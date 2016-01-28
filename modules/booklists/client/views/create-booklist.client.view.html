@@ -1,0 +1,78 @@
+<section ng-controller="BooklistsController" class="container">
+
+
+    <!--<div class="col-md-3">-->
+      
+      <!-- menu.html -->
+      <!--<ng-include src="'/modules/core/client/views/menu.client.view.html'"></ng-include>--<
+      
+    <!--</div> /span-3 -->
+    <div class="col-md-12">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
+          <li class="active">Crear lista</li>
+      </ol>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+      <div class="alert alert-warning" ng-show="warningopen">
+       <button href="#" type="button" class="close" ng-click="warningopen = !warningopen"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso: Crea la lista y a continuación podrás añadir los libros.</strong> 
+      </div>
+
+    <form name="booklistForm" class="form-horizontal" ng-submit="create(booklistForm.$valid)" novalidate>
+      <fieldset>
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Título de la lista</h4>
+          Introduce un título que identifique tu lista. Por ejemplo: Obras de teatro español.
+         </div>
+
+         <div class="form-group input-panel">
+            <input type="text" ng-model="title" placeholder="Título de la lista" class="form-control">
+         </div>
+        </div>
+
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>¿Deseas etiquetar tu lista?</h4>
+          Comienza a escribir y te ayudaremos con el vocabulario de nuestro catálogo. O si lo prefieres puedes añadir tus propias etiquetas.
+         </div>
+
+         <div class="form-group input-panel">
+          <tags-input display-property="name" placeholder="Añade etiquetas" ng-model="tags" replace-spaces-with-dashes="false">
+            <auto-complete source="getSubject($query)"></auto-complete>
+          </tags-input>
+         </div>
+        </div>
+
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Añade una descripción para la lista</h4>
+          Si lo deseas puedes incluir una descripción de tu lista de obras.
+         </div>
+
+         <div class="form-group input-panel">
+          <textarea name="comments" ng-model="comments" id="comments" class="form-control" cols="30" rows="5" placeholder="Descripción de la lista de obras"></textarea>
+         </div>
+        </div>
+
+        <div class="form-group input-panel text-right">
+          <input type="submit" value="Guardar" class="btn btn-primary">
+          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+        </div>
+      </fieldset>
+    </form>
+
+    </div><!--/col-span-9-->
+  </div><!--/row-->
+
+</section>
+<footer-generic></footer-generic>

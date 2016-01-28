@@ -1,0 +1,52 @@
+<section ng-controller="BooksController">
+  <div class="page-header">
+    <h1>Nueva obra</h1>
+  </div>
+  <div class="col-md-8">
+    <form name="bookForm" class="form-horizontal" ng-submit="create(bookForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+            <label for="title">Título</label>
+            <input type="text" ng-model="title" placeholder="Obra..." typeahead-on-select="setWorkValues($item)" typeahead="work.title for work in getWork($viewValue)" typeahead-loading="loadingWorks" typeahead-no-results="noResults" class="form-control">
+            <i ng-show="loadingWorks" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+                <i class="glyphicon glyphicon-remove"></i> No se han encontrado resultados
+            </div>
+        </div>
+<!--          <label for="title">Título</label>
+          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Título" required>
+          <div ng-messages="bookForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">El campo título es obligatorio</p>
+          </div>
+        </div>-->
+        <div class="form-group">
+          <label for="comments">Comentarios</label>
+          <textarea name="comments" ng-model="comments" id="comments" class="form-control" cols="30" rows="10" placeholder="Comentarios"></textarea>
+        </div>
+       
+        <div class="form-group">
+          <input type="submit" value="Guardar" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="col-md-4" ng-show="cover">
+    
+    <img class="col-sm-3" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{cover}}/portada/Cover.jpg">
+    
+    <dl class="dl-horizontal">
+      <dt class="col-sm-3">Título</dt>
+      <dd class="col-sm-6">{{title}}</dd>
+
+      <dt class="col-sm-3">Reproducción</dt>
+      <dd class="col-sm-6">{{reproduction}}</dd>
+
+      <dt class="col-sm-3">Idioma</dt>
+      <dd class="col-sm-6">{{language}}</dd>
+    </dl>
+    <button type="button" class="col-sm-3 btn btn-sm btn-danger" ng-href="{{url}}" ng-mousedown="openTab()" >Ver obra</button>
+  </div>
+</section>

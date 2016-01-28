@@ -1,0 +1,133 @@
+'use strict';
+
+// Books controller
+angular.module('books').controller('BooksController', ['$scope', '$http', '$stateParams', '$location', 'Authentication', 'Books',
+  function ($scope, $http, $stateParams, $location, Authentication, Books) {
+    $scope.authentication = Authentication;
+
+    $scope.cover = '';
+    $scope.slug = '';
+    $scope.uuid = '';
+    $scope.reproduction = '';
+    $scope.language = '';
+    $scope.identifierWork = ''; // This will hold the selected item
+
+    $scope.openTab = function() {
+        $window.open($scope.url);
+    }
+
+    $scope.setWorkValues = function(val) { // this gets executed when an item is selected
+        console.log('selected=' + val.identifierWork + ' ' + val.slug);
+        $scope.identifierWork = val.identifierWork;
+        $scope.slug = val.slug;
+        $scope.uuid = val.uuid;
+        $scope.reproduction = val.reproduction;
+        $scope.language = val.language;
+
+        $scope.cover = val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
+        console.log(val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/"));
+
+        $scope.url = 'http://www.cervantesvirtual.com/obra/' + val.slug;
+    };
+
+    // Create new Book
+    $scope.create = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'bookForm');
+
+            return false;
+        }
+
+        // Create new Book object
+        var book = new Books({
+            title: this.title,
+            comments: this.comments,
+            identifierWork: $scope.identifierWork,
+        });
+
+        // Redirect after save
+        book.$save(function (response) {
+            $location.path('books/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.comments = '';
+            $scope.identifierWork = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Remove existing Book
+    $scope.remove = function (book) {
+      if (book) {
+        book.$remove();
+
+        for (var i in $scope.books) {
+          if ($scope.books[i] === book) {
+            $scope.books.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.book.$remove(function () {
+          $location.path('books');
+        });
+      }
+    };
+
+    // Update existing Book
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'bookForm');
+
+        return false;
+      }
+
+      var book = $scope.book;
+
+      book.$update(function () {
+        $location.path('books/' + book._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Books
+    $scope.find = function () {
+      $scope.books = Books.query();
+    };
+
+    // Find existing Book
+    $scope.findOne = function () {
+      $scope.book = Books.get({
+        bookId: $stateParams.bookId
+      });
+    };
+
+    $scope.getWork = function(val) {
+
+      return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        params: {
+          q: val
+        }
+      }).then(function(response){
+        //console.log(response.data.lista);
+        return response.data.lista.map(function(item){
+          var result = {
+                        title:item.titulo, 
+                        identifierWork: item.idEntidadDocumental,
+                        slug: item.slug,
+                        uuid: item.uuid,
+                        reproduction: item.reproduccion,
+                        language: item.idioma,
+                       };
+          return result;
+      });
+    });
+  };
+  }
+]);

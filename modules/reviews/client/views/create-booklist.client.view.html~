@@ -1,0 +1,51 @@
+<section ng-controller="BooklistsController">
+
+
+    <div class="col-md-3">
+      
+      <!-- menu.html -->
+      <ng-include src="'/modules/core/client/views/menu.client.view.html'"></ng-include>
+      
+    </div><!-- /span-3 -->
+    <div class="col-md-9">
+
+      <div style="margin-top:20px">	
+         <strong><i class="glyphicon glyphicon-pencil"></i> Editar lista</strong>
+      </div>
+      <hr>
+
+
+    <form name="booklistForm" class="form-horizontal" ng-submit="create(booklistForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group">
+            <label for="title">Título</label>
+            <input type="text" ng-model="title" placeholder="Título de la lista" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="title">Etiquetas</label>
+          <tags-input display-property="name" placeholder="Añade etiquetas" ng-model="tags" replace-spaces-with-dashes="false">
+            <auto-complete source="getSubject($query)"></auto-complete>
+          </tags-input>
+        </div>
+
+        <div class="form-group">
+          <label for="comments">Comentarios</label>
+          <textarea name="comments" ng-model="comments" id="comments" class="form-control" cols="30" rows="10" placeholder="Comentarios"></textarea>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Guardar" class="btn btn-default">
+          <input type="button" value="Cancelar" class="btn btn-default" ng-click="showList();">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+
+    </div><!--/col-span-9-->
+  </div><!--/row-->
+
+</section>
+<footer-generic></footer-generic>

@@ -1,0 +1,75 @@
+<section ng-controller="BooklistsController" ng-init="findOne()" class="container">
+
+
+<div class="row">
+    <div class="col-md-12">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
+          <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
+      </ol>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+      <div class="top-icons">
+          <a tooltip="Volver" tooltip-placement="top" ng-href="booklists/{{booklist._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
+      </div>
+
+    <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)"	>
+      <fieldset>
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Título de la lista</h4>
+          Introduce un título que identifique tu lista. Por ejemplo: Obras de teatro español.
+         </div>
+
+         <div class="form-group input-panel">
+          <input name="title" type="text" ng-model="booklist.title" id="title" class="form-control" placeholder="Título" required>
+          <div ng-messages="booklistForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">El campo título es obligatorio.</p>
+          </div>
+         </div>
+        </div>
+
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>¿Deseas etiquetar tu lista?</h4>
+          Comienza a escribir y te ayudaremos con el vocabulario de nuestro catálogo. O si lo prefieres puedes añadir tus propias etiquetas.
+         </div>
+
+         <div class="form-group input-panel">
+          <tags-input key-property="identifierSubject" display-property="name" placeholder="Añade etiquetas" ng-model="booklist.tags" on-tag-added="onTagAdded($tag)" on-tag-removed="onTagRemoved($tag)" replace-spaces-with-dashes="false">
+            <auto-complete source="getSubject($query)"></auto-complete>
+          </tags-input>
+         </div>
+        </div>
+
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Añade una descripción para la lista</h4>
+          Si lo deseas puedes incluir una descripción de tu lista de obras.
+         </div>
+
+         <div class="form-group input-panel">
+          <textarea name="comments" ng-model="booklist.comments" id="comments" class="form-control" cols="30" rows="10" placeholder="Descripción de la lista de obras"></textarea>
+         </div>
+        </div>
+
+        <div class="form-group input-panel text-right">
+          <input type="submit" value="Guardar" class="btn btn-primary">
+          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+        </div>
+      </fieldset>
+    </form>
+
+    </div><!--/col-span-9-->
+  </div><!--/row-->
+
+</section>
+<footer-generic></footer-generic>

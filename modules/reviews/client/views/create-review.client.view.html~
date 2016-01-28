@@ -1,0 +1,88 @@
+<section ng-controller="ReviewsController" class="container">
+
+    <div class="col-md-12">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+          <li class="active">Crear reseña</li>
+      </ol>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+      <div class="alert alert-warning" ng-show="review.status === 'draft' && warningopen">
+       <button href="#" type="button" class="close" ng-click="warningopen = !warningopen"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso: La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.</strong> 
+      </div>
+
+      <div class="top-icons">
+          <a tooltip="Volver" tooltip-placement="top" ng-href="reviews"><i class="fa fa-arrow-left fa-2x"></i></a>
+      </div>
+
+    <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)">
+      <fieldset>
+        <!-- TITLE -->
+        <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Selecciona una obra del catálogo</h4>
+          Comienza a escribir el título de la obra sobre la que vas a escribir la reseña. Te mostraremos los resultados de nuestro catálogo.
+         </div>
+
+        <div class="form-group input-panel">
+          <div class="row">  
+            <input type="text" ng-model="title" placeholder="Escribe el título de la obra de la reseña" typeahead-on-select="setWorkValues($item)" typeahead="work.title for work in getWork($viewValue)" typeahead-loading="loadingWorks" typeahead-no-results="noResults" class="form-control" required>
+            <i ng-show="loadingWorks" class="glyphicon glyphicon-refresh"></i>
+            <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
+                <strong>Aviso:</strong> No se han encontrado resultados. Introduce un título de nuestro catálogo por favor.
+            </div>
+            <p ng-show="form.reviewForm.title.$invalid && !form.reviewForm.title.$pristine" class="help-block">Introduzca una obra.</p>
+          </div>
+        </div>
+        </div>
+
+        <div class="well well-sm" ng-show="cover">
+          <div class="row">
+            <div class="col-xs-3 col-md-3 text-center">
+               <img ng-if="cover" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{cover}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+            </div>
+            <div class="col-xs-9 col-md-9 section-box">
+              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{url}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
+              <p>{{ title | limitTo: 200 }}{{title.length > 200 ? '...' : ''}}</p>
+              <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit"></p>
+              <div class="row rating-desc">
+                <div class="col-md-12">
+                  <span class="label label-info" ng-show="language">{{language}}</span>
+                  <span class="label label-info" ng-show="mediaType">{{mediaType}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <div class="well">
+
+         <div class="bs-callout bs-callout-primary">
+          <h4>Escribe la reseña</h4>
+          Utiliza el siguiente formulario para escribir la reseña. Tienes la opción de incluir enlaces a páginas externas. 
+         </div>
+
+        <div class="form-group input-panel">
+          <textarea ui-tinymce name="content" ng-model="content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+        </div>
+
+        <div class="form-group input-panel text-right">
+          <input type="submit" value="Crear" class="btn btn-primary">
+          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+        </div>
+       </div> 
+      </fieldset>
+    </form>
+
+    </div><!--/col-span-9-->
+  </div><!--/row-->
+
+</section>
+<footer-generic></footer-generic>

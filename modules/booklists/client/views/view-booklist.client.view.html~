@@ -1,0 +1,101 @@
+<section ng-controller="BooklistsController" ng-init="findOne()" class="container">
+
+<div class="row">
+    <div class="col-md-12">
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
+          <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
+      </ol>
+
+      <div class="btn-group btn-group-justified toolbar menu">
+          <a href="#" class="btn btn-border col-sm-3" ui-sref="booklists.edit({booklistId: booklist._id})">
+             <i class="glyphicon glyphicon-edit"></i><br>
+             Editar Lista
+          </a>
+          <a href="#" class="btn btn-border col-sm-3" ng-click="showBookForm()">
+             <i class="glyphicon glyphicon-plus"></i><br>
+             Añadir obras
+          </a>
+          <a href="#" class="btn btn-border col-sm-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?">
+             <i class="glyphicon glyphicon-trash"></i><br>
+             Eliminar lista
+          </a>
+          <a href="#" class="btn col-sm-3">
+             <i class="glyphicon glyphicon-question-sign"></i><br>
+             Ayuda
+          </a>
+      </div>
+
+      <div class="alert alert-success" ng-show="messageok">
+       <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Resultado:</strong> {{messageok}}
+      </div>
+
+      <div class="booklist-description row">
+        <div class="col-md-8">
+            <h3>{{ booklist.title | limitTo: 200 }}{{booklist.title.length > 200 ? '...' : ''}}</h3>
+            <h5 ng-show="booklist.comments">Descripción</h5>
+            <p ng-show="booklist.comments"><small><em class="text-muted">{{booklist.comments}}</em></small></p>
+            <p><ul class="list-inline">
+              <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-info"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+            </ul></p>
+        </div>
+        <div class="col-md-4">
+          <div class="pull-right">
+            <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+            <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+            <a tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+          </div>
+        </div>
+        
+      </div>
+      <hr>
+
+      <div ng-repeat="book in booklist.books">
+       <div class="row">
+         <div class="col-sm-2">
+           <a href="#" class=""><img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(book.uuid)}}/portada/Cover.jpg" alt="{{book.title}}" class="img-responsive"></a>
+         </div>
+         <div class="col-sm-8">
+           <h4 class="title">{{ book.title | limitTo: 200 }}{{book.title.length > 200 ? '...' : ''}}</h4>
+           <p class="text-muted" ng-show="book.reproduction">{{book.reproduction | html}}</p>
+           <p class="text-muted">
+             <span ng-show="book.language" class="label label-info">{{book.language}}</span>
+             <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                <span ng-switch-when="audio">
+                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-when="video">
+                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-when="texto">
+                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-default>
+                    {{review.mediaType}}
+                </span>
+            </span>
+           </p>
+           <p class="text-muted" ng-show="book.comments">{{book.comments}}</p>
+         </div>
+         <div class="col-sm-2">
+           <a style="width: 100%;" tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-warning btn-sm">
+               <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
+           </a>
+           <button style="margin-top:3px;width: 100%;" type="button" ng-click="removeBook(book)" class="btn btn-warning btn-sm">
+               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar obra
+           </button>
+         </div>
+       </div> <!-- row -->
+       <hr>
+     </div> <!-- repeat books -->
+
+     <div class="alert alert-warning" ng-show="booklist.books.length == 0">
+       <a href="#" ng-click="showBookForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
+       <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
+     </div>
+
+   </div><!--/col-span-9-->
+ </div> <!-- row -->
+</section>
+<footer-generic></footer-generic>

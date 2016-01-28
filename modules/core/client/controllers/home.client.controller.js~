@@ -1,0 +1,13 @@
+'use strict';
+
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'Reviews',
+  function ($scope, Authentication, Reviews) {
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+
+    // Find a list of Reviews
+    $scope.find = function () {
+        $scope.reviews = Reviews.query();
+    };
+  }
+]);

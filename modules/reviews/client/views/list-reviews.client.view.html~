@@ -1,0 +1,80 @@
+<section ng-controller="ReviewsController" ng-init="find()" class="container">
+
+<div class="row">
+    <!--<div class="col-md-3">-->
+      
+      <!-- menu.html -->
+      <!--<ng-include src="'/modules/core/client/views/menu.client.view.html'"></ng-include>-->
+      
+    <!--</div>--><!-- /span-3 -->
+    <div class="col-md-12">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+      </ol>
+
+      <div class="btn-group btn-group-justified toolbar menu">
+          <a href="#" ui-sref="reviews.create" class="btn btn-border col-sm-3">
+             <i class="glyphicon glyphicon-plus"></i><br>
+             Reseña
+          </a>
+          <!--<a href="#" class="btn btn-info col-sm-3">
+             <i class="glyphicon glyphicon-cloud"></i><br>
+             Cloud
+          </a>
+          <a href="#" class="btn btn-info col-sm-3">
+             <i class="glyphicon glyphicon-cog"></i><br>
+             Tools
+          </a>-->
+          <a href="#" class="btn col-sm-3">
+             <i class="glyphicon glyphicon-question-sign"></i><br>
+             Ayuda
+          </a>
+      </div>
+  
+      <div class="list-group">
+      <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
+        <div class="media">
+        <div class="media-left">
+          <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
+        </div>
+        <div class="media-body">
+          <h5 class="media-heading">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h5>
+          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+          <!--<p class="text-muted">
+            <span ng-show="review.language" class="glyphicon glyphicon-tag"></span> {{review.language}}
+          </p>-->
+          <p class="text-muted">
+            <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+            <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+            <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
+            <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                <span ng-switch-when="audio">
+                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-when="video">
+                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-when="texto">
+                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                </span>
+                <span ng-switch-default>
+                    {{review.mediaType}}
+                </span>
+            </span>
+          </p>
+          <!--<p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit"></p>-->
+        </div>
+        </div> <!-- media -->
+      </a> 
+      </div> <!-- repeat -->
+
+      <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
+        No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
+      </div>
+
+    </div><!--/col-span-9-->
+  </div><!--/row-->
+
+</section>
+<footer-generic></footer-generic>

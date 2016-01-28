@@ -1,0 +1,70 @@
+<section ng-controller="BooklistsController" ng-init="findOne()">
+
+<div class="row">
+    <div class="col-md-3">
+
+      <!-- menu.html -->
+      <ng-include src="'/modules/core/client/views/menu.client.view.html'"></ng-include>
+      
+    </div><!-- /span-3 -->
+    <div class="col-md-9">  
+
+      <div class="btn-group btn-group-justified" style="margin-top:20px">
+          <a href="#" class="btn btn-info col-sm-3" ui-sref="booklists.edit({booklistId: booklist._id})">
+             <i class="glyphicon glyphicon-edit"></i><br>
+             Editar Lista
+          </a>
+          <a href="#" class="btn btn-info col-sm-3" ng-click="showForm()">
+             <i class="glyphicon glyphicon-pencil"></i><br>
+             Añadir libro
+          </a>
+          <a href="#" class="btn btn-info col-sm-3" ng-click="remove()">
+             <i class="glyphicon glyphicon-trash"></i><br>
+             Eliminar lista
+          </a>
+          <a href="#" class="btn btn-info col-sm-3">
+             <i class="glyphicon glyphicon-question-sign"></i><br>
+             Ayuda
+          </a>
+      </div>
+
+      <div class="booklist-description">
+        <h3>{{ booklist.title | limitTo: 200 }}{{booklist.title.length > 200 ? '...' : ''}}</h3>
+        <h5 ng-show="booklist.comments">Comentarios</h5>
+        <p ng-show="booklist.comments"><small><em class="text-muted">{{booklist.comments}}</em></small></p>
+        <ul class="list-inline">
+          <li ng-repeat="tag in booklist.tags"><span class="label label-primary label-tag">{{tag.name}}</span></li>
+        </ul>
+      </div>
+      <hr>
+
+
+      <div ng-repeat="book in booklist.books">
+       <div class="row">
+         <div class="col-sm-2">
+           <a href="#" class=""><img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(book.uuid)}}/portada/Cover.jpg" alt="{{book.title}}" class="img-responsive"></a>
+         </div>
+         <div class="col-sm-8">
+           <h4 class="title">{{ book.title | limitTo: 200 }}{{book.title.length > 200 ? '...' : ''}}</h4>
+           <p class="text-muted" ng-show="book.reproduction">{{book.reproduction}}</p>
+           <p class="text-muted" ng-show="book.language"><span class="glyphicon glyphicon-tag"></span> {{book.language}}</p>
+           <p class="text-muted" ng-show="book.mediatype">{{book.mediatype}}</p>
+           <p class="text-muted" ng-show="book.reproduction">{{book.reproduction}}</p>
+         </div>
+         <div class="col-sm-2">
+           <div class="div-link"><a class="list-link" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank">Ver obra</a></div>
+           <div class="div-link"><a class="list-link" href="#" ng-click="removeBook(book)">Eliminar</a></div>
+         </div>
+       </div> <!-- row -->
+       <hr>
+     </div> <!-- repeat books -->
+
+     <div class="alert alert-warning" ng-show="booklist.books.length == 0">
+       <a href="#" ng-click="showForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
+       <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
+     </div>
+
+   </div><!--/col-span-9-->
+ </div> <!-- row -->
+</section>
+<footer-generic></footer-generic>

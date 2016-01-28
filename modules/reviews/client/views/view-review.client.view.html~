@@ -1,0 +1,142 @@
+<section ng-controller="ReviewsController" ng-init="findOne()" class="container">
+
+<div class="row">
+    <div class="col-md-12">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+          <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
+      </ol>
+
+      <div class="btn-group btn-group-justified toolbar menu" ng-show="authentication.user._id == review.user._id">
+          <a href="#" class="btn btn-border col-sm-3" ui-sref="reviews.edit({reviewId: review._id})">
+             <i class="glyphicon glyphicon-edit"></i><br>
+             Editar reseña
+          </a>
+          <a href="#" class="btn btn-border col-sm-3" ng-show="review.status === 'draft'" ng-click="setPublicReviewStatus()">
+             <i class="glyphicon glyphicon-eye-open"></i><br>
+             Publicar reseña
+          </a>
+          <a href="#" class="btn btn-border col-sm-3" ng-show="review.status !== 'draft'" ng-click="setDraftReviewStatus()">
+             <i class="glyphicon glyphicon-eye-close"></i><br>
+             Deshacer publicación
+          </a>
+          <a href="#" class="btn btn-border col-sm-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
+             <i class="glyphicon glyphicon-trash"></i><br>
+             Eliminar reseña
+          </a>
+          <a href="#" class="btn col-sm-3">
+             <i class="glyphicon glyphicon-question-sign"></i><br>
+             Ayuda
+          </a>
+      </div>
+
+      <div class="alert alert-success" ng-show="messageok">
+       <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Resultado:</strong> {{messageok}}
+      </div>
+
+      <div class="alert alert-warning" ng-show="review.status === 'draft' && warningopen">
+       <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+       <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+      </div>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+     <hr>
+     <div>
+      <h1 class="title">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h1>
+      <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
+      <p style="margin-top:50px;" ng-bind-html="review.content | html"></p>
+     </div>
+     <hr>
+
+      <h4>Obra utilizada para la reseña</h4>
+      <div class="well well-sm">
+          <div class="row" ng-show="review.uuid">
+            <div class="col-xs-3 col-md-3 text-center">
+               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+            </div>
+            <div class="col-xs-9 col-md-9 section-box">
+              <h4><a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
+              <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
+              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+              <div class="row rating-desc">
+                <div class="col-md-12">
+                  <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                  <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
+                  <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
+                  <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                    <span ng-switch-when="audio">
+                      <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
+                    </span>
+                    <span ng-switch-when="video">
+                      <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                    </span>
+                    <span ng-switch-when="texto">
+                      <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                    </span>
+                    <span ng-switch-default>
+                      {{review.mediaType}}
+                    </span>
+                  </span>
+                  <div class="pull-right" ng-show="review.status === 'public'">
+                    <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+                    <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+                    <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+     <hr>
+      
+     <div ng-show="review.comments.length > 0">
+      <h4>Últimos comentarios</h4>	
+
+      <div ng-repeat="comment in review.comments" class="media">
+        <div class="media-left">
+          <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+        </div>
+        <div class="media-body">
+            <small>
+            <em class="text-muted">
+            Añadido el
+            <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+             por
+            <span ng-bind="comment.user.displayName"></span>
+            </em>
+            </small>
+            <p ng-bind="comment.content"></p>
+        </div>
+      </div>
+      <hr>
+     </div> <!-- last comments -->
+     
+     <div>
+        <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+         <div class="form-group">
+           <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
+           <div class="col-sm-10">
+              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5"></textarea>
+           </div>
+         </div>
+         <div class="form-group">
+           <div class="col-sm-offset-2 col-sm-10">                    
+              <button class="btn btn-info btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+           </div>
+         </div>            
+        </form>
+     </div>
+     
+
+   </div><!--/col-span-9-->
+ </div> <!-- row -->
+</section>
+<footer-generic></footer-generic>

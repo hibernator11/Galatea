@@ -1,0 +1,20 @@
+<section ng-controller="BooksController" ng-init="find()">
+  <div class="page-header">
+    <h1>Libros</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="book in books" ui-sref="books.view({bookId: book._id})" class="list-group-item">
+      <!--<small class="list-group-item-text">
+        Posted on
+        <span ng-bind="category.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="category.user.displayName"></span>
+      </small>-->
+      <h4 class="list-group-item-heading" ng-bind="book.name"></h4>
+      <p class="list-group-item-text" ng-bind="book.description"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="books.$resolved && !books.length">
+    No ha creado ningún libro todavía, ¿<a ui-sref="books.create">desea crear uno</a>?
+  </div>
+</section>
