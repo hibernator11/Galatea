@@ -16,6 +16,10 @@ app/tests/coverage/
 .idea/
 coverage/
 
+# Gcandela configuration
+# ======================
+*~
+
 # MEAN.js app and assets
 # ======================
 #comment gcandela run heroku
