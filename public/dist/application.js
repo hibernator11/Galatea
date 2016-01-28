@@ -473,7 +473,6 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
 
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
-
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
             params: {
                 q: val
@@ -1575,7 +1574,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('http://app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
             params: {
                 q: val
             }
