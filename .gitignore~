@@ -18,8 +18,7 @@ coverage/
 
 # MEAN.js app and assets
 # ======================
-#comment gcandela run heroku
-#public/dist/
+public/dist/
 uploads
 modules/users/client/img/profile/uploads
 config/env/local.js

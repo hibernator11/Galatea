@@ -4,7 +4,7 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
+    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://bvmc:candela01$@ds051585.mongolab.com:51585/ibvmc' || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
     options: {
       user: '',
       pass: ''
@@ -40,8 +40,8 @@ module.exports = {
     callbackURL: '/api/auth/facebook/callback'
   },
   twitter: {
-    clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-    clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
+    clientID: process.env.TWITTER_KEY || 'IwazOJC5Yr9pO7cqKOH8QlcO1',
+    clientSecret: process.env.TWITTER_SECRET || 'krBeI597SMhy04fKmaSQESoKnRjuPeOiy94uRwtS4F1Shbcihj',
     callbackURL: '/api/auth/twitter/callback'
   },
   google: {
