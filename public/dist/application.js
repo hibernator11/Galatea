@@ -458,7 +458,6 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
 
     // when select one item on typeahead
     $scope.setWorkValues = function(val) { // this gets executed when an item is selected
-        //console.log('setWorkValues selected=' + val.identifierWork + ' ' + val.slug);
         $scope.identifierWork = val.identifierWork;
         $scope.slug = val.slug;
         $scope.uuid = val.uuid;
@@ -614,7 +613,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         $scope.booklist.books.splice(index,1);
 
         $scope.booklist.$update(function () {
-            //$location.path('booklists/' + booklist._id);
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
@@ -622,12 +620,11 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     // Find existing Subjects in BVMC catalogue
     $scope.getSubject = function(val) {
-        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?maxRows=12&callback=JSON_CALLBACK', {
             params: {
                 q: val
             }
         }).then(function(response){
-            //console.log(response.data.lista);
             return response.data.lista.map(function(item){
                 var result = {
                         name:item.nombre, 
@@ -645,7 +642,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         var booklist = $scope.booklist;
         console.log('booklist:' + booklist);
         booklist.$update(function () {
-            //$location.path('booklists/' + booklist._id);
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
@@ -688,7 +684,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             $scope.booklist.books.push(book);
 
             $scope.booklist.$update(function () {
-                //$location.path('booklists/' + booklist._id);
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -715,29 +710,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
         modalInstance.result.then(function (selectedItem) {
             $scope.selectedItem = selectedItem;
-            console.log('result email:' + selectedItem);
-
+ 
             $scope.messageok = selectedItem.message;
-            
-            // Create new book object
-            /*var book = {
-                    title: $scope.selectedItem.title,
-                    comments: $scope.selectedItem.comments,
-                    identifierWork: $scope.selectedItem.identifierWork,
-                    slug: $scope.selectedItem.slug,
-                    uuid: $scope.selectedItem.uuid,
-                    reproduction: $scope.selectedItem.reproduction,
-                    language: $scope.selectedItem.language,
-                    mediaType: $scope.selectedItem.mediaType
-            };
-
-            $scope.booklist.books.push(book);
-
-            $scope.booklist.$update(function () {
-                //$location.path('booklists/' + booklist._id);
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });*/
             
         }, function () {
             $scope.selectedItem = '';
@@ -1574,7 +1548,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
-        return $http.jsonp('http://app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
             params: {
                 q: val
             }
