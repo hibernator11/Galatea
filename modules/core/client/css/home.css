@@ -373,10 +373,9 @@ footer {
     /*background: #747679 url(//dhchbx0tszrcx.cloudfront.net/assets/welcome/bg-440f21dde0676577f0276c26a4a8098f.png) no-repeat top center;*7
     /*background: #747679 url(//4.bp.blogspot.com/-2O8kJvlRVrM/UUiJIwKkiYI/AAAAAAAAAuQ/FpvJEUwgz_k/s1600/lecturas_2013.png) no-repeat top center;*/
     /*background: #747679 url(http://bib.cervantesvirtual.com/bib_autor/Cervantes/graf/fotos/008674_0027_s.jpg) no-repeat center center;*/
-
     background-size: cover!important;
-    height: 600px;
-    padding: 150px 0 0;
+    min-height: 500px;
+    padding: 5% 0 0;
 }
 
 .welcome-heading-second {
@@ -392,10 +391,9 @@ footer {
     color: #65c6c3;
     background: 0 0;
     border: 1px solid #65c6c3;
-    padding: 18px 60px;
+    padding: 18px 20%;
     text-transform: uppercase;
     font-size: 14px;
-    line-height: 25px;
     font-weight: bold;
 }
 
@@ -410,10 +408,10 @@ footer {
     text-align: center;
     color: #fff;
     text-transform: uppercase;
-    padding: 18px 60px;
+    padding: 18px 20%;
     font-size: 14px;
-    line-height: 25px;
     font-weight: bold;
+    border: 1px solid #65c6c3;
 }
 
 .btn-header:hover, .btn-header:focus{
