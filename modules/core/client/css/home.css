@@ -185,7 +185,6 @@ div.tooltip-inner {
     line-height: 1.5;
     font-size: 36px;
     text-align: center;
-    padding: 10px 0 30px;
 }
 
 /* input css */
@@ -258,10 +257,8 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
 }
 
 footer {
-    /*background-color: #474B59;*/
     color: #fff;
     text-align: center;
-    margin-top: 50px;
     padding: 20px;
 }
 
