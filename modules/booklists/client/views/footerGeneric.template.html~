@@ -1,15 +1,15 @@
 <footer>
-    <div class="row">
-        <a href="http://www.facebook.com/pages/Biblioteca-Virtual-Miguel-de-Cervantes/115005045196224?v=wall"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
-	<a href="http://twitter.com/fbvmc"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
-	<a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
-	<a href="mailto:developer@cervantesvirtual.com"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
-    </div>
-    <div class="row" style="margin-top:20px">
-        <ul class="nav nav-pills nav-justified">
-            <li><a href="http://fundacion.cervantesvirtual.com">&copy; Fundación Biblioteca Virtual Miguel de Cervantes</a></li>
-            <li><a href="http://www.cervantesvirtual.com/marco-legal/">Términos de uso</a></li>
-            <li><a href="#">Privacidad</a></li>
-        </ul>
+    <div class="container"><h2 class="section-title">Síguenos!</h2>
+      <div class="row" style="text-align:center">
+        <a style="padding-right:10%" href="http://www.facebook.com/pages/Biblioteca-Virtual-Miguel-de-Cervantes/115005045196224?v=wall" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a>
+        <a style="padding-right:10%" href="http://twitter.com/fbvmc" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
+        <a style="padding-right:10%" href="http://www.youtube.com/cervantesvirtual" target="_blank"><i class="fa fa-youtube-square fa-3x"></i></a>
+        <a style="padding-right:10%" href="https://www.linkedin.com/grps?home=&gid=6737063" target="_blank"><i class="fa fa-linkedin-square fa-3x"></i></a>
+      </div>
+      <ul class="nav nav-pills nav-justified">
+          <li><a href="http://fundacion.cervantesvirtual.com">&copy; Fundación Biblioteca Virtual Miguel de Cervantes</a></li>
+          <li><a href="http://www.cervantesvirtual.com/marco-legal/">Términos de uso</a></li>
+          <li><a href="#">Privacidad</a></li>
+      </ul>
     </div>
 </footer>
