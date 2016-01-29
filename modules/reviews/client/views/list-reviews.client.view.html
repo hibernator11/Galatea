@@ -1,14 +1,7 @@
 <section ng-controller="ReviewsController" ng-init="find()" class="container">
 
-<div class="row">
-    <div class="col-md-12">
-
-      <!--<ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
-      </ol>-->
-
-      <div class="btn-group btn-group-justified toolbar menu">
-          <a href="#" ui-sref="reviews.create" class="btn btn-border col-sm-3">
+      <div class="menu col-xs-12">
+          <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
              <i class="glyphicon glyphicon-plus"></i><br>
              Reseña
           </a>
@@ -20,13 +13,13 @@
              <i class="glyphicon glyphicon-cog"></i><br>
              Tools
           </a>-->
-          <a href="#" class="btn col-sm-3">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-6">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
   
-      <div class="list-group">
+      <div class="list-group col-xs-12">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
         <div class="media-left">
@@ -66,9 +59,6 @@
       <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
         No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
       </div>
-
-    </div><!--/col-span-9-->
-  </div><!--/row-->
 
 </section>
 <footer-generic></footer-generic>

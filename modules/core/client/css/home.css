@@ -7,6 +7,15 @@
     font-weight: bold;
 }
 
+.label {
+    margin: 2px;
+}
+
+.social-links {
+    margin: 2px;
+    margin-top: 5px;
+}
+
 .booklist-description {
     padding: 0px 0px 0px 10px;
     margin-top:20px;
@@ -165,15 +174,6 @@ div.tooltip-inner {
     color: #337ab7;
 }
 
-.toolbar {
-    margin-top:20px;
-    margin-bottom:20px;
-}
-
-.toolbar a:hover, .toolbar a:visited, .toolbar a:focus {
-    color: white;
-}
-
 .input-panel {
     padding: 0px 20px 0px 20px;
 }
@@ -187,7 +187,6 @@ div.tooltip-inner {
     text-align: center;
 }
 
-/* input css */
 input[type="text"], input[type="password"], input[type="search"], input[type="url"], input[type="email"], textarea {
     border: 1px solid #c1c1c1;
     background-color: #ffffff;
@@ -200,11 +199,17 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
     margin: 0;
     text-overflow: ellipsis;
 }
-/* input css */
 
 /* menus */
 .menu {
     background: #47a3da;
+    margin-bottom: 20px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.menu a:hover, .menu a:visited, .menu a:focus {
+    color: white;
 }
 
 .menu h3 {
@@ -218,12 +223,12 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
 }
 
 .menu a {
-    border-bottom: 1px solid #258ecd;
     display: block;
     color: #fff;
     font-size: 1.1em;
     font-weight: 300;
     border-radius: 0px;
+    background-color: #47a3da;
 }
 
 .menu a:visited {
@@ -242,12 +247,6 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
 .menu a:active {
     background: #afdefa;
     color: #47a3da;
-}
-
-.btn-border {
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-right-color: white;
 }
 
 /* menus */

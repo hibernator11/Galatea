@@ -1,42 +1,39 @@
 <section ng-controller="ReviewsController" ng-init="findOne()" class="container">
 
-<div class="row">
-    <div class="col-md-12">
-
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
           <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
-      <div class="btn-group btn-group-justified toolbar menu" ng-show="authentication.user._id == review.user._id">
-          <a href="#" class="btn btn-border col-sm-3" ui-sref="reviews.edit({reviewId: review._id})">
+      <div class="menu col-xs-12" ng-show="authentication.user._id == review.user._id">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="reviews.edit({reviewId: review._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar reseña
           </a>
-          <a href="#" class="btn btn-border col-sm-3" ng-show="review.status === 'draft'" ng-click="setPublicReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status === 'draft'" ng-click="setPublicReviewStatus()">
              <i class="glyphicon glyphicon-eye-open"></i><br>
              Publicar reseña
           </a>
-          <a href="#" class="btn btn-border col-sm-3" ng-show="review.status !== 'draft'" ng-click="setDraftReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status !== 'draft'" ng-click="setDraftReviewStatus()">
              <i class="glyphicon glyphicon-eye-close"></i><br>
              Deshacer publicación
           </a>
-          <a href="#" class="btn btn-border col-sm-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
              <i class="glyphicon glyphicon-trash"></i><br>
              Eliminar reseña
           </a>
-          <a href="#" class="btn col-sm-3">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
 
-      <div class="alert alert-success" ng-show="messageok">
+      <div class="alert alert-success col-xs-12" ng-show="messageok">
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
        <strong>Resultado:</strong> {{messageok}}
       </div>
 
-      <div class="alert alert-warning" ng-show="review.status === 'draft' && warningopen">
+      <div class="alert alert-warning col-xs-12" ng-show="review.status === 'draft' && warningopen">
        <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
        <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
       </div>
@@ -64,8 +61,8 @@
               <h4><a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
               <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
               <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-              <div class="row rating-desc">
-                <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12 .col-xs-12">
                   <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                   <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
                   <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
@@ -84,11 +81,11 @@
                       {{review.mediaType}}
                     </span>
                   </span>
-                  <div class="pull-right" ng-show="review.status === 'public'">
+                </div>
+                <div class="col-md-12 .col-xs-12 social-links" ng-show="review.status === 'public'">
                     <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                     <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                     <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                  </div>
                 </div>
               </div>
             </div>
@@ -134,9 +131,6 @@
          </div>            
         </form>
      </div>
-     
 
-   </div><!--/col-span-9-->
- </div> <!-- row -->
 </section>
 <footer-generic></footer-generic>
