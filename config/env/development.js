@@ -4,7 +4,7 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://bvmc:candela01@ds051585.mongolab.com:51585/ibvmc' || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
+    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
     options: {
       user: '',
       pass: ''
@@ -35,13 +35,13 @@ module.exports = {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   facebook: {
-    clientID: process.env.FACEBOOK_ID || '507044396136324',
-    clientSecret: process.env.FACEBOOK_SECRET || '481a5cdab4db9a1b9d295a9ece223cfe',
+    clientID: process.env.FACEBOOK_ID || 'key',
+    clientSecret: process.env.FACEBOOK_SECRET || 'secret',
     callbackURL: '/api/auth/facebook/callback'
   },
   twitter: {
-    clientID: process.env.TWITTER_KEY || 'IwazOJC5Yr9pO7cqKOH8QlcO1',
-    clientSecret: process.env.TWITTER_SECRET || 'krBeI597SMhy04fKmaSQESoKnRjuPeOiy94uRwtS4F1Shbcihj',
+    clientID: process.env.TWITTER_KEY || 'key',
+    clientSecret: process.env.TWITTER_SECRET || 'secret',
     callbackURL: '/api/auth/twitter/callback'
   },
   google: {
