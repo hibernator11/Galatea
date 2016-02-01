@@ -1,5 +1,12 @@
 'use strict';
 
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
 // controller for modal email window
 var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.result = 'hidden';
@@ -308,7 +315,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         });
     };
 
-}
+    $scope.showHelpInformation = function () {
+       var modalInstance = $modal.open({
+            templateUrl: '/modules/reviews/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
+    };
+
+  }
 ]);
 
 angular.module('reviews').filter('html', ['$sce', function ($sce) { 

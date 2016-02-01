@@ -370,6 +370,13 @@ angular.module('booklists').config(['$stateProvider',
 
 'use strict';
 
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
 // controller for modal email window
 var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.result = 'hidden';
@@ -716,6 +723,14 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         }, function () {
             $scope.selectedItem = '';
         });
+    };
+
+    $scope.showHelpInformation = function () {
+       var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
     };
   }
 ]);
@@ -1306,6 +1321,14 @@ angular.module('reviews').config(['$stateProvider',
 
 'use strict';
 
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalHelpInstanceCtrl.$inject = ["$scope", "$modalInstance"];
+
 // controller for modal email window
 var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.result = 'hidden';
@@ -1615,7 +1638,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         });
     };
 
-}
+    $scope.showHelpInformation = function () {
+       var modalInstance = $modal.open({
+            templateUrl: '/modules/reviews/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
+    };
+
+  }
 ]);
 
 angular.module('reviews').filter('html', ['$sce', function ($sce) { 

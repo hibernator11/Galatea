@@ -1,5 +1,12 @@
 'use strict';
 
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
 // controller for modal email window
 var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.result = 'hidden';
@@ -345,6 +352,14 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         }, function () {
             $scope.selectedItem = '';
         });
+    };
+
+    $scope.showHelpInformation = function () {
+       var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
     };
   }
 ]);
