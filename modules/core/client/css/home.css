@@ -250,10 +250,18 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
     color: #47a3da;
 }
 
-/* menus */
+/* end menus */
 
 .breadcrumb {
     margin-top: 10px;
+}
+
+.navbar-default .navbar-brand {
+    font: normal 18px 'Cookie', cursive;
+}
+
+.navbar-default .navbar-brand span {
+    color: #B43C2C;
 }
 
 /* begin footer */
