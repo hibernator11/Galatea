@@ -1,12 +1,5 @@
 <section ng-controller="BooklistsController" ng-init="find()" class="container">
 
-<div class="row">
-    <div class="col-md-12">
-
-      <!--<ol class="breadcrumb">
-          <li class="active"><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
-      </ol>-->
-
       <div class="btn-group btn-group-justified toolbar menu">
           <a href="#" ui-sref="booklists.create" class="btn btn-border col-sm-3">
              <i class="glyphicon glyphicon-plus"></i><br>
@@ -48,9 +41,6 @@
       <div class="alert alert-warning text-center" ng-if="booklists.$resolved && !booklists.length">
         No ha creado ninguna lista todavía, ¿<a ui-sref="booklists.create">desea crear una</a>?
       </div>
-
-    </div><!--/col-span-9-->
-  </div><!--/row-->
 
 </section>
 <footer-generic></footer-generic>
