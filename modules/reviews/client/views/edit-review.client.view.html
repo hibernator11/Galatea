@@ -1,4 +1,4 @@
-<section ng-controller="ReviewsController" ng-init="findOne()" class="container">
+<section ng-controller="ReviewsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == review.user._id">
 
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
@@ -14,34 +14,12 @@
           <a tooltip="Volver" tooltip-placement="top" ng-href="reviews/{{review._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
-    <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)" ng-show="authentication.user._id == review.user._id">
+
+    <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
 
       <fieldset>
 
-        <div class="well well-sm">
-          <div class="row" ng-show="review.uuid">
-            <div class="col-xs-3 col-md-3 text-center">
-               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9 section-box">
-              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
-              <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
-              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-              <div class="row rating-desc">
-                <div class="col-md-12">
-                  <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                  <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
-                  <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                  <span class="label label-info" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="well">
-
+        <div class="well" style="margin-right: 0px;margin-left: 0px;">
          <div class="bs-callout bs-callout-primary">
           <h4>Modifica la reseña</h4>
           Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
@@ -58,6 +36,27 @@
         </div> <!-- well -->
       </fieldset>
     </form>
+
+
+      <div class="row well" style="margin-right: 0px;margin-left: 0px;">
+            <div class="col-xs-3 col-md-3" ng-show="review.uuid">
+               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
+              <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
+              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+              <div class="row">
+              <div class="col-md-12">
+                  <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                  <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
+                  <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
+                  <span class="label label-info" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
+              </div>
+              </div>
+            </div>
+      </div>
 
 </section>
 <footer-generic></footer-generic>
