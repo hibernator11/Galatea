@@ -1,8 +1,5 @@
 <section ng-controller="ReviewsController" ng-init="findOne()" class="container">
 
-<div class="row" ng-show="authentication.user._id == review.user._id">
-    <div class="col-md-12">
-
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
           <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
@@ -17,7 +14,7 @@
           <a tooltip="Volver" tooltip-placement="top" ng-href="reviews/{{review._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
-    <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
+    <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)" ng-show="authentication.user._id == review.user._id">
 
       <fieldset>
 
@@ -61,9 +58,6 @@
         </div> <!-- well -->
       </fieldset>
     </form>
-
-    </div><!--/col-span-9-->
-  </div><!--/row-->
 
 </section>
 <footer-generic></footer-generic>

@@ -1,8 +1,5 @@
 <section ng-controller="BooklistsController" ng-init="findOne()" class="container" >
 
-<div class="row" ng-show="authentication.user._id == booklist.user._id">
-    <div class="col-md-12">
-
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
           <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
@@ -17,7 +14,7 @@
           <a tooltip="Volver" tooltip-placement="top" ng-href="booklists/{{booklist._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
-    <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)"	>
+    <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)" ng-show="authentication.user._id == booklist.user._id" >
       <fieldset>
         <div class="well">
 
@@ -66,9 +63,6 @@
         </div>
       </fieldset>
     </form>
-
-    </div><!--/col-span-9-->
-  </div><!--/row-->
 
 </section>
 <footer-generic></footer-generic>
