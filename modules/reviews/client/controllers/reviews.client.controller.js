@@ -220,7 +220,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     $scope.addComment = function() {
-      console.log('scope.txtcomment:' + $scope.txtcomment);
       if ($scope.form.commentForm.$valid) {
             
         var comment = {

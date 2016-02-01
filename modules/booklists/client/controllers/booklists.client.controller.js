@@ -273,10 +273,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     // update Tag event
     $scope.updateTag = function(val) {
-        console.log('val:' + val.name + ' val.identifierSubject:' + val.identifierSubject);
         
         var booklist = $scope.booklist;
-        console.log('booklist:' + booklist);
+
         booklist.$update(function () {
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -288,9 +287,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     };
 
     $scope.showBookForm = function () {
-        $scope.message = "Show Form Button Clicked";
-        console.log($scope.message);
-
         var modalInstance = $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-book-form.html',
             controller: ModalBookInstanceCtrl,
@@ -330,9 +326,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     };
 
     $scope.showEmailForm = function () {
-        $scope.message = "Show Form Button Clicked";
-        console.log($scope.message);
-
         var modalInstance = $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-email-form.html',
             controller: ModalEmailInstanceCtrl,
