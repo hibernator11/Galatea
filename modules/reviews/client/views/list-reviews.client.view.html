@@ -1,5 +1,6 @@
 <section ng-controller="ReviewsController" ng-init="find()" class="container">
 
+ <div class="row">
       <div class="menu col-xs-12">
           <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
              <i class="glyphicon glyphicon-plus"></i><br>
@@ -18,7 +19,8 @@
              Ayuda
           </a>
       </div>
-  
+ </div>
+ <div class="row">  
       <div class="list-group col-xs-12">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
@@ -55,6 +57,7 @@
         </div> <!-- media -->
       </a> 
       </div> <!-- repeat -->
+ </div>
 
       <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
         No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
