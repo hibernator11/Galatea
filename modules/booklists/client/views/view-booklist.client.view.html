@@ -1,32 +1,30 @@
 <section ng-controller="BooklistsController" ng-init="findOne()" class="container">
 
-<div class="row">
-    <div class="col-md-12">
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
           <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
-      <div class="btn-group btn-group-justified toolbar menu" ng-show="authentication.user._id == booklist.user._id">
-          <a href="#" class="btn btn-border col-sm-3" ui-sref="booklists.edit({booklistId: booklist._id})">
+      <div class="menu col-xs-12" ng-show="authentication.user._id == booklist.user._id">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="booklists.edit({booklistId: booklist._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar Lista
           </a>
-          <a href="#" class="btn btn-border col-sm-3" ng-click="showBookForm()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showBookForm()">
              <i class="glyphicon glyphicon-plus"></i><br>
              Añadir obras
           </a>
-          <a href="#" class="btn btn-border col-sm-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?">
              <i class="glyphicon glyphicon-trash"></i><br>
              Eliminar lista
           </a>
-          <a href="#" class="btn col-sm-3">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
 
-      <div class="alert alert-success" ng-show="messageok">
+      <div class="alert alert-success col-xs-12" ng-show="messageok">
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
        <strong>Resultado:</strong> {{messageok}}
       </div>
@@ -95,7 +93,5 @@
        <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
      </div>
 
-   </div><!--/col-span-9-->
- </div> <!-- row -->
 </section>
 <footer-generic></footer-generic>
