@@ -1571,6 +1571,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.hoveringOver = function(value) {
       $scope.overStar = value;
       $scope.percent = 100 * (value / $scope.max);
+      console.log('value:' + value);
+      if(value === 1 || value === 2)
+        $scope.overStar = 'Me gusta un poco';
+      else if(value === 3)
+        $scope.overStar = 'Me gusta bastante';
+      else if(value === 4)
+        $scope.overStar = 'Me gusta mucho';
+      else if(value === 5)
+        $scope.overStar = 'Me encanta';
     };
  
     $scope.addComment = function() {

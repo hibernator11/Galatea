@@ -48,11 +48,11 @@
       <h1 class="title">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h1>
       <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 
-      <div>
+      <p>
       <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="custom-icons-1" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()"></rating>
 
-      <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
-      </div>
+      <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+      </p>
 
       <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
      </div>
