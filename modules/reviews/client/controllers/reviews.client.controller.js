@@ -77,6 +77,11 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
 
     $scope.messageok = '';
     $scope.warningopen = true;
+
+    $scope.max = 5;
+    $scope.rate = 0;
+    $scope.isReadonly = false;
+    $scope.percent = 0;
     
     // Create new Review
     $scope.create = function (isValid) {
@@ -249,15 +254,14 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         }
     });
     
-    $scope.max = 5;
-    $scope.isReadonly = false;
-
     $scope.hoveringOver = function(value) {
       $scope.overStar = value;
       $scope.percent = 100 * (value / $scope.max);
-      console.log('value:' + value);
-      if(value === 1 || value === 2)
-        $scope.overStar = 'Me gusta un poco';
+
+      if(value === 1)
+        $scope.overStar = 'Me gusta poco';
+      else if(value === 2)
+        $scope.overStar = 'Me gusta';
       else if(value === 3)
         $scope.overStar = 'Me gusta bastante';
       else if(value === 4)
@@ -265,6 +269,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
       else if(value === 5)
         $scope.overStar = 'Me encanta';
     };
+
  
     $scope.addComment = function() {
       if ($scope.form.commentForm.$valid) {
