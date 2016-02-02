@@ -1553,7 +1553,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     
     $scope.$watch('rate', function(value) {
 
-       if (!angular.isUndefined($scope.rate) && !angular.isUndefined($scope.review.ratings) && !$scope.isReadonly) {
+       if (!angular.isUndefined($scope.rate) && 
+           !angular.isUndefined($scope.review) &&
+           !angular.isUndefined($scope.review.ratings) && !$scope.isReadonly) {
             
           var rating = {
                 rate: value,

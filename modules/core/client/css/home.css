@@ -203,7 +203,7 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
 /* menus */
 .menu {
     background: #47a3da;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     margin-bottom: 20px;
     padding-right: 0px;
     padding-left: 0px;

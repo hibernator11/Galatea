@@ -1,6 +1,12 @@
 <section ng-controller="ReviewsController" ng-init="find()" class="container">
 
  <div class="row">
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+      </ol>
+ </div>
+
+ <div class="row">
       <div class="menu col-xs-12">
           <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
              <i class="glyphicon glyphicon-plus"></i><br>
