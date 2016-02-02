@@ -498,5 +498,7 @@ span.rating {
 
 /* end callout */
 
-
+.img-login {
+    cursor:pointer;
+}
 

@@ -1,5 +1,5 @@
 <div ng-controller="AuthenticationController">
-  <h3 class="col-md-12 text-center">O con tu cuenta</h3>
+  <h3 class="col-md-12 text-center section-title">O con tu cuenta</h3>
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
     <form name="userForm" ng-submit="signin(userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
@@ -18,9 +18,9 @@
           </div>
         </div>
         <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary">Entrar</button>
-          &nbsp; &nbsp;
-          <a ui-sref="authentication.signup">Registrarse</a>
+          <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+          &nbsp; &nbsp;¿No tienes cuenta?
+          <a ui-sref="authentication.signup">Regístrate</a>
         </div>
         <div class="text-center forgot-password">
           <a ui-sref="password.forgot">¿Olvidaste tu contraseña?</a>
