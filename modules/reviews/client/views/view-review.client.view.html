@@ -60,7 +60,7 @@
 
       <h4>Obra utilizada para la reseña</h4>
       <div class="well well-sm">
-          <div class="row" ng-show="review.uuid">
+          <div class="row" ng-if="review.uuid">
             <div class="col-xs-3 col-md-3 text-center">
                <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
             </div>
