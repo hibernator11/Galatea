@@ -13,8 +13,8 @@
       <div class="caption">
         <h4>{{ reviews[0].title | limitTo: 200 }}{{ reviews[0].title.length > 200 ? '...' : '' }}</h4>
         <p style="font-style: italic">por {{ reviews[0].user.displayName }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
     </div>
 
@@ -28,8 +28,8 @@
       <div class="caption">
         <h5>{{ reviews[1].title | limitTo: 30 }}{{ reviews[1].title.length > 30 ? '...' : '' }}</h5>
         <p style="font-style: italic">por {{ reviews[1].user.displayName | limitTo: 30 }}{{reviews[1].user.displayName > 30 ? '...' : '' }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
     </div>
     <div ng-click="openReview(reviews[2]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
@@ -39,8 +39,8 @@
       <div class="caption">
         <h5>{{ reviews[2].title | limitTo: 30 }}{{ reviews[2].title.length > 30 ? '...' : '' }}</h5>
         <p style="font-style: italic">por {{ reviews[2].user.displayName | limitTo: 30 }}{{reviews[2].user.displayName > 30 ? '...' : '' }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
     </div>
   </div> 
@@ -54,8 +54,8 @@
       <div class="caption">
         <h4>{{ reviews[3].title | limitTo: 200 }}{{reviews[3].title.length > 200 ? '...' : '' }}</h4>
         <pstyle="font-style: italic">por {{reviews[3].user.displayName }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
     </div>
   </div>
@@ -68,8 +68,8 @@
       <div class="caption">
         <h5>{{ reviews[4].title | limitTo: 30 }}{{reviews[4].title.length > 30 ? '...' : '' }}</h5>
         <p style="font-style: italic">por {{ reviews[4].user.displayName | limitTo: 30 }}{{reviews[4].user.displayName > 30 ? '...' : '' }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
    </div>
    <div ng-click="openReview(reviews[5]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
@@ -79,8 +79,8 @@
       <div class="caption">
         <h5>{{ reviews[5].title | limitTo: 30 }}{{reviews[5].title.length > 30 ? '...' : '' }}</h5>
         <p style="font-style: italic">por {{ reviews[5].user.displayName | limitTo: 30 }}{{reviews[5].user.displayName > 30 ? '...' : '' }}</p>
-        <p><a href="" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-danger" rel="tooltip" title="Zoom">Leer</a>
-        <a href="" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-default" rel="tooltip" title="Download now">Comentar</a></p>
+        <p><a href="#" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="top">Leer</a>
+        <a href="#" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="top">Comentar</a></p>
       </div>
     </div>
   </div>
