@@ -37,6 +37,7 @@
             <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
             <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
             <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
+            <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} Valoraciones</span>
             <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
                 <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}

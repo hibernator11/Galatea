@@ -239,7 +239,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 user: $scope.authentication.user
           };
 
-          console.log('entra rating:' + rating.rate);
           $scope.review.ratings.push(rating);
 
           $scope.review.$update(function () {

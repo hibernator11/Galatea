@@ -39,11 +39,16 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var review = req.review;
 
-  review.title = req.body.title;
-  review.comments = req.body.comments;
-  review.content = req.body.content;
-  review.status = req.body.status;
-  review.ratings = req.body.ratings;
+  if(req.review.user.id === req.user.id){
+      review.title = req.body.title;
+      review.content = req.body.content;
+      review.status = req.body.status;
+      review.comments = req.body.comments;
+      review.ratings = req.body.ratings;
+  }else{
+      review.ratings = req.body.ratings;
+      review.comments = req.body.comments;
+  }
 
   review.save(function (err) {
     if (err) {

@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If a review is being processed and the current user created it then allow any manipulation
-  if (req.review && req.user && req.review.user.id === req.user.id) {
+  if (req.review && req.user /*&& req.review.user.id === req.user.id*/) {
     return next();
   }
 
