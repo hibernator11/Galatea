@@ -128,7 +128,7 @@
       <hr>
      </div> <!-- last comments -->
      
-     <div>
+     <div ng-show="review.status === 'public'">
         <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
          <div class="form-group">
            <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
