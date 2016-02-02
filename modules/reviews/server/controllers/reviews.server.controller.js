@@ -43,6 +43,7 @@ exports.update = function (req, res) {
   review.comments = req.body.comments;
   review.content = req.body.content;
   review.status = req.body.status;
+  review.ratings = req.body.ratings;
 
   review.save(function (err) {
     if (err) {

@@ -257,12 +257,23 @@ input[type="text"], input[type="password"], input[type="search"], input[type="ur
 }
 
 .navbar-default .navbar-brand {
-    font: normal 18px 'Cookie', cursive;
+    font: normal 24px 'Cookie', cursive;
+    padding: 10px 15px;
 }
 
 .navbar-default .navbar-brand span {
     color: #B43C2C;
 }
+
+/* begin rating */
+.glyphicon.ng-scope.glyphicon-star {
+    font-size: 2em;
+}
+.glyphicon.ng-scope.glyphicon-star-empty {
+    font-size: 2em;
+}
+
+/* end rating */
 
 /* begin footer */
 

@@ -1468,7 +1468,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         var review = $scope.review;
 
         review.$update(function () {
-            $scope.messageok = 'La reseña se ha modificado correctamente.';console.log('$scope.messageok:' + $scope.messageok);
+            $scope.messageok = 'La reseña se ha modificado correctamente.';
             $location.path('reviews/' + review._id);
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -1535,6 +1535,45 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
       });
     };
 
+    $scope.$watch('review.ratings', function(value) {
+        if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
+            angular.forEach($scope.review.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                }
+            });
+        }
+    });
+    
+    $scope.$watch('rate', function(value) {
+
+       if (!angular.isUndefined($scope.rate) && !angular.isUndefined($scope.review.ratings) && !$scope.isReadonly) {
+            
+          var rating = {
+                rate: value,
+                user: $scope.authentication.user
+          };
+
+          console.log('entra rating:' + rating.rate);
+          $scope.review.ratings.push(rating);
+
+          $scope.review.$update(function () {
+              $scope.messageok = 'La reseña se ha valorado correctamente.';
+          }, function (errorResponse) {
+              $scope.error = errorResponse.data.message;
+          });
+        }
+    });
+    
+    $scope.max = 5;
+    $scope.isReadonly = false;
+
+    $scope.hoveringOver = function(value) {
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+    };
+ 
     $scope.addComment = function() {
       if ($scope.form.commentForm.$valid) {
             
@@ -1607,9 +1646,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     $scope.showEmailForm = function () {
-        $scope.message = "Show Form Button Clicked";
-        console.log($scope.message);
-
         var modalInstance = $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-email-form.html',
             controller: ModalEmailInstanceCtrl,

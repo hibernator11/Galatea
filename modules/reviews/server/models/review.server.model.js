@@ -43,6 +43,17 @@ var ReviewSchema = new Schema({
       default: Date.now
     }
   }],
+  ratings: [{
+    rate: Number,
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   identifierWork: {
     type: String,
   },
