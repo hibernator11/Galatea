@@ -93,7 +93,7 @@
            <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
       </div> <!- row -->
      
-      <div class="well well-sm col-md-3 col-sm-6 col-xs-8 col-xs-offset-2 text-center">
+      <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
          <a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">
              <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
