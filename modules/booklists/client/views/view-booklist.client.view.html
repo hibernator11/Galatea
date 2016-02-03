@@ -52,7 +52,9 @@
       <div ng-repeat="book in booklist.books">
        <div class="row">
          <div class="col-sm-3 col-xs-3 col-md-2">
-           <a href="#" class=""><img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(book.uuid)}}/portada/Cover.jpg" alt="{{book.title}}" class="img-responsive"></a>
+           <a href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank">
+             <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(book.uuid)}}/portada/Cover.jpg" alt="{{book.title}}" class="img-responsive">
+           </a>
          </div>
          <div class="col-sm-7 col-xs-9 col-md-8">
            <h4 class="title">{{ book.title | limitTo: 200 }}{{book.title.length > 200 ? '...' : ''}}</h4>
@@ -77,9 +79,9 @@
            <p class="text-muted" ng-show="book.comments">{{book.comments}}</p>
          </div>
          <div class="col-md-2 col-md-offset-0 col-xs-8 col-xs-offset-2">
-           <button tooltip="Ver obra en catálogo" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-danger btn-sm full-width">
+           <a tooltip="Ver obra en catálogo" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
-           </button>
+           </a>
            <button tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar obra
            </button>
