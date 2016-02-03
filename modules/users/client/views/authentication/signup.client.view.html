@@ -38,7 +38,13 @@
           <div ng-messages="userForm.password.$error" role="alert">
             <p class="help-block error-text" ng-message="required">La contraseña es requerida.</p>
             <div ng-repeat="passwordError in passwordErrors">
-              <p class="help-block error-text" ng-show="userForm.password.$error.requirements">{{passwordError}}</p>
+              
+              <p ng-if="passwordError === 'The password must be at least 10 characters long.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener al menos 10 caracteres.</p>
+              <p ng-if="passwordError === 'The password must contain at least one uppercase letter.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener al menos un carácter en mayúscula.</p>
+              <p ng-if="passwordError === 'The password must contain at least one number.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener al menos un número.</p>
+              <p ng-if="passwordError === 'The password must contain at least one special character.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener al menos un carácter especial.</p>
+              <p ng-if="passwordError === 'The password must be fewer than 128 characters.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener menos de 128 caracteres.</p>
+              <p ng-if="passwordError === 'The password may not contain sequences of three or more repeated characters.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña no debe contener secuencias de 3 o más caracteres repetidos.</p>
             </div>
           </div>
         </div>

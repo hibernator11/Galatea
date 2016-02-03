@@ -94,7 +94,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must be at least 10 characters long.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña debe incluir al menos 10 caracteres.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -106,7 +106,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must be fewer than 128 characters.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña debe ser inferior a 128 caracteres.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -118,7 +118,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password may not contain sequences of three or more repeated characters.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña no debe contener secuencias de 3 o más caracteres repetidos.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -130,7 +130,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one uppercase letter.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña debe incluir al menos un carácter en mayúscula.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -142,7 +142,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one number.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña debe incluir al menos un número.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -154,7 +154,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one special character.']);
+      expect(scope.passwordErrors).toEqual(['La contraseña debe incluir al menos un carácter especial.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });

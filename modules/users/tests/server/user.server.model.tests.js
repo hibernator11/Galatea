@@ -268,7 +268,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = 'P@$$w0rd!';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must be at least 10 characters long.');
+        err.errors.password.message.should.equal('La contraseña debe incluir al menos 10 caracteres.');
         done();
       });
     });
@@ -278,7 +278,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = ')!/uLT="lh&:`6X!]|15o!$!TJf,.13l?vG].-j],lFPe/QhwN#{Z<[*1nX@n1^?WW-%_.*D)m$toB+N7z}kcN#B_d(f41h%w@0F!]igtSQ1gl~6sEV&r~}~1ub>If1c+';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must be fewer than 128 characters.');
+        err.errors.password.message.should.equal('La contraseña debe ser inferior a 128 caracteres.');
         done();
       });
     });
@@ -288,7 +288,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = 'P@$$w0rd!!!';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password may not contain sequences of three or more repeated characters.');
+        err.errors.password.message.should.equal('La contraseña no debe contener secuencias de 3 o más caracteres repetidos.');
         done();
       });
     });
@@ -298,7 +298,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = 'p@$$w0rd!!';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one uppercase letter.');
+        err.errors.password.message.should.equal('La contraseña debe incluir al menos un carácter en mayúscula.');
         done();
       });
     });
@@ -308,7 +308,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = 'P@$$word!!';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one number.');
+        err.errors.password.message.should.equal('La contraseña debe incluir al menos un número.');
         done();
       });
     });
@@ -318,7 +318,7 @@ describe('User Model Unit Tests:', function () {
       _user1.password = 'Passw0rdss';
 
       _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one special character.');
+        err.errors.password.message.should.equal('La contraseña debe incluir al menos un carácter especial.');
         done();
       });
     });
