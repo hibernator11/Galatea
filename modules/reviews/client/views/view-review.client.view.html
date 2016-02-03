@@ -43,71 +43,68 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
+
      <hr>
-     <div>
-      <h1 class="title">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h1>
-      <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
+     <div class="row">
+       <div class="col-md-9">
+         <h1 class="title">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h1>
+         <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+         <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 
-      <div class="well" ng-show="review.status === 'public'">
-        <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
-        <h4 ng-show="isReadonly">Tu valoración</h4>
-        <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="review.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+         <div class="well" ng-show="review.status === 'public'">
+           <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
+           <h4 ng-show="isReadonly">Tu valoración</h4>
+           <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="review.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
 
-        <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
-      </div>
+           <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+         </div>
 
-      <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
-     </div>
-     <hr>
 
-      <h4>Obra utilizada para la reseña</h4>
-      <div class="well well-sm">
-          <div class="row" ng-if="review.uuid">
-            <div class="col-xs-3 col-md-3 text-center">
-               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9 section-box">
-              <h4><a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
-              <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
-              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-              <div class="row">
-                <div class="col-md-12 .col-xs-12">
-                  <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                  <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-                  <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                  <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+         <div class="row">
+             <div class="col-md-12 .col-xs-12">
+                <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+                <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
+                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
 
-                  <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
-
-                    <span ng-switch-when="audio">
-                      <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
-                    </span>
-                    <span ng-switch-when="video">
-                      <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
-                    </span>
-                    <span ng-switch-when="texto">
-                      <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
-                    </span>
-                    <span ng-switch-default>
-                      {{review.mediaType}}
-                    </span>
+                <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                  <span ng-switch-when="audio">
+                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
                   </span>
-                </div>
-                <div class="col-md-12 .col-xs-12 social-links" ng-show="review.status === 'public'">
-                    <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
-                    <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-                    <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                </div>
-              </div>
-            </div>
-          </div>
-      </div>
+                  <span ng-switch-when="video">
+                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                  </span>
+                  <span ng-switch-when="texto">
+                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                  </span>
+                  <span ng-switch-default>
+                     {{review.mediaType}}
+                  </span>
+                </span>
+             </div>
+             <div class="col-md-12 .col-xs-12 social-links" ng-show="review.status === 'public'">
+                 <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+                 <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+                 <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+             </div>
+           </div> <!-- col-md-12 .col-xs-12-->
 
-     <hr>
+           <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
+      </div> <!- row -->
      
-     <a name="recentComments"></a> 
-     <div ng-show="review.comments.length > 0">
+      <div class="well well-sm col-md-3">
+         <a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">
+             <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
+         </a><br>
+         <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
+      </div>
+   </div>
+   </div>
+   
+   <hr>
+     
+   <div ng-show="review.comments.length > 0">
       <h4>Últimos comentarios</h4>	
 
       <div ng-repeat="comment in review.comments" class="media">
