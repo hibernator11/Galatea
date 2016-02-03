@@ -61,7 +61,7 @@
 
 
          <div class="row">
-             <div class="col-md-12 .col-xs-12">
+             <div class="col-md-12 col-xs-12">
                 <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                 <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
                 <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
@@ -83,7 +83,7 @@
                   </span>
                 </span>
              </div>
-             <div class="col-md-12 .col-xs-12 social-links" ng-show="review.status === 'public'">
+             <div class="col-md-12 col-xs-12 social-links" ng-show="review.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
@@ -93,9 +93,9 @@
            <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
       </div> <!- row -->
      
-      <div class="well well-sm col-md-3">
+      <div class="well well-sm col-md-3 col-sm-6 col-xs-8 col-xs-offset-2 text-center">
          <a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">
-             <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
+             <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
          <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
       </div>
