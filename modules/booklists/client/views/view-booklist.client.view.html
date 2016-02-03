@@ -76,11 +76,11 @@
            </p>
            <p class="text-muted" ng-show="book.comments">{{book.comments}}</p>
          </div>
-         <div class="col-sm-2 col-xs-12 col-md-2">
-           <a style="width: 100%;" tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-warning btn-sm">
+         <div class="col-md-2 col-md-offset-0 col-xs-8 col-xs-offset-2">
+           <button tooltip="Ver obra en catálogo" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
-           </a>
-           <button style="margin-top:3px;width: 100%;" type="button" ng-click="removeBook(book)" class="btn btn-warning btn-sm">
+           </button>
+           <button tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar obra
            </button>
          </div>
