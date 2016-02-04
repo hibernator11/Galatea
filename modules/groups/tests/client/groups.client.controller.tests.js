@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-  // Booklists Controller Spec
-  describe('Booklists Controller Tests', function () {
+  // Groups Controller Spec
+  describe('Groups Controller Tests', function () {
     // Initialize global variables
-    var BooklistsController,
+    var GroupsController,
       scope,
       $httpBackend,
       $stateParams,
       $location,
       Authentication,
-      Booklists,
-      mockBooklist;
+      Groups,
+      mockGroup;
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -38,7 +38,7 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _Authentication_, _Booklists_) {
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _Authentication_, _Groups_) {
       // Set a new global scope
       scope = $rootScope.$new();
 
@@ -47,12 +47,12 @@
       $httpBackend = _$httpBackend_;
       $location = _$location_;
       Authentication = _Authentication_;
-      Booklists = _Booklists_;
+      Groups = _Groups_;
 
-      // create mock booklist
-      mockBooklist = new Booklists({
+      // create mock group
+      mockGroup = new Groups({
         _id: '525a8422f6d0f87f0e407a33',
-        title: 'A Booklist about MEAN',
+        title: 'A Group about MEAN',
         content: 'MEAN rocks!'
       });
 
@@ -61,62 +61,62 @@
         roles: ['user']
       };
 
-      // Initialize the Booklists controller.
-      BooklistsController = $controller('BooklistsController', {
+      // Initialize the Groups controller.
+      GroupsController = $controller('GroupsController', {
         $scope: scope
       });
     }));
 
-    it('$scope.find() should create an array with at least one booklist object fetched from XHR', inject(function (Booklists) {
+    it('$scope.find() should create an array with at least one group object fetched from XHR', inject(function (Groups) {
       // Create a sample books array that includes the new book
-      var sampleBooklists = [mockBooklist];
+      var sampleGroups = [mockGroup];
 
       // Set GET response
-      $httpBackend.expectGET('api/booklists').respond(sampleBooklists);
+      $httpBackend.expectGET('api/groups').respond(sampleGroups);
 
       // Run controller functionality
       scope.find();
       $httpBackend.flush();
 
       // Test scope value
-      expect(scope.booklists).toEqualData(sampleBooklists);
+      expect(scope.groups).toEqualData(sampleGroups);
     }));
 
-    it('$scope.findOne() should create an array with one booklist object fetched from XHR using a booklistId URL parameter', inject(function (Booklists) {
+    it('$scope.findOne() should create an array with one group object fetched from XHR using a groupId URL parameter', inject(function (Groups) {
       // Set the URL parameter
-      $stateParams.booklistId = mockBooklist._id;
+      $stateParams.groupId = mockGroup._id;
 
       // Set GET response
-      $httpBackend.expectGET(/api\/books\/([0-9a-fA-F]{24})$/).respond(mockBooklist);
+      $httpBackend.expectGET(/api\/books\/([0-9a-fA-F]{24})$/).respond(mockGroup);
 
       // Run controller functionality
       scope.findOne();
       $httpBackend.flush();
 
       // Test scope value
-      expect(scope.booklist).toEqualData(mockBooklist);
+      expect(scope.group).toEqualData(mockGroup);
     }));
 
     describe('$scope.create()', function () {
-      var sampleBooklistPostData;
+      var sampleGroupPostData;
 
       beforeEach(function () {
         // Create a sample book object
-        sampleBooklistPostData = new Booklists({
-          title: 'A Booklist about MEAN',
+        sampleGroupPostData = new Groups({
+          title: 'A Group about MEAN',
           content: 'MEAN rocks!'
         });
 
         // Fixture mock form input values
-        scope.title = 'A Booklist about MEAN';
+        scope.title = 'A Group about MEAN';
         scope.content = 'MEAN rocks!';
 
         spyOn($location, 'path');
       });
 
-      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Booklists) {
+      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Groups) {
         // Set POST response
-        $httpBackend.expectPOST('api/booklists', sampleBooklistPostData).respond(mockBooklist);
+        $httpBackend.expectPOST('api/groups', sampleGroupPostData).respond(mockGroup);
 
         // Run controller functionality
         scope.create(true);
@@ -127,12 +127,12 @@
         expect(scope.content).toEqual('');
 
         // Test URL redirection after the book was created
-        expect($location.path.calls.mostRecent().args[0]).toBe('booklists/' + mockBooklist._id);
+        expect($location.path.calls.mostRecent().args[0]).toBe('groups/' + mockGroup._id);
       }));
 
       it('should set scope.error if save error', function () {
         var errorMessage = 'this is an error message';
-        $httpBackend.expectPOST('api/booklists', sampleBooklistPostData).respond(400, {
+        $httpBackend.expectPOST('api/groups', sampleGroupPostData).respond(400, {
           message: errorMessage
         });
 
@@ -145,25 +145,25 @@
 
     describe('$scope.update()', function () {
       beforeEach(function () {
-        // Mock booklist in scope
-        scope.booklist = mockBooklist;
+        // Mock group in scope
+        scope.group = mockGroup;
       });
 
-      it('should update a valid booklist', inject(function (Booklists) {
+      it('should update a valid group', inject(function (Groups) {
         // Set PUT response
-        $httpBackend.expectPUT(/api\/booklists\/([0-9a-fA-F]{24})$/).respond();
+        $httpBackend.expectPUT(/api\/groups\/([0-9a-fA-F]{24})$/).respond();
 
         // Run controller functionality
         scope.update(true);
         $httpBackend.flush();
 
         // Test URL location to new object
-        expect($location.path()).toBe('/booklists/' + mockBooklist._id);
+        expect($location.path()).toBe('/groups/' + mockGroup._id);
       }));
 
-      it('should set scope.error to error response message', inject(function (Booklists) {
+      it('should set scope.error to error response message', inject(function (Groups) {
         var errorMessage = 'error';
-        $httpBackend.expectPUT(/api\/booklists\/([0-9a-fA-F]{24})$/).respond(400, {
+        $httpBackend.expectPUT(/api\/groups\/([0-9a-fA-F]{24})$/).respond(400, {
           message: errorMessage
         });
 
@@ -174,36 +174,36 @@
       }));
     });
 
-    describe('$scope.remove(booklist)', function () {
+    describe('$scope.remove(group)', function () {
       beforeEach(function () {
-        // Create new booklists array and include the booklist
-        scope.booklists = [mockBooklist, {}];
+        // Create new groups array and include the group
+        scope.groups = [mockGroup, {}];
 
         // Set expected DELETE response
-        $httpBackend.expectDELETE(/api\/booklists\/([0-9a-fA-F]{24})$/).respond(204);
+        $httpBackend.expectDELETE(/api\/groups\/([0-9a-fA-F]{24})$/).respond(204);
 
         // Run controller functionality
-        scope.remove(mockBooklist);
+        scope.remove(mockGroup);
       });
 
-      it('should send a DELETE request with a valid booklistId and remove the book from the scope', inject(function (Booklists) {
-        expect(scope.booklists.length).toBe(1);
+      it('should send a DELETE request with a valid groupId and remove the book from the scope', inject(function (Groups) {
+        expect(scope.groups.length).toBe(1);
       }));
     });
 
     describe('scope.remove()', function () {
       beforeEach(function () {
         spyOn($location, 'path');
-        scope.booklist = mockBooklist;
+        scope.group = mockGroup;
 
-        $httpBackend.expectDELETE(/api\/booklists\/([0-9a-fA-F]{24})$/).respond(204);
+        $httpBackend.expectDELETE(/api\/groups\/([0-9a-fA-F]{24})$/).respond(204);
 
         scope.remove();
         $httpBackend.flush();
       });
 
-      it('should redirect to booklists', function () {
-        expect($location.path).toHaveBeenCalledWith('booklists');
+      it('should redirect to groups', function () {
+        expect($location.path).toHaveBeenCalledWith('groups');
       });
     });
   });

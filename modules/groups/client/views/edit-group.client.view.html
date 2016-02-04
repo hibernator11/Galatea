@@ -1,0 +1,62 @@
+<section ng-controller="GroupsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == group.user._id">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="groups.list()">Mis reseñas</a></li>
+          <li class="active">{{ group.title | limitTo: 100 }}{{group.title.length > 100 ? '...' : ''}}</li>
+      </ol>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+      <div class="top-icons">
+          <a tooltip="Volver" tooltip-placement="top" ng-href="groups/{{group._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
+      </div>
+
+
+    <form name="groupForm" class="form-horizontal" ng-submit="update(groupForm.$valid)">
+
+      <fieldset>
+
+        <div class="well" style="margin-right: 0px;margin-left: 0px;">
+         <div class="bs-callout bs-callout-primary">
+          <h4>Modifica la reseña</h4>
+          Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
+         </div>
+
+         <div class="form-group input-panel">
+          <textarea ui-tinymce name="content" ng-model="group.content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+         </div>
+
+         <div class="form-group input-panel" style="text-align:right">
+          <input type="submit" value="Guardar" class="btn btn-primary">
+          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+         </div>
+        </div> <!-- well -->
+      </fieldset>
+    </form>
+
+
+      <div class="row well" style="margin-right: 0px;margin-left: 0px;">
+            <div class="col-xs-3 col-md-3" ng-show="group.uuid">
+               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(group.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
+              <p>{{ group.title | limitTo: 200 }}{{group.title.length > 200 ? '...' : ''}}</p>
+              <p class="text-muted" ng-show="group.reproduction" ng-bind-html="group.reproduction | htmlLimit"></p>
+              <div class="row">
+              <div class="col-md-12">
+                  <span class="label label-info" ng-show="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                  <span class="label label-info" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} Comentarios</span>
+                  <span class="label label-info" ng-show="group.language"><i class="glyphicon glyphicon-tag"></i> {{group.language}}</span>
+                  <span class="label label-info" ng-show="group.mediatype"><i class="glyphicon glyphicon-tag"></i> {{group.mediatype}}</span>
+              </div>
+              </div>
+            </div>
+      </div>
+
+</section>
+<footer-generic></footer-generic>

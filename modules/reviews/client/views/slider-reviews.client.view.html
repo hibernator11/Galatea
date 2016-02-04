@@ -53,7 +53,7 @@
       </div>
       <div class="caption">
         <h4>{{ reviews[3].title | limitTo: 200 }}{{reviews[3].title.length > 200 ? '...' : '' }}</h4>
-        <pstyle="font-style: italic">por {{reviews[3].user.displayName }}</p>
+        <p style="font-style: italic">por {{reviews[3].user.displayName }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>

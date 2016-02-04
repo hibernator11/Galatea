@@ -189,7 +189,7 @@ div.tooltip-inner {
 .section-title {
     font-weight: 400;
     margin-top: 30px;
-    color: #f7504f;
+    color: #B43C2C;
     line-height: 1.5;
     font-size: 36px;
     text-align: center;
@@ -302,23 +302,17 @@ span.rating {
     margin-top: 80px;
 }
 
-.footer-distributed .footer-icons {
-    margin-top: 25px;
-}
-
 .footer-distributed .footer-icons a {
     display: inline-block;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     background-color: #33383b;
     border-radius: 2px;
     font-size: 20px;
     color: #ffffff;
     text-align: center;
-    line-height: 35px;
-    margin-right: 3px;
-    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .footer-distributed .footer-links {
@@ -344,7 +338,7 @@ span.rating {
     color: inherit;
 }
 
-.footer-distributed .footer-company-name {
+.footer-distributed .footer-company-name, .footer-distributed .footer-company-name a {
     color: #8f9296;
     font-size: 14px;
     font-weight: normal;
@@ -359,7 +353,7 @@ span.rating {
     font-size: 48px;
     line-height: 56px;
     text-align: left;
-    background: #bfbfbf url(/modules/core/client/img/brand/fondo_bvmc.png) no-repeat left bottom -100px;
+    background: #bfbfbf url(/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png) no-repeat left bottom -100px;
     background-repeat: no-repeat;
     background-size: cover!important;
     min-height: 500px;

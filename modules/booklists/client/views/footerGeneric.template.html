@@ -1,31 +1,30 @@
-<footer class="footer-distributed">
+<footer class="footer-distributed" ng-controller="BooklistsController">
    <div class="container">
     <div class="row">
-    <div class="col-xs-8">
+      <div class="col-xs-8">
         <h3>i<span>BVMC</span></h3>
         <p class="footer-links">
           <a href="/">Inicio</a>
           ·
+          <a target="_blank" href="http://www.cervantesvirtual.com">Biblioteca Virtual Miguel de Cervantes</a>
+          ·
           <a target="_blank" href="http://blog.cervantesvirtual.com">Blog</a>
           ·
           <a target="_blank" href="http://fundacion.cervantesvirtual.com">Sobre nosotros</a>
-          ·
-          <a target="_blank" href="http://www.cervantesvirtual.com">Biblioteca virtual</a>
         </p>
-        <p class="footer-company-name">Fundación Miguel de Cervantes Virtual © 2015</p>
-    </div>
+        <p class="footer-company-name"><a target="_blank" href="http://fundacion.cervantesvirtual.com">Fundación Biblioteca Virtual Miguel de Cervantes</a> © {{year | date:'yyyy'}}</p>
+      </div>
 
 
-    <div class="col-xs-4">
-
+      <div class="col-xs-4">
         <div class="footer-icons">
-            <a tooltip="Ir a Facebook" tooltip-placement="top" href="http://www.facebook.com/pages/Biblioteca-Virtual-Miguel-de-Cervantes/115005045196224?v=wall" target="_blank"><i class="fa fa-facebook"></i></a>
-            <a tooltip="Ir a Twitter" tooltip-placement="top" href="http://twitter.com/fbvmc" target="_blank"><i class="fa fa-twitter"></i></a>
-            <a tooltip="Ir a Youtube" tooltip-placement="top" href="http://www.youtube.com/cervantesvirtual" target="_blank"><i class="fa fa-youtube"></i></a>
-            <a tooltip="Ir a Linkedin" tooltip-placement="top"  href="https://www.linkedin.com/grps?home=&gid=6737063" target="_blank"><i class="fa fa-linkedin"></i></a>
-            <a tooltip="Ir a Flickr" tooltip-placement="top" href="https://www.flickr.com/photos/fbvmc/" target="_blank"><i class="fa fa-flickr"></i></a>
+            <a tooltip="Ir a Facebook" tooltip-placement="top" href="http://www.facebook.com/pages/Biblioteca-Virtual-Miguel-de-Cervantes/115005045196224?v=wall" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
+            <a tooltip="Ir a Twitter" tooltip-placement="top" href="http://twitter.com/fbvmc" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>
+            <a tooltip="Ir a Youtube" tooltip-placement="top" href="http://www.youtube.com/cervantesvirtual" target="_blank"><i class="fa fa-youtube fa-2x"></i></a>
+            <a tooltip="Ir a Linkedin" tooltip-placement="top"  href="https://www.linkedin.com/grps?home=&gid=6737063" target="_blank"><i class="fa fa-linkedin fa-2x"></i></a>
+            <a tooltip="Ir a Flickr" tooltip-placement="top" href="https://www.flickr.com/photos/fbvmc/" target="_blank"><i class="fa fa-flickr fa-2x"></i></a>
         </div>
-    </div>
+      </div>
     </div> <!-- row -->
 </div>
 </footer>

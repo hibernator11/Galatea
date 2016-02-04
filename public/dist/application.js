@@ -123,6 +123,11 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('groups', ['ui.tinymce']);
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('reviews', ['ui.tinymce']);
 
 'use strict';
@@ -520,6 +525,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     $scope.warningopen = true;
     $scope.messageok = '';
+    
+    $scope.year = new Date();
 
     // Create new Booklist
     $scope.create = function (isValid) {
@@ -1244,6 +1251,487 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 'use strict';
 
 // Configuring the reviews module
+angular.module('groups').run(['Menus',
+  function (Menus) {
+    // Add the review dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Grupos',
+      state: 'groups',
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'groups', {
+      title: 'Mis grupos',
+      state: 'groups.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'groups', {
+      title: 'Crear Grupo',
+      state: 'groups.create',
+      roles: ['user']
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('groups').config(['$stateProvider',
+  function ($stateProvider) {
+    // groups state routing
+    $stateProvider
+      .state('groups', {
+        abstract: true,
+        url: '/groups',
+        template: '<ui-view/>'
+      })
+      .state('groups.list', {
+        url: '',
+        templateUrl: 'modules/groups/client/views/list-groups.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('groups.create', {
+        url: '/create',
+        templateUrl: 'modules/groups/client/views/create-group.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('groups.view', {
+        url: '/:groupId',
+        templateUrl: 'modules/groups/client/views/view-group.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('groups.edit', {
+        url: '/:groupId/edit',
+        templateUrl: 'modules/groups/client/views/edit-group.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      });
+  }
+]);
+
+'use strict';
+
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
+// controller for modal email window
+var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            console.log('contact form valid');
+            /*$http({
+                method  : 'POST',
+                url     : 'contact-form.php',
+                data    : $.param($scope.formData),  //param method from jQuery
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
+            }).success(function(data){
+                console.log(data);
+                if (data.success) { //success comes from the return json object*/
+                    $scope.submitButtonDisabled = true;
+                    //$scope.resultMessage = data.message;
+                    //$scope.result='bg-success';
+                    $scope.result = {
+                        css: 'bg-success',
+                        message: 'Correo enviado correctamente'
+                    };
+
+                /*} else {
+                    $scope.submitButtonDisabled = false;
+                    $scope.resultMessage = data.message;
+                    $scope.result='bg-danger';
+                }
+            });*/
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Failed <img src="http://www.chaosm.net/blog/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">  Please fill out all the fields.';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
+// Reviews controller
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups',
+  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups) {
+    $scope.authentication = Authentication;
+
+    $scope.location = $location.absUrl();
+
+    $scope.identifierWork = '';
+    $scope.slug = '';
+    $scope.title = '';
+    $scope.uuid = '';
+    $scope.reproduction = '';
+    $scope.language = '';
+    $scope.cover = '';
+    $scope.url = '';
+    $scope.mediaType = '';
+
+    $scope.form = {};
+    $scope.txtcomment = '';
+
+    $scope.messageok = '';
+    $scope.warningopen = true;
+
+    $scope.max = 5;
+    $scope.rate = 0;
+    $scope.isReadonly = false;
+    $scope.percent = 0;
+    
+    // Create new Review
+    $scope.create = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'groupForm');
+
+            return false;
+        }
+
+        // Create new Review object
+        var group = new Groups({
+            title: this.title,
+            content: this.content,
+            identifierWork: $scope.identifierWork,
+            slug: $scope.slug,
+            uuid: $scope.uuid,
+            reproduction: $scope.reproduction,
+            language: $scope.language,
+            mediaType: $scope.mediaType 
+        });
+
+        // Redirect after save
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.content = '';
+            $scope.identifierWork = '';
+            $scope.slug = '';
+            $scope.title = '';
+            $scope.uuid = '';
+            $scope.reproduction = '';
+            $scope.language = '';
+            $scope.cover = '';
+            $scope.url = '';
+            $scope.mediaType = '';
+
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Remove existing Review
+    $scope.remove = function (group) {
+        if (group) {
+            group.$remove();
+
+            for (var i in $scope.groups) {
+                if ($scope.groups[i] === group) {
+                    $scope.groups.splice(i, 1);
+                }
+            }
+        } else {
+            $scope.group.$remove(function () {
+                $location.path('groups');
+            });
+        }
+    };
+
+    // Update existing Review
+    $scope.update = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'groupForm');
+
+            return false;
+        }
+
+        var group = $scope.group;
+
+        group.$update(function () {
+            $scope.messageok = 'La reseña se ha modificado correctamente.';
+            $location.path('groups/' + group._id);
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    $scope.showList = function(){
+        $location.path('groups');
+    };
+
+    $scope.openReview = function(groupId) {
+        $location.path('groups/' + groupId);
+    };
+
+    // Find the list of Reviews of the user
+    $scope.find = function () {
+        $scope.groups = Groups.query();
+    };
+
+    // Find a list of Reviews with public status
+    $scope.findStatusPublic = function () {
+        $http.get('api/groups/public').success(function (response) {
+            $scope.groups = response;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });
+    };
+
+    // Set update group
+    $scope.updateReview = function () {
+        $scope.group.$update(function () {
+            $scope.messageok = 'La reseña se ha modificado correctamente.';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Find existing Review
+    $scope.findOne = function () {
+      $scope.group = Groups.get({
+        groupId: $stateParams.groupId
+      });
+    };
+
+    // update group status draft
+    $scope.setDraftReviewStatus = function () {
+      $scope.group.status = "draft";
+      
+      $scope.group.$update(function () {
+          $scope.messageok = 'La reseña se ha cambiado a estado borrador.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // update group status public
+    $scope.setPublicReviewStatus = function () {
+      $scope.group.status = "public";
+      
+      $scope.group.$update(function () {
+          $scope.messageok = 'La reseña se ha publicado correctamente.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+
+    $scope.$watch('group.ratings', function(value) {
+        if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
+            angular.forEach($scope.group.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                }
+            });
+        }
+    });
+    
+    $scope.$watch('rate', function(value) {
+
+       if (!angular.isUndefined($scope.rate) && 
+           !angular.isUndefined($scope.group) &&
+           !angular.isUndefined($scope.group.ratings) && !$scope.isReadonly) {
+            
+          var rating = {
+                rate: value,
+                user: $scope.authentication.user
+          };
+
+          $scope.group.ratings.push(rating);
+
+          $scope.group.$update(function () {
+              $scope.messageok = 'La reseña se ha valorado correctamente.';
+          }, function (errorResponse) {
+              $scope.error = errorResponse.data.message;
+          });
+        }
+    });
+    
+    $scope.hoveringOver = function(value) {
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+
+      if(value === 1)
+        $scope.overStar = 'Me gusta poco';
+      else if(value === 2)
+        $scope.overStar = 'Me gusta';
+      else if(value === 3)
+        $scope.overStar = 'Me gusta bastante';
+      else if(value === 4)
+        $scope.overStar = 'Me gusta mucho';
+      else if(value === 5)
+        $scope.overStar = 'Me encanta';
+    };
+
+ 
+    $scope.addComment = function() {
+      if ($scope.form.commentForm.$valid) {
+            
+        var comment = {
+                    content: $scope.txtcomment,
+                    user: $scope.authentication.user
+        };
+
+        $scope.group.comments.unshift(comment);
+
+        $scope.group.$update(function () {
+            $scope.txtcomment = '';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+      }
+    };
+
+    $scope.uuidFilter = function(uuid) {
+        if(uuid)
+          return uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
+        else
+          return '';
+    };
+
+    // Find existing Books in BVMC catalogue
+    $scope.getWork = function(val) {
+
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+            params: {
+                q: val
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+     
+                var mediatype = '';
+                angular.forEach(item.formaSoporte, function(mt) {
+     
+                    if(mediatype !== '')
+                        mediatype += ', ';
+                 
+                    mediatype += mt.nombre;
+                });
+
+                var result = {
+                        title:item.titulo, 
+                        identifierWork: item.idEntidadDocumental,
+                        slug: item.slug,
+                        uuid: item.uuid,
+                        reproduction: item.reproduccion,
+                        language: item.idioma,
+                        mediaType: mediatype
+                    };
+                return result;
+            });
+        });
+    };
+
+    // when select one item on typeahead
+    $scope.setWorkValues = function(val) { // this gets executed when an item is selected
+        $scope.identifierWork = val.identifierWork;
+        $scope.slug = val.slug;
+        $scope.uuid = val.uuid;
+        $scope.reproduction = val.reproduction;
+        $scope.title = val.title;
+        $scope.language = val.language;
+        $scope.mediaType = val.mediaType;
+        $scope.cover = val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
+        $scope.url = 'http://www.cervantesvirtual.com/obra/' + val.slug;
+    };
+
+    $scope.showEmailForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
+            controller: ModalEmailInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selectedItem = selectedItem;
+            $scope.messageok = selectedItem.message;
+            
+        }, function () {
+            $scope.selectedItem = '';
+        });
+    };
+
+    $scope.showHelpInformation = function () {
+       var modalInstance = $modal.open({
+            templateUrl: '/modules/groups/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
+    };
+
+  }
+]);
+
+angular.module('groups').filter('html', ['$sce', function ($sce) { 
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };    
+}]);
+
+angular.module('groups').filter('htmlLimit', ['$sce', function ($sce) { 
+    return function (text) {
+        if(text && text.length > 200)
+          text = text.substring(0, 200) + '...';
+        return $sce.trustAsHtml(text);
+    };    
+}]);
+
+
+
+
+'use strict';
+
+//Groups service used for communicating with the categories REST endpoints
+angular.module('groups').factory('Groups', ['$resource',
+  function ($resource) {
+    return $resource('api/groups/:groupId', {
+      groupId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Configuring the reviews module
 angular.module('reviews').run(['Menus',
   function (Menus) {
     // Add the review dropdown item
@@ -1394,10 +1882,17 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.messageok = '';
     $scope.warningopen = true;
 
+    // rating variables
     $scope.max = 5;
     $scope.rate = 0;
     $scope.isReadonly = false;
     $scope.percent = 0;
+    
+    
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js' 
+    };
+    
     
     // Create new Review
     $scope.create = function (isValid) {
@@ -1738,6 +2233,225 @@ function flip() {
   };
 }
 
+tinymce.addI18n('es',{
+"Cut": "Cortar",
+"Heading 5": "Encabezado 5",
+"Header 2": "Encabezado 2 ",
+"Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.": "Tu navegador no soporta acceso directo al portapapeles. Por favor usa las teclas Crtl+X\/C\/V de tu teclado",
+"Heading 4": "Encabezado 4",
+"Div": "Capa",
+"Heading 2": "Encabezado 2",
+"Paste": "Pegar",
+"Close": "Cerrar",
+"Font Family": "Familia de fuentes",
+"Pre": "Pre",
+"Align right": "Alinear a la derecha",
+"New document": "Nuevo documento",
+"Blockquote": "Bloque de cita",
+"Numbered list": "Lista numerada",
+"Heading 1": "Encabezado 1",
+"Headings": "Encabezados",
+"Increase indent": "Incrementar sangr\u00eda",
+"Formats": "Formatos",
+"Headers": "Encabezados",
+"Select all": "Seleccionar todo",
+"Header 3": "Encabezado 3",
+"Blocks": "Bloques",
+"Undo": "Deshacer",
+"Strikethrough": "Tachado",
+"Bullet list": "Lista de vi\u00f1etas",
+"Header 1": "Encabezado 1",
+"Superscript": "Super\u00edndice",
+"Clear formatting": "Limpiar formato",
+"Font Sizes": "Tama\u00f1os de fuente",
+"Subscript": "Sub\u00edndice",
+"Header 6": "Encabezado 6",
+"Redo": "Rehacer",
+"Paragraph": "P\u00e1rrafo",
+"Ok": "Ok",
+"Bold": "Negrita",
+"Code": "C\u00f3digo",
+"Italic": "It\u00e1lica",
+"Align center": "Alinear al centro",
+"Header 5": "Encabezado 5 ",
+"Heading 6": "Encabezado 6",
+"Heading 3": "Encabezado 3",
+"Decrease indent": "Disminuir sangr\u00eda",
+"Header 4": "Encabezado 4",
+"Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.": "Pegar est\u00e1 ahora en modo de texto plano. El contenido se pegar\u00e1 como texto plano hasta que desactive esta opci\u00f3n.",
+"Underline": "Subrayado",
+"Cancel": "Cancelar",
+"Justify": "Justificar",
+"Inline": "en l\u00ednea",
+"Copy": "Copiar",
+"Align left": "Alinear a la izquierda",
+"Visual aids": "Ayudas visuales",
+"Lower Greek": "Inferior Griega",
+"Square": "Cuadrado",
+"Default": "Por defecto",
+"Lower Alpha": "Inferior Alfa",
+"Circle": "C\u00edrculo",
+"Disc": "Disco",
+"Upper Alpha": "Superior Alfa",
+"Upper Roman": "Superior Romana",
+"Lower Roman": "Inferior Romana",
+"Name": "Nombre",
+"Anchor": "Ancla",
+"You have unsaved changes are you sure you want to navigate away?": "Tiene cambios sin guardar. \u00bfEst\u00e1 seguro de que quiere salir?",
+"Restore last draft": "Restaurar el \u00faltimo borrador",
+"Special character": "Car\u00e1cter especial",
+"Source code": "C\u00f3digo fuente",
+"B": "A",
+"R": "R",
+"G": "V",
+"Color": "Color",
+"Right to left": "De derecha a izquierda",
+"Left to right": "De izquierda a derecha",
+"Emoticons": "Emoticonos",
+"Robots": "Robots",
+"Document properties": "Propiedades del documento",
+"Title": "T\u00edtulo",
+"Keywords": "Palabras clave",
+"Encoding": "Codificaci\u00f3n",
+"Description": "Descripci\u00f3n",
+"Author": "Autor",
+"Fullscreen": "Pantalla completa",
+"Horizontal line": "L\u00ednea horizontal",
+"Horizontal space": "Espacio horizontal",
+"Insert\/edit image": "Insertar\/editar imagen",
+"General": "General",
+"Advanced": "Avanzado",
+"Source": "Enlace",
+"Border": "Borde",
+"Constrain proportions": "Restringir proporciones",
+"Vertical space": "Espacio vertical",
+"Image description": "Descripci\u00f3n de la imagen",
+"Style": "Estilo",
+"Dimensions": "Dimensiones",
+"Insert image": "Insertar imagen",
+"Zoom in": "Acercar",
+"Contrast": "Contraste",
+"Back": "Atr\u00e1s",
+"Gamma": "Gamma",
+"Flip horizontally": "Invertir horizontalmente",
+"Resize": "Redimensionar",
+"Sharpen": "Forma",
+"Zoom out": "Alejar",
+"Image options": "Opciones de imagen",
+"Apply": "Aplicar",
+"Brightness": "Brillo",
+"Rotate clockwise": "Girar a la derecha",
+"Rotate counterclockwise": "Girar a la izquierda",
+"Edit image": "Editar imagen",
+"Color levels": "Niveles de color",
+"Crop": "Recortar",
+"Orientation": "Orientaci\u00f3n",
+"Flip vertically": "Invertir verticalmente",
+"Invert": "Invertir",
+"Insert date\/time": "Insertar fecha\/hora",
+"Remove link": "Quitar enlace",
+"Url": "URL",
+"Text to display": "Texto para mostrar",
+"Anchors": "Anclas",
+"Insert link": "Insertar enlace",
+"New window": "Nueva ventana",
+"None": "Ninguno",
+"The URL you entered seems to be an external link. Do you want to add the required http:\/\/ prefix?": "El enlace que has introducido no parece ser una enlace externo. Quieres a\u00f1adir el prefijo necesario http:\/\/ ?",
+"Target": "Destino",
+"The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?": "El enlace que has introducido no parece ser una direcci\u00f3n de correo electr\u00f3nico. Quieres a\u00f1adir el prefijo necesario mailto: ?",
+"Insert\/edit link": "Insertar\/editar enlace",
+"Insert\/edit video": "Insertar\/editar video",
+"Poster": "Miniatura",
+"Alternative source": "Enlace alternativo",
+"Paste your embed code below:": "Pega tu c\u00f3digo embebido debajo",
+"Insert video": "Insertar video",
+"Embed": "Incrustado",
+"Nonbreaking space": "Espacio fijo",
+"Page break": "Salto de p\u00e1gina",
+"Paste as text": "Pegar como texto",
+"Preview": "Previsualizar",
+"Print": "Imprimir",
+"Save": "Guardar",
+"Could not find the specified string.": "No se encuentra la cadena de texto especificada",
+"Replace": "Reemplazar",
+"Next": "Siguiente",
+"Whole words": "Palabras completas",
+"Find and replace": "Buscar y reemplazar",
+"Replace with": "Reemplazar con",
+"Find": "Buscar",
+"Replace all": "Reemplazar todo",
+"Match case": "Coincidencia exacta",
+"Prev": "Anterior",
+"Spellcheck": "Corrector ortogr\u00e1fico",
+"Finish": "Finalizar",
+"Ignore all": "Ignorar todos",
+"Ignore": "Ignorar",
+"Add to Dictionary": "A\u00f1adir al Diccionario",
+"Insert row before": "Insertar fila antes",
+"Rows": "Filas",
+"Height": "Alto",
+"Paste row after": "Pegar la fila despu\u00e9s",
+"Alignment": "Alineaci\u00f3n",
+"Border color": "Color del borde",
+"Column group": "Grupo de columnas",
+"Row": "Fila",
+"Insert column before": "Insertar columna antes",
+"Split cell": "Dividir celdas",
+"Cell padding": "Relleno de celda",
+"Cell spacing": "Espacio entre celdas",
+"Row type": "Tipo de fila",
+"Insert table": "Insertar tabla",
+"Body": "Cuerpo",
+"Caption": "Subt\u00edtulo",
+"Footer": "Pie de p\u00e1gina",
+"Delete row": "Eliminar fila",
+"Paste row before": "Pegar la fila antes",
+"Scope": "\u00c1mbito",
+"Delete table": "Eliminar tabla",
+"H Align": "Alineamiento Horizontal",
+"Top": "Arriba",
+"Header cell": "Celda de la cebecera",
+"Column": "Columna",
+"Row group": "Grupo de filas",
+"Cell": "Celda",
+"Middle": "Centro",
+"Cell type": "Tipo de celda",
+"Copy row": "Copiar fila",
+"Row properties": "Propiedades de la fila",
+"Table properties": "Propiedades de la tabla",
+"Bottom": "Abajo",
+"V Align": "Alineamiento Vertical",
+"Header": "Cabecera",
+"Right": "Derecha",
+"Insert column after": "Insertar columna despu\u00e9s",
+"Cols": "Columnas",
+"Insert row after": "Insertar fila despu\u00e9s ",
+"Width": "Ancho",
+"Cell properties": "Propiedades de la celda",
+"Left": "Izquierda",
+"Cut row": "Cortar fila",
+"Delete column": "Eliminar columna",
+"Center": "Centrado",
+"Merge cells": "Combinar celdas",
+"Insert template": "Insertar plantilla",
+"Templates": "Plantillas",
+"Background color": "Color de fondo",
+"Custom...": "Personalizar...",
+"Custom color": "Color personalizado",
+"No color": "Sin color",
+"Text color": "Color del texto",
+"Show blocks": "Mostrar bloques",
+"Show invisible characters": "Mostrar caracteres invisibles",
+"Words: {0}": "Palabras: {0}",
+"Insert": "Insertar",
+"File": "Archivo",
+"Edit": "Editar",
+"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help": "\u00c1rea de texto enriquecido. Pulse ALT-F9 para el menu. Pulse ALT-F10 para la barra de herramientas. Pulse ALT-0 para ayuda",
+"Tools": "Herramientas",
+"View": "Ver",
+"Table": "Tabla",
+"Format": "Formato"
+});
 'use strict';
 
 //Booklists service used for communicating with the categories REST endpoints

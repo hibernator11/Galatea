@@ -1,0 +1,146 @@
+<section ng-controller="GroupsController" ng-init="findOne();" class="container">
+
+      <ol class="breadcrumb">
+          <li><a href="#" ui-sref="groups.list()">Mis reseñas</a></li>
+          <li class="active">{{ group.title | limitTo: 100 }}{{group.title.length > 100 ? '...' : ''}}</li>
+      </ol>
+
+      <div class="menu col-xs-12" ng-show="authentication.user._id == group.user._id">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="groups.edit({groupId: group._id})">
+             <i class="glyphicon glyphicon-edit"></i><br>
+             Editar reseña
+          </a>
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status === 'draft'" ng-click="setPublicReviewStatus()">
+             <i class="glyphicon glyphicon-eye-open"></i><br>
+             Publicar reseña
+          </a>
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status !== 'draft'" ng-click="setDraftReviewStatus()">
+             <i class="glyphicon glyphicon-eye-close"></i><br>
+             Deshacer publicación
+          </a>
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
+             <i class="glyphicon glyphicon-trash"></i><br>
+             Eliminar reseña
+          </a>
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showHelpInformation();">
+             <i class="glyphicon glyphicon-question-sign"></i><br>
+             Ayuda
+          </a>
+      </div>
+
+      <div class="alert alert-success col-xs-12" ng-show="messageok">
+       <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+       <strong>Resultado:</strong> {{messageok}}
+      </div>
+
+      <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
+       <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+       <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+      </div>
+
+      <div class="alert alert-warning" ng-show="error">
+       <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
+
+
+     <hr>
+     <div class="row">
+       <div class="col-md-9">
+         <h1 class="title">{{ group.title | limitTo: 200 }}{{group.title.length > 200 ? '...' : ''}}</h1>
+         <p class="text-muted" ng-show="group.reproduction" ng-bind-html="group.reproduction | htmlLimit"></p>
+         <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
+
+         <div class="well" ng-show="group.status === 'public'">
+           <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
+           <h4 ng-show="isReadonly">Tu valoración</h4>
+           <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+
+           <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+         </div>
+
+
+         <div class="row">
+             <div class="col-md-12 col-xs-12">
+                <span class="label label-info" ng-show="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                <span class="label label-info" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+                <span class="label label-info" ng-show="group.language"><i class="glyphicon glyphicon-tag"></i> {{group.language}}</span>
+                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+
+                <span class="label label-info" ng-show="group.mediaType" ng-switch on="group.mediaType">
+                  <span ng-switch-when="audio">
+                    <i class="glyphicon glyphicon-headphones"></i> {{group.mediaType}}
+                  </span>
+                  <span ng-switch-when="video">
+                    <i class="glyphicon glyphicon-film"></i> {{group.mediaType}}
+                  </span>
+                  <span ng-switch-when="texto">
+                    <i class="glyphicon glyphicon-book"></i> {{group.mediaType}}
+                  </span>
+                  <span ng-switch-default>
+                     {{group.mediaType}}
+                  </span>
+                </span>
+             </div>
+             <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
+                 <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+                 <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+                 <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+             </div>
+           </div> <!-- col-md-12 .col-xs-12-->
+
+           <p style="margin-top:30px;" ng-bind-html="group.content | html"></p>
+      </div> <!- row -->
+     
+      <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+         <a ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">
+             <img ng-if="group.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(group.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
+         </a><br>
+         <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
+      </div>
+   </div>
+   </div>
+   
+   <hr>
+     
+   <div ng-show="group.comments.length > 0">
+      <h4>Últimos comentarios</h4>	
+
+      <div ng-repeat="comment in group.comments" class="media">
+        <div class="media-left">
+          <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+        </div>
+        <div class="media-body">
+            <small>
+            <em class="text-muted">
+            Añadido el
+            <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+             por
+            <span ng-bind="comment.user.displayName"></span>
+            </em>
+            </small>
+            <p ng-bind="comment.content"></p>
+        </div>
+      </div>
+      <hr>
+     </div> <!-- last comments -->
+     
+     <div ng-show="group.status === 'public'">
+        <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+         <div class="form-group">
+           <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
+           <div class="col-sm-10">
+              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5"></textarea>
+           </div>
+         </div>
+         <div class="form-group">
+           <div class="col-sm-offset-2 col-sm-10">                    
+              <button class="btn btn-info btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+           </div>
+         </div>            
+        </form>
+     </div>
+
+</section>
+<footer-generic></footer-generic>

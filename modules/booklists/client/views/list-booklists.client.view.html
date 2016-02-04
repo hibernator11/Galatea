@@ -39,7 +39,7 @@
             <span ng-bind="booklist.user.displayName"></span> -->
           </small>
           <!--<i ng-if="booklist.visible" class="glyphicon glyphicon-eye-open"></i><i ng-if="!booklist.visible" class="glyphicon glyphicon-eye-close"></i>-->
-          <span class="badge" ng-bind="booklist.books.length + ' Obras'"></span>
+          <span class="label label-pill label-danger pull-right">{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}}</span>
 
           <ul class="list-inline">
             <li ng-repeat="tag in booklist.tags"><span class="label label-info"><i class="glyphicon glyphicon-tag"></i> {{tag.name}}</span></li>

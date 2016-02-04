@@ -1,9 +1,9 @@
-<section ng-controller="ReviewsController" class="container">
+<section ng-controller="GroupsController" class="container">
 
     <div class="col-md-12">
 
       <ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+          <li><a href="#" ui-sref="groups.list()">Mis reseñas</a></li>
           <li class="active">Crear reseña</li>
       </ol>
 
@@ -12,16 +12,16 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
-      <div class="alert alert-warning" ng-show="review.status === 'draft' && warningopen">
+      <div class="alert alert-warning" ng-show="group.status === 'draft' && warningopen">
        <button href="#" type="button" class="close" ng-click="warningopen = !warningopen"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
        <strong>Aviso: La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.</strong> 
       </div>
 
       <div class="top-icons">
-          <a tooltip="Volver" tooltip-placement="top" ng-href="reviews"><i class="fa fa-arrow-left fa-2x"></i></a>
+          <a tooltip="Volver" tooltip-placement="top" ng-href="groups"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
-    <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)">
+    <form name="groupForm" class="form-horizontal" ng-submit="create(groupForm.$valid)">
       <fieldset>
         <!-- TITLE -->
         <div class="well">
@@ -38,7 +38,7 @@
             <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un título de nuestro catálogo por favor.
             </div>
-            <p ng-show="form.reviewForm.title.$invalid && !form.reviewForm.title.$pristine" class="help-block">Introduzca una obra.</p>
+            <p ng-show="form.groupForm.title.$invalid && !form.groupForm.title.$pristine" class="help-block">Introduzca una obra.</p>
           </div>
         </div>
         </div>
@@ -70,7 +70,7 @@
          </div>
 
         <div class="form-group input-panel">
-          <textarea ui-tinymce="tinymceOptions" name="content" ng-model="content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+          <textarea ui-tinymce name="content" ng-model="content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
         </div>
 
         <div class="form-group input-panel text-right">

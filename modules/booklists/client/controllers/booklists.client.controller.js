@@ -149,6 +149,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     $scope.warningopen = true;
     $scope.messageok = '';
+    
+    $scope.year = new Date();
 
     // Create new Booklist
     $scope.create = function (isValid) {

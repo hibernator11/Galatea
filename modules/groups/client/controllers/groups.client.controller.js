@@ -56,8 +56,8 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
 };
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Reviews) {
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups',
+  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -78,30 +78,23 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.messageok = '';
     $scope.warningopen = true;
 
-    // rating variables
     $scope.max = 5;
     $scope.rate = 0;
     $scope.isReadonly = false;
     $scope.percent = 0;
-    
-    
-    $scope.tinymceOptions = {
-        language_url : 'modules/reviews/client/language-tinymce/es.js' 
-    };
-    
     
     // Create new Review
     $scope.create = function (isValid) {
         $scope.error = null;
 
         if (!isValid) {
-            $scope.$broadcast('show-errors-check-validity', 'reviewForm');
+            $scope.$broadcast('show-errors-check-validity', 'groupForm');
 
             return false;
         }
 
         // Create new Review object
-        var review = new Reviews({
+        var group = new Groups({
             title: this.title,
             content: this.content,
             identifierWork: $scope.identifierWork,
@@ -113,8 +106,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         });
 
         // Redirect after save
-        review.$save(function (response) {
-            $location.path('reviews/' + response._id);
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
 
             // Clear form fields
             $scope.title = '';
@@ -135,18 +128,18 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     // Remove existing Review
-    $scope.remove = function (review) {
-        if (review) {
-            review.$remove();
+    $scope.remove = function (group) {
+        if (group) {
+            group.$remove();
 
-            for (var i in $scope.reviews) {
-                if ($scope.reviews[i] === review) {
-                    $scope.reviews.splice(i, 1);
+            for (var i in $scope.groups) {
+                if ($scope.groups[i] === group) {
+                    $scope.groups.splice(i, 1);
                 }
             }
         } else {
-            $scope.review.$remove(function () {
-                $location.path('reviews');
+            $scope.group.$remove(function () {
+                $location.path('groups');
             });
         }
     };
@@ -156,46 +149,46 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         $scope.error = null;
 
         if (!isValid) {
-            $scope.$broadcast('show-errors-check-validity', 'reviewForm');
+            $scope.$broadcast('show-errors-check-validity', 'groupForm');
 
             return false;
         }
 
-        var review = $scope.review;
+        var group = $scope.group;
 
-        review.$update(function () {
+        group.$update(function () {
             $scope.messageok = 'La reseña se ha modificado correctamente.';
-            $location.path('reviews/' + review._id);
+            $location.path('groups/' + group._id);
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
     };
 
     $scope.showList = function(){
-        $location.path('reviews');
+        $location.path('groups');
     };
 
-    $scope.openReview = function(reviewId) {
-        $location.path('reviews/' + reviewId);
+    $scope.openReview = function(groupId) {
+        $location.path('groups/' + groupId);
     };
 
     // Find the list of Reviews of the user
     $scope.find = function () {
-        $scope.reviews = Reviews.query();
+        $scope.groups = Groups.query();
     };
 
     // Find a list of Reviews with public status
     $scope.findStatusPublic = function () {
-        $http.get('api/reviews/public').success(function (response) {
-            $scope.reviews = response;
+        $http.get('api/groups/public').success(function (response) {
+            $scope.groups = response;
         }).error(function (response) {
             $scope.error = response.message;
         });
     };
 
-    // Set update review
+    // Set update group
     $scope.updateReview = function () {
-        $scope.review.$update(function () {
+        $scope.group.$update(function () {
             $scope.messageok = 'La reseña se ha modificado correctamente.';
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -204,36 +197,36 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
 
     // Find existing Review
     $scope.findOne = function () {
-      $scope.review = Reviews.get({
-        reviewId: $stateParams.reviewId
+      $scope.group = Groups.get({
+        groupId: $stateParams.groupId
       });
     };
 
-    // update review status draft
+    // update group status draft
     $scope.setDraftReviewStatus = function () {
-      $scope.review.status = "draft";
+      $scope.group.status = "draft";
       
-      $scope.review.$update(function () {
+      $scope.group.$update(function () {
           $scope.messageok = 'La reseña se ha cambiado a estado borrador.';
       }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
       });
     };
 
-    // update review status public
+    // update group status public
     $scope.setPublicReviewStatus = function () {
-      $scope.review.status = "public";
+      $scope.group.status = "public";
       
-      $scope.review.$update(function () {
+      $scope.group.$update(function () {
           $scope.messageok = 'La reseña se ha publicado correctamente.';
       }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
       });
     };
 
-    $scope.$watch('review.ratings', function(value) {
-        if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
-            angular.forEach($scope.review.ratings, function(value, key){
+    $scope.$watch('group.ratings', function(value) {
+        if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
+            angular.forEach($scope.group.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
                     $scope.isReadonly = true;
                     $scope.rate = value.rate;
@@ -245,17 +238,17 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.$watch('rate', function(value) {
 
        if (!angular.isUndefined($scope.rate) && 
-           !angular.isUndefined($scope.review) &&
-           !angular.isUndefined($scope.review.ratings) && !$scope.isReadonly) {
+           !angular.isUndefined($scope.group) &&
+           !angular.isUndefined($scope.group.ratings) && !$scope.isReadonly) {
             
           var rating = {
                 rate: value,
                 user: $scope.authentication.user
           };
 
-          $scope.review.ratings.push(rating);
+          $scope.group.ratings.push(rating);
 
-          $scope.review.$update(function () {
+          $scope.group.$update(function () {
               $scope.messageok = 'La reseña se ha valorado correctamente.';
           }, function (errorResponse) {
               $scope.error = errorResponse.data.message;
@@ -288,9 +281,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                     user: $scope.authentication.user
         };
 
-        $scope.review.comments.unshift(comment);
+        $scope.group.comments.unshift(comment);
 
-        $scope.review.$update(function () {
+        $scope.group.$update(function () {
             $scope.txtcomment = '';
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -374,7 +367,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
 
     $scope.showHelpInformation = function () {
        var modalInstance = $modal.open({
-            templateUrl: '/modules/reviews/client/views/modal-help-information.html',
+            templateUrl: '/modules/groups/client/views/modal-help-information.html',
             controller: ModalHelpInstanceCtrl,
             scope: $scope
        });
@@ -383,13 +376,13 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
   }
 ]);
 
-angular.module('reviews').filter('html', ['$sce', function ($sce) { 
+angular.module('groups').filter('html', ['$sce', function ($sce) { 
     return function (text) {
         return $sce.trustAsHtml(text);
     };    
 }]);
 
-angular.module('reviews').filter('htmlLimit', ['$sce', function ($sce) { 
+angular.module('groups').filter('htmlLimit', ['$sce', function ($sce) { 
     return function (text) {
         if(text && text.length > 200)
           text = text.substring(0, 200) + '...';
