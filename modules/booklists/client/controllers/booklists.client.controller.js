@@ -141,8 +141,8 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
 };
 
 // Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists) {
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
+  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();

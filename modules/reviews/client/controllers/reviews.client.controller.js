@@ -183,6 +183,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.find = function () {
         $scope.reviews = Reviews.query();
     };
+    
+    // Find the list of Reviews by uuid
+    $scope.findByUuid = function () {
+        $http.get('api/reviews/uuid/' + $stateParams.uuid).success(function (response) {
+            $scope.reviews = response;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });
+    };
 
     // Find a list of Reviews with public status
     $scope.findStatusPublic = function () {

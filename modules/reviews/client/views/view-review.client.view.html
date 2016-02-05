@@ -97,9 +97,11 @@
          <a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">
              <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
-         <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
+         <a class="btn btn-danger btn-sm full-width" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
+            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver más reseñas
+         </a>
       </div>
-   </div>
    </div>
    
    <hr>

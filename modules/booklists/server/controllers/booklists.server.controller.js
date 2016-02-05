@@ -97,6 +97,7 @@ exports.list = function (req, res) {
   }
 };
 
+//query = {books: {$elemMatch: {uuid: req.params.uuid}}};console.log(query);
 
 /**
 * Paginate List booklist

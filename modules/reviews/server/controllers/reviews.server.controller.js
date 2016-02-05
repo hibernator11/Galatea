@@ -120,6 +120,30 @@ exports.listPublic = function(req, res){
     });
 };
 
+/**
+* Uuid List review
+**/
+exports.listUuid = function(req, res){
+ console.log('viene por uuid:' + req.params.uuid);
+    var page = 1;
+    if(req.params.page){
+        page = req.params.page;
+    }
+    var per_page =10;
+
+    var query = '';
+    query = {uuid: req.params.uuid, status: 'public'};
+
+    Review.find(query).sort('-created').skip((page-1)*per_page).limit(per_page).populate('user', 'displayName').exec(function(err, reviews) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.json(reviews);
+        }
+    });
+};
 
 /**
 * Paginate List review

@@ -1,7 +1,7 @@
 <section ng-controller="ReviewsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == review.user._id">
 
       <ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
+          <li><a href="#" ui-sref="reviews.list">Mis reseñas</a></li>
           <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
@@ -11,7 +11,7 @@
       </div>
 
       <div class="top-icons">
-          <a tooltip="Volver" tooltip-placement="top" ng-href="reviews/{{review._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
+          <a tooltip="Volver" tooltip-placement="top" ui-sref="reviews.view({reviewId: review._id})"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
 

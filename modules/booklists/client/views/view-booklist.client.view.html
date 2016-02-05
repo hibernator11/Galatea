@@ -85,6 +85,9 @@
            <button tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar obra
            </button>
+           <a tooltip="Ver reseñas de esta obra" tooltip-placement="bottom" style="margin-top:3px;" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-danger btn-sm full-width">
+               <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver reseñas
+           </a>
          </div>
        </div> <!-- row -->
        <hr>

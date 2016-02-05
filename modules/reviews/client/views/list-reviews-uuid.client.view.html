@@ -1,4 +1,4 @@
-<section ng-controller="ReviewsController" ng-init="find()" class="container">
+<section ng-controller="ReviewsController" ng-init="findByUuid()" class="container">
 
  <div class="row">
       <ol class="breadcrumb">
@@ -35,10 +35,9 @@
         </div>
         <div class="media-body">
           <h5 class="media-heading">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h5>
+          <p class="text-muted">Reseñado por {{ review.user.displayName | limitTo: 200 }}{{review.user.displayName.length > 200 ? '...' : ''}}</p>
           <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-          <!--<p class="text-muted">
-            <span ng-show="review.language" class="glyphicon glyphicon-tag"></span> {{review.language}}
-          </p>-->
+          
           <p class="text-muted">
             <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
             <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>

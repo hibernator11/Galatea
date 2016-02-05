@@ -11,6 +11,10 @@ module.exports = function (app) {
   app.route('/api/reviews').all(reviewsPolicy.isAllowed)
     .get(reviews.list)
     .post(reviews.create);
+    
+  // Reviews by uuid
+  app.route('/api/reviews/uuid/:uuid')
+     .get(reviews.listUuid);
 
   // Reviews paginate
   app.route('/api/reviews/page/:page')

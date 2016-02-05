@@ -17,6 +17,13 @@ angular.module('reviews').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('reviews.uuid', {
+        url: '/uuid/:uuid',
+        templateUrl: 'modules/reviews/client/views/list-reviews-uuid.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
       .state('reviews.create', {
         url: '/create',
         templateUrl: 'modules/reviews/client/views/create-review.client.view.html',
