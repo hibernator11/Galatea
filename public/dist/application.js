@@ -517,8 +517,8 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
 ModalBookInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance"];
 
 // Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists) {
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
+  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -1776,6 +1776,13 @@ angular.module('reviews').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('reviews.uuid', {
+        url: '/uuid/:uuid',
+        templateUrl: 'modules/reviews/client/views/list-reviews-uuid.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
       .state('reviews.create', {
         url: '/create',
         templateUrl: 'modules/reviews/client/views/create-review.client.view.html',
@@ -1987,6 +1994,17 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.find = function () {
         $scope.reviews = Reviews.query();
     };
+    
+    // Find the list of Reviews by uuid
+    $scope.findByUuid = function () {
+        $http.get('api/reviews/uuid/' + $stateParams.uuid).success(function (response) {
+            $scope.reviews = response;
+            //console.log('workJson:' + $scope.getWorkJson());
+            $scope.getWorkJson();
+        }).error(function (response) {
+            $scope.error = response.message;
+        });
+    };
 
     // Find a list of Reviews with public status
     $scope.findStatusPublic = function () {
@@ -2108,9 +2126,52 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         else
           return '';
     };
+    
+     // Find existing Book by uuid in BVMC catalogue 
+    $scope.getWorkJson = function() {
+
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/getJson?callback=JSON_CALLBACK', {
+            params: {
+                uuid: $stateParams.uuid
+            }
+        }).then(function(response){
+            return response.data.map(function(item){
+     
+                var mediaType = '';
+                angular.forEach(item.formaSoporte, function(mt) {
+     
+                    if(mediaType !== '')
+                        mediaType += ', ';
+                 
+                    mediaType += mt.nombre;
+                });
+                
+                $scope.identifierWork = item.idEntidadDocumental;
+        $scope.slug = item.slug;
+        $scope.uuid = item.uuid;
+        $scope.reproduction = item.reproduccion;
+        $scope.title = item.titulo;
+        $scope.language = item.idioma;
+        $scope.mediaType = mediaType;
+        $scope.cover = item.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
+        $scope.url = 'http://www.cervantesvirtual.com/obra/' + item.slug;
+
+                /*var result = {
+                        title:item.titulo, 
+                        identifierWork: item.idEntidadDocumental,
+                        slug: item.slug,
+                        uuid: item.uuid,
+                        reproduction: item.reproduccion,
+                        language: item.idioma,
+                        mediaType: mediatype
+                    };
+                return result;*/
+            });
+        });
+    };
 
     // Find existing Books in BVMC catalogue
-    $scope.getWork = function(val) {
+    $scope.getWorkLike = function(val) {
 
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
             params: {
