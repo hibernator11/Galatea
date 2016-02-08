@@ -33,7 +33,7 @@
 
         <div class="form-group input-panel">
           <div class="row">  
-            <input type="text" ng-model="title" placeholder="Escribe el título de la obra de la reseña" typeahead-on-select="setWorkValues($item)" typeahead="work.title for work in getWork($viewValue)" typeahead-loading="loadingWorks" typeahead-no-results="noResults" class="form-control" required>
+            <input type="text" ng-model="title" placeholder="Escribe el título de la obra de la reseña" typeahead-on-select="setWorkValues($item)" typeahead="work.title for work in getWorkLike($viewValue)" typeahead-loading="loadingWorks" typeahead-no-results="noResults" class="form-control" required>
             <i ng-show="loadingWorks" class="glyphicon glyphicon-refresh"></i>
             <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un título de nuestro catálogo por favor.

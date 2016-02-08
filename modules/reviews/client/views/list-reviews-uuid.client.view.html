@@ -1,42 +1,45 @@
 <section ng-controller="ReviewsController" ng-init="findByUuid()" class="container">
 
  <div class="row">
-      <ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list">Mis reseñas</a></li>
-      </ol>
+    <ol class="breadcrumb">
+        <li class="active">Reseñas sobre <strong>{{ title | limitTo: 100 }}{{title.length > 100 ? '...' : ''}}</strong></li>
+    </ol>
  </div>
 
  <div class="row">
       <div class="menu col-xs-12">
-          <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
+          <a href="#" ui-sref="reviews.create" class="btn col-sm-4 col-xs-4 col-md-4">
              <i class="glyphicon glyphicon-plus"></i><br>
              Reseña
           </a>
-          <!--<a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cloud"></i><br>
-             Cloud
+          <a href="#" ui-sref="reviews.list" class="btn col-sm-4 col-xs-4 col-md-4">
+             <i class="glyphicon glyphicon-zoom-in"></i><br>
+             Mis reseñas
           </a>
-          <a href="#" class="btn btn-info col-sm-3">
+          <!--<a href="#" class="btn btn-info col-sm-3">
              <i class="glyphicon glyphicon-cog"></i><br>
              Tools
           </a>-->
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
+          <a href="#" class="btn col-sm-4 col-xs-4 col-md-4" ng-click="showHelpInformation();">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
  </div>
- <div class="row">  
-      <div class="list-group col-xs-12">
+ <div class="row">
+     
+    <h1 class="title">Listado de reseñas sobre la obra: {{ title | limitTo: 200 }}{{title.length > 200 ? '...' : ''}}</h1>
+    <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit"></p>
+    
+    <div class="col-xs-9">
+    <div class="list-group">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
         <div class="media-left">
           <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
-          <h5 class="media-heading">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h5>
-          <p class="text-muted">Reseñado por {{ review.user.displayName | limitTo: 200 }}{{review.user.displayName.length > 200 ? '...' : ''}}</p>
-          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+          <h5 class="media-heading">Reseñado por {{ review.user.displayName | limitTo: 200 }}{{review.user.displayName.length > 200 ? '...' : ''}}</h5>
           
           <p class="text-muted">
             <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
@@ -58,16 +61,28 @@
                 </span>
             </span>
           </p>
-          <!--<p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit"></p>-->
+          <p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit"></p>
         </div>
         </div> <!-- media -->
       </a> 
-      </div> <!-- repeat -->
+      </div> <!-- list-group -->
+    
+      <div class="alert alert-warning text-center" ng-show="!reviews.length">
+        No existe ninguna reseña sobre esta obra, ¿<a ui-sref="reviews.create">desea crear una</a>?
+      </div>
+    
+    </div> <!-- col-xs-9 -->
+    
+    <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+        <a ng-href="http://www.cervantesvirtual.com/obra/{{slug}}" target="_blank">
+             <img ng-if="uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
+        </a><br>
+        <a class="btn btn-danger btn-sm full-width" ng-href="http://www.cervantesvirtual.com/obra/{{slug}}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+    </div>
+    
  </div>
 
-      <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
-        No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
-      </div>
+
 
 </section>
 <footer-generic></footer-generic>
