@@ -1,7 +1,7 @@
 <section ng-controller="GroupsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == group.user._id">
 
       <ol class="breadcrumb">
-          <li><a href="#" ui-sref="groups.list()">Mis reseñas</a></li>
+          <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
           <li class="active">{{ group.title | limitTo: 100 }}{{group.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
@@ -21,8 +21,8 @@
 
         <div class="well" style="margin-right: 0px;margin-left: 0px;">
          <div class="bs-callout bs-callout-primary">
-          <h4>Modifica la reseña</h4>
-          Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
+          <h4>Modifica el grupo</h4>
+          Utiliza el siguiente formulario para modificar el grupo. Tienes la opción de incluir enlaces a páginas externas. 
          </div>
 
          <div class="form-group input-panel">

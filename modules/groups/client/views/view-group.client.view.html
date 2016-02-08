@@ -1,26 +1,26 @@
 <section ng-controller="GroupsController" ng-init="findOne();" class="container">
 
       <ol class="breadcrumb">
-          <li><a href="#" ui-sref="groups.list()">Mis reseñas</a></li>
+          <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
           <li class="active">{{ group.title | limitTo: 100 }}{{group.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
       <div class="menu col-xs-12" ng-show="authentication.user._id == group.user._id">
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="groups.edit({groupId: group._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
-             Editar reseña
+             Editar grupo
           </a>
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status === 'draft'" ng-click="setPublicReviewStatus()">
              <i class="glyphicon glyphicon-eye-open"></i><br>
-             Publicar reseña
+             Publicar grupo
           </a>
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status !== 'draft'" ng-click="setDraftReviewStatus()">
              <i class="glyphicon glyphicon-eye-close"></i><br>
              Deshacer publicación
           </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?">
              <i class="glyphicon glyphicon-trash"></i><br>
-             Eliminar reseña
+             Eliminar grupo
           </a>
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showHelpInformation();">
              <i class="glyphicon glyphicon-question-sign"></i><br>
@@ -35,7 +35,7 @@
 
       <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
        <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
-       <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+       <strong>Aviso:</strong> La grupo no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
       </div>
 
       <div class="alert alert-warning" ng-show="error">
@@ -52,7 +52,7 @@
          <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
 
          <div class="well" ng-show="group.status === 'public'">
-           <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
+           <h4 ng-show="!isReadonly">¿Te gusta este grupo?</h4>
            <h4 ng-show="isReadonly">Tu valoración</h4>
            <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
 
@@ -91,7 +91,7 @@
            </div> <!-- col-md-12 .col-xs-12-->
 
            <p style="margin-top:30px;" ng-bind-html="group.content | html"></p>
-      </div> <!- row -->
+         </div> <!- row -->
      
       <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
          <a ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">
@@ -99,7 +99,6 @@
          </a><br>
          <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
       </div>
-   </div>
    </div>
    
    <hr>
