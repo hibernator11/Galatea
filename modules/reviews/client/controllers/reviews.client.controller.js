@@ -45,7 +45,7 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
             $modalInstance.close($scope.result);
         } else {
             $scope.submitButtonDisabled = false;
-            $scope.resultMessage = 'Failed <img src="http://www.chaosm.net/blog/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">  Please fill out all the fields.';
+            $scope.resultMessage = 'Por favor complete todos los campos.';
             $scope.result='bg-danger';
         }
     };
@@ -305,13 +305,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
       }
     };
 
-    $scope.uuidFilter = function(uuid) {
-        if(uuid)
-          return uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        else
-          return '';
-    };
-    
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {
 
@@ -345,9 +338,10 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     // Find existing Books in BVMC catalogue
     $scope.getWorkLike = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 10
             }
         }).then(function(response){
             return response.data.lista.map(function(item){

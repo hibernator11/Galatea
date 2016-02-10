@@ -81,52 +81,85 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     $scope.isReadonly = false;
     $scope.percent = 0;
     
+    $scope.type = '';
     
     $scope.showWorkPanel = false;
     $scope.showBookListPanel = false;
     $scope.showAuthorPanel = false;
     $scope.showDescriptionPanel = false;
-    $scope.type = '';
     $scope.booklists = '';
     
     $scope.selectTypeAction = function() {
-        if($scope.type === '0'){
+        if($scope.type === 'obra'){
             $scope.showWorkPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showAuthorPanel = false;
             $scope.showBookListPanel = false;
             $scope.booklists = '';
-        }else if($scope.type === '1'){
+            $scope.authorName = '';
+            $scope.booklist = '';
+        }else if($scope.type === 'autor'){
             $scope.showAuthorPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showBookListPanel = false;
             $scope.booklists = '';
-        }else if($scope.type === '2'){
+            $scope.uuid = '';
+            $scope.slug = '';
+            $scope.reproduction = '';
+            $scope.title = '';
+            $scope.booklist = '';
+        }else if($scope.type === 'lista'){
             $scope.showBookListPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
+            $scope.uuid = '';
+            $scope.slug = '';
+            $scope.reproduction = '';
+            $scope.title = '';
+            $scope.authorName = '';
+            $scope.booklist = '';
             
             // load booklists
             $scope.booklists = Booklists.query();
             
+        }else if($scope.type === 'general'){
+            $scope.showBookListPanel = false;
+            $scope.showDescriptionPanel = true;
+            $scope.showWorkPanel = false;
+            $scope.showAuthorPanel = false;
+            $scope.uuid = '';
+            $scope.slug = '';
+            $scope.reproduction = '';
+            $scope.title = '';
+            $scope.authorName = '';
+            $scope.books = '';
+            $scope.booklist = '';
         }else{
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
             $scope.showDescriptionPanel = false;
             $scope.showBookListPanel = false;
             $scope.booklists = '';
+            $scope.uuid = '';
+            $scope.slug = '';
+            $scope.reproduction = '';
+            $scope.title = '';
+            $scope.authorName = '';
+            $scope.booklist = '';
         }
     };
     
     $scope.selectBookListAction = function() {
+        $scope.source = $scope.booklistId;
+        
         $scope.booklist = Booklists.get({
             booklistId: $scope.booklistId
         });
     }
     
-    // Create new Review
+    // Create new Group
     $scope.create = function (isValid) {
         $scope.error = null;
 
@@ -136,16 +169,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
             return false;
         }
 
-        // Create new Review object
+        // Create new Group object
         var group = new Groups({
-            title: this.title,
+            name: this.name,
             content: this.content,
-            identifierWork: $scope.identifierWork,
-            slug: $scope.slug,
+            type: $scope.type,
+            source: $scope.source,
             uuid: $scope.uuid,
             reproduction: $scope.reproduction,
-            language: $scope.language,
-            mediaType: $scope.mediaType 
+            title: $scope.title,
+            authorName: $scope.authorName,
+            books: $scope.booklist.books
         });
 
         // Redirect after save
@@ -153,9 +187,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
             $location.path('groups/' + response._id);
 
             // Clear form fields
+            $scope.name = '';
             $scope.title = '';
             $scope.content = '';
             $scope.identifierWork = '';
+            $scope.type = '';
+            $scope.source = '';
             $scope.slug = '';
             $scope.title = '';
             $scope.uuid = '';
@@ -198,7 +235,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         var group = $scope.group;
 
         group.$update(function () {
-            $scope.messageok = 'La reseña se ha modificado correctamente.';
+            $scope.messageok = 'El grupo se ha modificado correctamente.';
             $location.path('groups/' + group._id);
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -213,12 +250,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         $location.path('groups/' + groupId);
     };
 
-    // Find the list of Reviews of the user
+    // Find the list of groups of the user
     $scope.find = function () {
         $scope.groups = Groups.query();
     };
 
-    // Find a list of Reviews with public status
+    // Find a list of groups with public status
     $scope.findStatusPublic = function () {
         $http.get('api/groups/public').success(function (response) {
             $scope.groups = response;
@@ -228,15 +265,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     };
 
     // Set update group
-    $scope.updateReview = function () {
+    $scope.updateGroup = function () {
         $scope.group.$update(function () {
-            $scope.messageok = 'La reseña se ha modificado correctamente.';
+            $scope.messageok = 'El grupo se ha modificado correctamente.';
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
     };
 
-    // Find existing Review
+    // Find existing Group
     $scope.findOne = function () {
       $scope.group = Groups.get({
         groupId: $stateParams.groupId
@@ -244,22 +281,22 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     };
 
     // update group status draft
-    $scope.setDraftReviewStatus = function () {
+    $scope.setDraftStatus = function () {
       $scope.group.status = "draft";
       
       $scope.group.$update(function () {
-          $scope.messageok = 'La reseña se ha cambiado a estado borrador.';
+          $scope.messageok = 'El grupo se ha cambiado a estado borrador.';
       }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
       });
     };
 
     // update group status public
-    $scope.setPublicReviewStatus = function () {
+    $scope.setPublicStatus = function () {
       $scope.group.status = "public";
       
       $scope.group.$update(function () {
-          $scope.messageok = 'La reseña se ha publicado correctamente.';
+          $scope.messageok = 'El grupo se ha publicado correctamente.';
       }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
       });
@@ -290,7 +327,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
           $scope.group.ratings.push(rating);
 
           $scope.group.$update(function () {
-              $scope.messageok = 'La reseña se ha valorado correctamente.';
+              $scope.messageok = 'El grupo se ha valorado correctamente.';
           }, function (errorResponse) {
               $scope.error = errorResponse.data.message;
           });
@@ -331,20 +368,51 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         });
       }
     };
+    
+    $scope.addFollower = function() {
+      if ($scope.authentication.user) {
+          
+        if ($scope.authentication.user._id !== $scope.group.user._id) {
+            var follower = {
+                    user: $scope.authentication.user
+            };
+            
+            var found = false;
+            for(var i = 0; i <  $scope.group.followers.length; i++) {
+                console.log('$scope.group.followers[i]._id:' + $scope.group.followers[i].user);
+                if ( $scope.group.followers[i].user === $scope.authentication.user._id) {
+                    found = true;
+                    break;
+                }
+            }
 
-    $scope.uuidFilter = function(uuid) {
-        if(uuid)
-          return uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        else
-          return '';
+            if(!found){
+                $scope.group.followers.push(follower);
+
+                $scope.group.$update(function () {
+                    $scope.messageok = 'Ahora eres seguidor de este grupo.' + $scope.authentication.user._id;
+                }, function (errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            }else{
+                $scope.error = 'Ya eres seguidor del grupo.';
+            }
+        }else{
+            $scope.error = 'Eres el creador de este grupo y por tanto ya eres seguidor.';
+        }
+      }else{
+          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
+      }
     };
+    
 
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 10
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -381,20 +449,23 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.source = val.slug;
     };
     
     $scope.getAuthor = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 10,
+                lengthName:150
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
      
                 var result = {
-                        name:item.nombre,
-                        idAuthor: item.idAutoridad
+                        authorName:item.nombre,
+                        authorId: item.idAutoridad
                     };
                 return result;
             });
@@ -403,8 +474,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
 
     // when select one item on typeahead
     $scope.setAuthorValues = function(val) { // this gets executed when an item is selected
-        $scope.idAuthor = val.idAuthor;
-        $scope.name = val.name;
+        $scope.authorId = val.authorId;
+        $scope.authorName = val.authorName;
+        $scope.source = val.authorId;
     };
 
     $scope.showEmailForm = function () {

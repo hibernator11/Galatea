@@ -2,25 +2,25 @@
 
  <div class="row">
       <ol class="breadcrumb">
-          <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
+          <li class="active">Mis grupos</li>
       </ol>
  </div>
 
  <div class="row">
       <div class="menu col-xs-12">
-          <a href="#" ui-sref="groups.create" class="btn col-sm-6 col-xs-6 col-md-6">
+          <a href="#" ui-sref="groups.create" class="btn col-sm-4 col-xs-4 col-md-4">
              <i class="glyphicon glyphicon-plus"></i><br>
              Grupo
           </a>
-          <!--<a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cloud"></i><br>
-             Cloud
+          <a href="#" class="btn col-sm-4 col-xs-4 col-md-4">
+             <i class="glyphicon glyphicon-user"></i><br>
+             Seguidor
           </a>
-          <a href="#" class="btn btn-info col-sm-3">
+          <!--<a href="#" class="btn btn-info col-sm-3">
              <i class="glyphicon glyphicon-cog"></i><br>
              Tools
           </a>-->
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
+          <a href="#" class="btn col-sm-4 col-xs-4 col-md-4" ng-click="showHelpInformation();">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
@@ -30,12 +30,17 @@
       <div class="list-group col-xs-12">
       <a ng-repeat="group in groups" ui-sref="groups.view({groupId: group._id})" class="list-group-item">
         <div class="media">
-        <div class="media-left">
-          <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(group.uuid)}}/portada/Cover.jpg" alt="{{group.title}}" class="media-object">
+        <div class="media-left" ng-switch on="group.type">
+          <img ng-switch-when="obra" ng-if="group.uuid" style="width: 80px;height: 120px;" ng-src="{{group.uuid | mountCover}}" alt="{{group.title}}" class="media-object">
+          <span style="font-size: 30px;padding: 20px;" ng-switch-when="autor" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+          <span style="font-size: 30px;padding: 20px;" ng-switch-when="lista" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+          <span style="font-size: 30px;padding: 20px;" ng-switch-when="general" class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
         </div>
         <div class="media-body">
-          <h5 class="media-heading">{{ group.title | limitTo: 200 }}{{group.title.length > 200 ? '...' : ''}}</h5>
-          <p class="text-muted" ng-show="group.reproduction" ng-bind-html="group.reproduction | htmlLimit"></p>
+          <h5 class="media-heading">{{ group.name | htmlLimit: 200 }}</h5>
+          <p class="text-muted" ng-show="group.authorName">Grupo sobre el autor {{group.authorName}}</p>
+          <p class="text-muted" ng-show="group.title">{{group.title}}</p>
+          <p class="text-muted" ng-show="group.reproduction">{{group.reproduction}}</p>
           <!--<p class="text-muted">
             <span ng-show="group.language" class="glyphicon glyphicon-tag"></span> {{group.language}}
           </p>-->
@@ -44,7 +49,7 @@
             <span class="label label-info" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
             <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
             <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-            <span class="label label-info" ng-show="group.mediaType" ng-switch on="group.mediaType">
+            <!--<span class="label label-info" ng-show="group.mediaType" ng-switch on="group.mediaType">
                 <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{group.mediaType}}
                 </span>
@@ -57,9 +62,9 @@
                 <span ng-switch-default>
                     {{group.mediaType}}
                 </span>
-            </span>
+            </span>-->
           </p>
-          <!--<p class="text-muted" ng-show="group.content" ng-bind-html="group.content | htmlLimit"></p>-->
+          <p class="text-muted" ng-show="group.content" ng-bind-html="group.content | htmlLimit: 200"></p>
         </div>
         </div> <!-- media -->
       </a> 

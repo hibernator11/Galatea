@@ -30,9 +30,10 @@
             
           <select class="form-control" style="width:30%;" ng-model="type" ng-change="selectTypeAction()">
             <option value="">---Por favor selecciona---</option>
-            <option value="0">Obra</option>
-            <option value="1">Autor</option>
-            <option value="2">Lista de obras</option>
+            <option value="obra">Obra</option>
+            <option value="autor">Autor</option>
+            <option value="lista">Lista de obras</option>
+            <option value="general">General</option>
           </select>
       </div>
     
@@ -55,7 +56,7 @@
          </div>
         </div>
 
-        <div class="well well-sm" ng-show="uuid">
+        <div class="well well-sm" ng-show="showWorkPanel && uuid && slug">
           <div class="row">
             <div class="col-xs-3 col-md-3 text-center">
                <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
@@ -84,7 +85,7 @@
 
          <div class="form-group input-panel">
           <div class="row">
-            <input type="text" ng-model="name" placeholder="Escribe el nombre del autor" typeahead-on-select="setAuthorValues($item)" typeahead="author.name for author in getAuthor($viewValue)" typeahead-loading="loadingAuthors" typeahead-no-results="noResults" class="form-control" required>
+            <input type="text" ng-model="authorName" placeholder="Escribe el nombre del autor" typeahead-on-select="setAuthorValues($item)" typeahead="author.authorName for author in getAuthor($viewValue)" typeahead-loading="loadingAuthors" typeahead-no-results="noResults" class="form-control" required>
             <i ng-show="loadingAuthors" class="glyphicon glyphicon-refresh"></i>
             <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de autor de nuestro catálogo por favor.
@@ -140,10 +141,24 @@
 
     <form name="groupForm" class="form-horizontal" ng-submit="create(groupForm.$valid)">
       <fieldset>
-        
+       <div class="well" ng-show="showDescriptionPanel">
+           
+         <div class="bs-callout bs-callout-primary">
+          <h4>Escribe el nombre del grupo</h4>
+          Utiliza el siguiente campo para introducir el nombre del grupo que deseas crear. 
+         </div>
+
+        <div class="form-group input-panel">
+          <input name="name" type="text" ng-model="name" id="name" class="form-control" placeholder="Nombre para el grupo" required>
+          <div ng-messages="groupForm.namee.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">El nombre del grupo es necesario.</p>
+          </div>
+        </div>
+       </div> 
+
 
        <div class="well" ng-show="showDescriptionPanel">
-
+           
          <div class="bs-callout bs-callout-primary">
           <h4>Escribe la descripción del grupo</h4>
           Utiliza el siguiente formulario para escribir la descripción del grupo. Tienes la opción de incluir enlaces a páginas externas. 

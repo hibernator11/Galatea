@@ -40,7 +40,7 @@ exports.update = function (req, res) {
   var group = req.group;
 
   if(req.group.user.id === req.user.id){
-      group.title = req.body.title;
+      group.title = req.body.title;//TODO revisarr
       group.content = req.body.content;
       group.status = req.body.status;
       group.comments = req.body.comments;
@@ -48,6 +48,7 @@ exports.update = function (req, res) {
   }else{
       group.ratings = req.body.ratings;
       group.comments = req.body.comments;
+      group.followers = req.body.followers;
   }
 
   group.save(function (err) {
@@ -107,7 +108,7 @@ exports.list = function (req, res) {
 **/
 exports.listPublic = function(req, res){
  
-    var query = {status:'public'};
+    var query = {status:'public', type:'obra'};
 
     Group.find(query).sort('-created').limit(10).populate('user', 'displayName').exec(function(err, groups) {
         if (err) {

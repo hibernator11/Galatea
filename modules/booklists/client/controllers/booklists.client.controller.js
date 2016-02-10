@@ -252,9 +252,10 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     // Find existing Subjects in BVMC catalogue
     $scope.getSubject = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 10
             }
         }).then(function(response){
             return response.data.lista.map(function(item){

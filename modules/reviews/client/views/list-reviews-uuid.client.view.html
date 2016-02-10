@@ -36,7 +36,7 @@
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
         <div class="media-left">
-          <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
+          <img style="width: 80px;height: 120px;" ng-src="{{review.uuid | mountCover }}" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
           <h5 class="media-heading">Reseñado por {{ review.user.displayName | htmlLimit: 200 }}</h5>
@@ -74,10 +74,10 @@
     </div> <!-- col-xs-9 -->
     
     <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-        <a ng-href="http://www.cervantesvirtual.com/obra/{{slug}}" target="_blank">
-             <img ng-if="uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
+        <a ng-href="{{slug | mountRecord }}" target="_blank">
+             <img ng-if="uuid" ng-src="{{uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
         </a><br>
-        <a class="btn btn-danger btn-sm full-width" ng-href="http://www.cervantesvirtual.com/obra/{{slug}}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+        <a class="btn btn-danger btn-sm full-width" ng-href="{{slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
     </div>
     
  </div>

@@ -8,7 +8,7 @@
   <div class="col-md-4">
     <div ng-click="openReview(reviews[0]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[0].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[0].uuid | mountCover }}"/>
       </div>
       <div class="caption">
         <h4>{{ reviews[0].title | htmlLimit: 200 }}</h4>
@@ -23,7 +23,7 @@
   <div class="col-md-2">
     <div ng-click="openReview(reviews[1]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[1].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[1].uuid | mountCover }}"/>
       </div>
       <div class="caption">
         <h5>{{ reviews[1].title | htmlLimit: 30 }}</h5>
@@ -34,10 +34,10 @@
     </div>
     <div ng-click="openReview(reviews[2]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[2].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[2].uuid | mountCover }}"/>
       </div>
       <div class="caption">
-        <h5>{{ reviews[2].title | | htmlLimit: 30 }}</h5>
+        <h5>{{ reviews[2].title | htmlLimit: 30 }}</h5>
         <p style="font-style: italic">por {{ reviews[2].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
@@ -49,7 +49,7 @@
 
     <div ng-click="openReview(reviews[3]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[3].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[3].uuid | mountCover }}"/>
       </div>
       <div class="caption">
         <h4>{{ reviews[3].title | htmlLimit: 200 }}</h4>
@@ -63,7 +63,7 @@
   <div class="col-md-2">
    <div ng-click="openReview(reviews[4]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[4].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[4].uuid | mountCover }}"/>
       </div>
       <div class="caption">
         <h5>{{ reviews[4].title | htmlLimit: 30 }}</h5>
@@ -74,7 +74,7 @@
    </div>
    <div ng-click="openReview(reviews[5]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[5].uuid)}}/portada/Cover.jpg"/>
+        <img width="100%" class="img-responsive review-cover" ng-if="reviews" ng-src="{{reviews[5].uuid | mountCover }}"/>
       </div>
       <div class="caption">
         <h5>{{ reviews[5].title | htmlLimit: 30 }}</h5>

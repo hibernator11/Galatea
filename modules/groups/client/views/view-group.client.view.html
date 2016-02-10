@@ -1,20 +1,21 @@
 <section ng-controller="GroupsController" ng-init="findOne();" class="container">
-
+    <div class="row">
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
-          <li class="active">{{ group.title | limitTo: 100 }}{{group.title.length > 100 ? '...' : ''}}</li>
+          <li class="active">{{ group.name | htmlLimit: 100 }}</li>
       </ol>
-
-      <div class="menu col-xs-12" ng-show="authentication.user._id == group.user._id">
+    </div> 
+    <div class="row">
+      <div class="menu col-xs-12" ng-show="authentication.user._id === group.user._id">
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="groups.edit({groupId: group._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar grupo
           </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status === 'draft'" ng-click="setPublicReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status === 'draft'" ng-click="setPublicStatus()">
              <i class="glyphicon glyphicon-eye-open"></i><br>
              Publicar grupo
           </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status !== 'draft'" ng-click="setDraftReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status !== 'draft'" ng-click="setDraftStatus()">
              <i class="glyphicon glyphicon-eye-close"></i><br>
              Deshacer publicación
           </a>
@@ -27,6 +28,7 @@
              Ayuda
           </a>
       </div>
+    </div>    
 
       <div class="alert alert-success col-xs-12" ng-show="messageok">
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
@@ -35,7 +37,7 @@
 
       <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
        <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
-       <strong>Aviso:</strong> La grupo no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+       <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú superior.
       </div>
 
       <div class="alert alert-warning" ng-show="error">
@@ -47,8 +49,7 @@
      <hr>
      <div class="row">
        <div class="col-md-9">
-         <h1 class="title">{{ group.title | limitTo: 200 }}{{group.title.length > 200 ? '...' : ''}}</h1>
-         <p class="text-muted" ng-show="group.reproduction" ng-bind-html="group.reproduction | htmlLimit"></p>
+         <h1 class="title">{{ group.name | htmlLimit: 200 }}</h1>
          <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
 
          <div class="well" ng-show="group.status === 'public'">
@@ -67,37 +68,35 @@
                 <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
                 <span class="label label-info" ng-show="group.language"><i class="glyphicon glyphicon-tag"></i> {{group.language}}</span>
                 <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-
-                <span class="label label-info" ng-show="group.mediaType" ng-switch on="group.mediaType">
-                  <span ng-switch-when="audio">
-                    <i class="glyphicon glyphicon-headphones"></i> {{group.mediaType}}
-                  </span>
-                  <span ng-switch-when="video">
-                    <i class="glyphicon glyphicon-film"></i> {{group.mediaType}}
-                  </span>
-                  <span ng-switch-when="texto">
-                    <i class="glyphicon glyphicon-book"></i> {{group.mediaType}}
-                  </span>
-                  <span ng-switch-default>
-                     {{group.mediaType}}
-                  </span>
-                </span>
              </div>
              <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
-                 <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
-                 <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-                 <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                 <a tooltip="Compartir en facebook" tooltip-placement="bottom" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+                 <a tooltip="Compartir en twitter" tooltip-placement="bottom" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+                 <a tooltip="Enviar por correo" tooltip-placement="bottom" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                 <a tooltip="Seguir" tooltip-placement="bottom" href="#" ng-click="addFollower()" class="btn btn-success"><i class="fa fa-users"></i> Seguir</a> 
              </div>
            </div> <!-- col-md-12 .col-xs-12-->
 
            <p style="margin-top:30px;" ng-bind-html="group.content | html"></p>
          </div> <!- row -->
      
-      <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-         <a ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">
-             <img ng-if="group.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(group.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
+      <div ng-if="group.type === 'obra' && group.uuid" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+         <a ng-href="{{group.source | mountRecord }}" target="_blank">
+             <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
          </a><br>
-         <a class="btn btn-danger" ng-href="http://www.cervantesvirtual.com/obra/{{group.slug}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
+         <a class="btn btn-danger" ng-href="{{group.source | mountRecord }}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a>
+      </div>
+         
+      <div ng-if="group.type === 'lista' && group.books" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+          <carousel interval="myInterval" no-wrap="noWrapSlides">
+                <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                  <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;">
+                  <div class="carousel-caption">
+                    <p>{{slide.title | htmlLimit: 80}}</p>
+                  </div>
+                </slide>
+          </carousel>
+          <a style="margin-top: 5px" tooltip="Ver todas las obras de la lista" tooltip-placement="bottom" href="#" class="btn btn-danger" ui-sref="booklists.view({booklistId: group.source})" >Ver la lista completa <span class="glyphicon glyphicon-zoom-in"></span></a>
       </div>
    </div>
    

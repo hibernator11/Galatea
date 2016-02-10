@@ -16,21 +16,62 @@ var GroupSchema = new Schema({
   },
   status: {
     type: String,
+    enum : ['draft','public'],
     default: 'draft',
-    trim: true,
     required: 'El campo estado no puede ser nulo'
+  },
+  type: {
+    type: String,
+    enum : ['obra','autor','lista','general'],
+    default: 'general',
+    required: 'El campo tipo de grupo no puede ser nulo'
+  },
+  source: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  uuid: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  name: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'El campo nombre no puede ser nulo'
+  },
+  authorName: {
+    type: String,
+    default: '',
+    trim: true
   },
   title: {
     type: String,
     default: '',
-    trim: true,
-    required: 'El campo título no puede ser nulo'
+    trim: true
   },
+  reproduction: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  books: [{
+    title: String,
+    identifierWork: String,
+    comments: String,
+    uuid: String,
+    slug: String,
+    reproduction: String,
+    mediaType: String,
+    language: String
+  }],
   content: {
     type: String,
     default: '',
     trim: true,
-    required: 'El campo contenido no puede ser nulo'
+    required: 'El campo descripción no puede ser nulo'
   },
   comments: [{
     content: String,
@@ -54,28 +95,20 @@ var GroupSchema = new Schema({
       default: Date.now
     }
   }],
-  identifierWork: {
-    type: String,
-  },
-  uuid: {
-    type: String,
-  },
-  slug: {
-    type: String,
-  },
-  reproduction:{
-    type: String,
-  },
-  mediaType: {
-    type: String,
-  },
-  language: {
-    type: String,
-  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  followers: [{
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  }],
 });
 
 mongoose.model('Group', GroupSchema);

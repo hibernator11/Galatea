@@ -31,7 +31,7 @@
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
         <div class="media-left">
-          <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
+          <img style="width: 80px;height: 120px;" ng-src="{{review.uuid | mountCover }}" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
           <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
