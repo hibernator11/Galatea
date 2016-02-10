@@ -23,15 +23,15 @@
         </div>
         </div> <!-- well -->
 
-        <div class="well well-sm" ng-show="cover">
+        <div class="well well-sm" ng-show="uuid">
           <div class="row">
             <div class="col-xs-3 col-md-3 text-center">
-               <img ng-if="cover" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{cover}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+               <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
             </div>
             <div class="col-xs-9 col-md-9 section-box">
-              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{url}}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
-              <p>{{ title | limitTo: 200 }}{{title.length > 200 ? '...' : ''}}</p>
-              <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit"></p>
+              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{slug | mountRecord }}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
+              <p>{{ title | htmlLimit: 200 }}</p>
+              <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
               <div class="row rating-desc">
                 <div class="col-md-12">
                   <span class="label label-info" ng-show="language">{{language}}</span>

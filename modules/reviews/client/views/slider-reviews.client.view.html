@@ -11,7 +11,7 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[0].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h4>{{ reviews[0].title | limitTo: 200 }}{{ reviews[0].title.length > 200 ? '...' : '' }}</h4>
+        <h4>{{ reviews[0].title | htmlLimit: 200 }}</h4>
         <p style="font-style: italic">por {{ reviews[0].user.displayName }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[0]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
@@ -26,8 +26,8 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[1].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h5>{{ reviews[1].title | limitTo: 30 }}{{ reviews[1].title.length > 30 ? '...' : '' }}</h5>
-        <p style="font-style: italic">por {{ reviews[1].user.displayName | limitTo: 30 }}{{reviews[1].user.displayName > 30 ? '...' : '' }}</p>
+        <h5>{{ reviews[1].title | htmlLimit: 30 }}</h5>
+        <p style="font-style: italic">por {{ reviews[1].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[1]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>
@@ -37,8 +37,8 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[2].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h5>{{ reviews[2].title | limitTo: 30 }}{{ reviews[2].title.length > 30 ? '...' : '' }}</h5>
-        <p style="font-style: italic">por {{ reviews[2].user.displayName | limitTo: 30 }}{{reviews[2].user.displayName > 30 ? '...' : '' }}</p>
+        <h5>{{ reviews[2].title | | htmlLimit: 30 }}</h5>
+        <p style="font-style: italic">por {{ reviews[2].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[2]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>
@@ -52,8 +52,8 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[3].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h4>{{ reviews[3].title | limitTo: 200 }}{{reviews[3].title.length > 200 ? '...' : '' }}</h4>
-        <p style="font-style: italic">por {{reviews[3].user.displayName }}</p>
+        <h4>{{ reviews[3].title | htmlLimit: 200 }}</h4>
+        <p style="font-style: italic">por {{reviews[3].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[3]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>
@@ -66,8 +66,8 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[4].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h5>{{ reviews[4].title | limitTo: 30 }}{{reviews[4].title.length > 30 ? '...' : '' }}</h5>
-        <p style="font-style: italic">por {{ reviews[4].user.displayName | limitTo: 30 }}{{reviews[4].user.displayName > 30 ? '...' : '' }}</p>
+        <h5>{{ reviews[4].title | htmlLimit: 30 }}</h5>
+        <p style="font-style: italic">por {{ reviews[4].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[4]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>
@@ -77,8 +77,8 @@
         <img width="100%" class="img-responsive review-cover" src="http://www.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(reviews[5].uuid)}}/portada/Cover.jpg"/>
       </div>
       <div class="caption">
-        <h5>{{ reviews[5].title | limitTo: 30 }}{{reviews[5].title.length > 30 ? '...' : '' }}</h5>
-        <p style="font-style: italic">por {{ reviews[5].user.displayName | limitTo: 30 }}{{reviews[5].user.displayName > 30 ? '...' : '' }}</p>
+        <h5>{{ reviews[5].title | htmlLimit: 30 }}</h5>
+        <p style="font-style: italic">por {{ reviews[5].user.displayName | htmlLimit: 30 }}</p>
         <p><a href="#" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
         <a href="#" ui-sref="reviews.view({reviewId: reviews[5]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>

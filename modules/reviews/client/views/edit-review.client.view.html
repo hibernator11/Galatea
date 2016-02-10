@@ -40,11 +40,11 @@
 
       <div class="row well" style="margin-right: 0px;margin-left: 0px;">
             <div class="col-xs-3 col-md-3" ng-show="review.uuid">
-               <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="Obra seleccionada" class="img-rounded img-responsive" />
+               <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
             </div>
             <div class="col-xs-9 col-md-9">
               <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
-              <p>{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</p>
+              <p>{{ review.title | htmlLimit: 200}}</p>
               <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
               <div class="row">
               <div class="col-md-12">

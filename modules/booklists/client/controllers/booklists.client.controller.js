@@ -64,8 +64,6 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.uuid = '';
     $scope.reproduction = '';
     $scope.language = '';
-    $scope.cover = '';
-    $scope.url = '';
     $scope.mediaType = '';
 
     $scope.form = {};
@@ -80,8 +78,6 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                         uuid: $scope.uuid,
                         reproduction: $scope.reproduccion,
                         language: $scope.language,
-                        cover: $scope.cover,
-                        url: $scope.url,
                         mediaType: $scope.mediaType,
             };
 
@@ -102,8 +98,6 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
-        $scope.cover = val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        $scope.url = 'http://www.cervantesvirtual.com/obra/' + val.slug;
     };
 
 
@@ -165,7 +159,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         // Create new Booklist object
         var booklist = new Booklists({
             title: this.title,
-            comments: this.comments,
+            description: this.description,
             tags: this.tags,
             visible: this.visible
         });
@@ -176,7 +170,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
             // Clear form fields
             $scope.title = '';
-            $scope.comments = '';
+            $scope.description = '';
             $scope.tags = '';
             $scope.books = '';
             $scope.visible = '';
@@ -282,10 +276,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
-    };
-
-    $scope.uuidFilter = function(uuid) {
-        return uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
     };
 
     $scope.showBookForm = function () {

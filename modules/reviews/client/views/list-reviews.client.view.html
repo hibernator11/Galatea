@@ -34,7 +34,7 @@
           <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
-          <h5 class="media-heading">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h5>
+          <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
           <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
           <!--<p class="text-muted">
             <span ng-show="review.language" class="glyphicon glyphicon-tag"></span> {{review.language}}

@@ -28,8 +28,8 @@
  </div>
  <div class="row">
      
-    <h1 class="title">Listado de reseñas sobre la obra: {{ title | limitTo: 200 }}{{title.length > 200 ? '...' : ''}}</h1>
-    <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit"></p>
+    <h1 class="title">Listado de reseñas sobre la obra: {{ title | htmlLimit: 200 }}</h1>
+    <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
     
     <div class="col-xs-9">
     <div class="list-group">
@@ -39,7 +39,7 @@
           <img style="width: 80px;height: 120px;" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
-          <h5 class="media-heading">Reseñado por {{ review.user.displayName | limitTo: 200 }}{{review.user.displayName.length > 200 ? '...' : ''}}</h5>
+          <h5 class="media-heading">Reseñado por {{ review.user.displayName | htmlLimit: 200 }}</h5>
           
           <p class="text-muted">
             <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
@@ -61,7 +61,7 @@
                 </span>
             </span>
           </p>
-          <p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit"></p>
+          <p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit: 200"></p>
         </div>
         </div> <!-- media -->
       </a> 

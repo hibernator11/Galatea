@@ -40,7 +40,7 @@ exports.update = function (req, res) {
   var booklist = req.booklist;
 
   booklist.title = req.body.title;
-  booklist.comments = req.body.comments;
+  booklist.description = req.body.description;
   booklist.tags = req.body.tags;
   booklist.books = req.body.books;
   booklist.visible = req.body.visible;

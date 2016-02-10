@@ -2,7 +2,7 @@
 
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
-          <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
+          <li class="active">{{ booklist.title | htmlLimit: 100 }}</li>
       </ol>
 
       <div class="alert alert-warning" ng-show="error">
@@ -14,7 +14,7 @@
           <a tooltip="Volver" tooltip-placement="top" ng-href="booklists/{{booklist._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
       </div>
 
-    <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)" ng-show="authentication.user._id == booklist.user._id" >
+    <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)" ng-show="authentication.user._id === booklist.user._id" >
       <fieldset>
         <div class="well">
 
@@ -53,7 +53,7 @@
          </div>
 
          <div class="form-group input-panel">
-          <textarea name="comments" ng-model="booklist.comments" id="comments" class="form-control" cols="30" rows="10" placeholder="Descripción de la lista de obras"></textarea>
+          <textarea name="description" ng-model="booklist.description" id="description" class="form-control" cols="30" rows="10" placeholder="Descripción de la lista de obras"></textarea>
          </div>
         </div>
 

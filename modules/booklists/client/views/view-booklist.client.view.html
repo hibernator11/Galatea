@@ -2,10 +2,10 @@
 
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
-          <li class="active">{{ booklist.title | limitTo: 100 }}{{ booklist.title.length > 100 ? '...' : ''}}</li>
+          <li class="active">{{ booklist.title | htmlLimit: 100 }}</li>
       </ol>
 
-      <div class="menu col-xs-12" ng-show="authentication.user._id == booklist.user._id">
+      <div class="menu col-xs-12" ng-show="authentication.user._id === booklist.user._id">
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="booklists.edit({booklistId: booklist._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar Lista
@@ -31,12 +31,14 @@
 
       <div class="booklist-description row">
         <div class="col-md-8">
-            <h3>{{ booklist.title | limitTo: 200 }}{{booklist.title.length > 200 ? '...' : ''}}</h3>
+            <h3>{{ booklist.title | htmlLimit: 200 }}</h3>
             <h5 ng-show="booklist.comments">Descripción</h5>
             <p ng-show="booklist.comments"><small><em class="text-muted">{{booklist.comments}}</em></small></p>
-            <p><ul class="list-inline">
+            <p>
+              <ul class="list-inline">
               <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-info"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
-            </ul></p>
+              </ul>
+            </p>
         </div>
         <div class="col-md-4">
           <div class="pull-right">
@@ -52,13 +54,13 @@
       <div ng-repeat="book in booklist.books">
        <div class="row">
          <div class="col-sm-3 col-xs-3 col-md-2">
-           <a href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank">
-             <img ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(book.uuid)}}/portada/Cover.jpg" alt="{{book.title}}" class="img-responsive">
+           <a ng-href="{{book.slug | mountRecord }}" target="_blank">
+             <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive">
            </a>
          </div>
          <div class="col-sm-7 col-xs-9 col-md-8">
-           <h4 class="title">{{ book.title | limitTo: 200 }}{{book.title.length > 200 ? '...' : ''}}</h4>
-           <p class="text-muted" ng-show="book.reproduction">{{book.reproduction | html}}</p>
+           <h4 class="title">{{ book.title | htmlLimit: 200 }}</h4>
+           <p class="text-muted" ng-show="book.reproduction">{{book.reproduction | htmlLimit: 200}}</p>
            <p class="text-muted">
              <span ng-show="book.language" class="label label-info">{{book.language}}</span>
              <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
@@ -79,7 +81,7 @@
            <p class="text-muted" ng-show="book.comments">{{book.comments}}</p>
          </div>
          <div class="col-md-2 col-md-offset-0 col-xs-8 col-xs-offset-2">
-           <a tooltip="Ver obra en catálogo" tooltip-placement="top" href="http://www.cervantesvirtual.com/obra/{{book.slug}}" target="_blank" class="btn btn-danger btn-sm full-width">
+           <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
            </a>
            <button tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
@@ -93,7 +95,7 @@
        <hr>
      </div> <!-- repeat books -->
 
-     <div class="alert alert-warning" ng-show="booklist.books.length == 0">
+     <div class="alert alert-warning" ng-show="booklist.books.length === 0">
        <a href="#" ng-click="showBookForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
        <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
      </div>

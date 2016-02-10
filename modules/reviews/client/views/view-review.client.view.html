@@ -5,7 +5,7 @@
           <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
       </ol>
 
-      <div class="menu col-xs-12" ng-show="authentication.user._id == review.user._id">
+      <div class="menu col-xs-12" ng-show="authentication.user._id === review.user._id">
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="reviews.edit({reviewId: review._id})">
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar reseña
@@ -47,7 +47,7 @@
      <hr>
      <div class="row">
        <div class="col-md-9">
-         <h1 class="title">{{ review.title | limitTo: 200 }}{{review.title.length > 200 ? '...' : ''}}</h1>
+         <h1 class="title">{{ review.title | htmlLimit: 200 }}</h1>
          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
          <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 
@@ -94,10 +94,10 @@
       </div> <!- row -->
      
       <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-         <a ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">
-             <img ng-if="review.uuid" ng-src="http://media.cervantesvirtual.com/s3/BVMC_OBRAS/{{uuidFilter(review.uuid)}}/portada/Cover.jpg" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
+         <a ng-href="{{review.slug | mountRecord }}" target="_blank">
+             <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
-         <a class="btn btn-danger btn-sm full-width" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         <a class="btn btn-danger btn-sm full-width" ng-href="{{review.slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
          <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
             <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver más reseñas
          </a>

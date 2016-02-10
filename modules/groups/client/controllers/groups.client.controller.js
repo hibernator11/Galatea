@@ -56,8 +56,8 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
 };
 
 // Reviews controller
-angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups) {
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
+  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -68,8 +68,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     $scope.uuid = '';
     $scope.reproduction = '';
     $scope.language = '';
-    $scope.cover = '';
-    $scope.url = '';
     $scope.mediaType = '';
 
     $scope.form = {};
@@ -82,6 +80,51 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     $scope.rate = 0;
     $scope.isReadonly = false;
     $scope.percent = 0;
+    
+    
+    $scope.showWorkPanel = false;
+    $scope.showBookListPanel = false;
+    $scope.showAuthorPanel = false;
+    $scope.showDescriptionPanel = false;
+    $scope.type = '';
+    $scope.booklists = '';
+    
+    $scope.selectTypeAction = function() {
+        if($scope.type === '0'){
+            $scope.showWorkPanel = true;
+            $scope.showDescriptionPanel = true;
+            $scope.showAuthorPanel = false;
+            $scope.showBookListPanel = false;
+            $scope.booklists = '';
+        }else if($scope.type === '1'){
+            $scope.showAuthorPanel = true;
+            $scope.showDescriptionPanel = true;
+            $scope.showWorkPanel = false;
+            $scope.showBookListPanel = false;
+            $scope.booklists = '';
+        }else if($scope.type === '2'){
+            $scope.showBookListPanel = true;
+            $scope.showDescriptionPanel = true;
+            $scope.showWorkPanel = false;
+            $scope.showAuthorPanel = false;
+            
+            // load booklists
+            $scope.booklists = Booklists.query();
+            
+        }else{
+            $scope.showWorkPanel = false;
+            $scope.showAuthorPanel = false;
+            $scope.showDescriptionPanel = false;
+            $scope.showBookListPanel = false;
+            $scope.booklists = '';
+        }
+    };
+    
+    $scope.selectBookListAction = function() {
+        $scope.booklist = Booklists.get({
+            booklistId: $scope.booklistId
+        });
+    }
     
     // Create new Review
     $scope.create = function (isValid) {
@@ -118,8 +161,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
             $scope.uuid = '';
             $scope.reproduction = '';
             $scope.language = '';
-            $scope.cover = '';
-            $scope.url = '';
             $scope.mediaType = '';
 
             }, function (errorResponse) {
@@ -340,8 +381,30 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
-        $scope.cover = val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        $scope.url = 'http://www.cervantesvirtual.com/obra/' + val.slug;
+    };
+    
+    $scope.getAuthor = function(val) {
+
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?maxRows=12&callback=JSON_CALLBACK', {
+            params: {
+                q: val
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+     
+                var result = {
+                        name:item.nombre,
+                        idAuthor: item.idAutoridad
+                    };
+                return result;
+            });
+        });
+    };
+
+    // when select one item on typeahead
+    $scope.setAuthorValues = function(val) { // this gets executed when an item is selected
+        $scope.idAuthor = val.idAuthor;
+        $scope.name = val.name;
     };
 
     $scope.showEmailForm = function () {
@@ -376,19 +439,18 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
   }
 ]);
 
-angular.module('groups').filter('html', ['$sce', function ($sce) { 
-    return function (text) {
-        return $sce.trustAsHtml(text);
-    };    
+
+angular.module('groups').filter('mountCover', [function () { 
+    return function (uuid) {
+        var uuidPath = uuid.replace(/-/g, '').match(/.{1,3}/g).join("/"); 
+        return "http://media.cervantesvirtual.com/s3/BVMC_OBRAS/" + uuidPath + "/portada/Cover.jpg";
+    };
 }]);
 
-angular.module('groups').filter('htmlLimit', ['$sce', function ($sce) { 
-    return function (text) {
-        if(text && text.length > 200)
-          text = text.substring(0, 200) + '...';
-        return $sce.trustAsHtml(text);
-    };    
+angular.module('groups').filter('mountRecord', [function () { 
+    return function (slug) {
+        return "http://www.cervantesvirtual.com/obra/" + slug + "/";
+    };
 }]);
-
 
 

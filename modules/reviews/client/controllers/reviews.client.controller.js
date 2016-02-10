@@ -68,8 +68,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.uuid = '';
     $scope.reproduction = '';
     $scope.language = '';
-    $scope.cover = '';
-    $scope.url = '';
     $scope.mediaType = '';
 
     $scope.form = {};
@@ -125,8 +123,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.uuid = '';
             $scope.reproduction = '';
             $scope.language = '';
-            $scope.cover = '';
-            $scope.url = '';
             $scope.mediaType = '';
 
             }, function (errorResponse) {
@@ -336,25 +332,12 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 });
                 
                 $scope.identifierWork = item.idEntidadDocumental;
-        $scope.slug = item.slug;
-        $scope.uuid = item.uuid;
-        $scope.reproduction = item.reproduccion;
-        $scope.title = item.titulo;
-        $scope.language = item.idioma;
-        $scope.mediaType = mediaType;
-        $scope.cover = item.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        $scope.url = 'http://www.cervantesvirtual.com/obra/' + item.slug;
-
-                /*var result = {
-                        title:item.titulo, 
-                        identifierWork: item.idEntidadDocumental,
-                        slug: item.slug,
-                        uuid: item.uuid,
-                        reproduction: item.reproduccion,
-                        language: item.idioma,
-                        mediaType: mediatype
-                    };
-                return result;*/
+                $scope.slug = item.slug;
+                $scope.uuid = item.uuid;
+                $scope.reproduction = item.reproduccion;
+                $scope.title = item.titulo;
+                $scope.language = item.idioma;
+                $scope.mediaType = mediaType;
             });
         });
     };
@@ -401,8 +384,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
-        $scope.cover = val.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/");
-        $scope.url = 'http://www.cervantesvirtual.com/obra/' + val.slug;
     };
 
     $scope.showEmailForm = function () {
@@ -444,9 +425,9 @@ angular.module('reviews').filter('html', ['$sce', function ($sce) {
 }]);
 
 angular.module('reviews').filter('htmlLimit', ['$sce', function ($sce) { 
-    return function (text) {
-        if(text && text.length > 200)
-          text = text.substring(0, 200) + '...';
+    return function (text, limit) {
+        if(text && limit && text.length > limit)
+          text = text.substring(0, limit) + '...';
         return $sce.trustAsHtml(text);
     };    
 }]);
