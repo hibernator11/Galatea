@@ -8,7 +8,7 @@
         <!-- TITLE --> 
         <div class="well">
 
-         <div class="bs-callout bs-callout-primary bs-callout-modal">
+         <div class="bs-callout bs-callout-danger bs-callout-modal">
           <h4>Selecciona una obra del catálogo</h4>
           Comienza a escribir el título de la obra sobre la que vas a escribir la reseña. Te mostraremos los resultados de nuestro catálogo.
          </div>
@@ -34,8 +34,8 @@
               <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
               <div class="row rating-desc">
                 <div class="col-md-12">
-                  <span class="label label-info" ng-show="language">{{language}}</span>
-                  <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                  <span class="label label-danger" ng-show="language">{{language}}</span>
+                  <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
                     <span ng-switch-when="audio">
                       <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
                     </span>
@@ -58,7 +58,7 @@
             <!-- Comments -->
         <div class="well">
 
-         <div class="bs-callout bs-callout-primary bs-callout-modal">
+         <div class="bs-callout bs-callout-danger bs-callout-modal">
           <h4>Añade comentarios para esta obra</h4>
           Escribe los comentarios relacionados con esta obra
          </div>
@@ -66,7 +66,7 @@
         </div> <!-- well -->
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-disabled="form.bookForm.$invalid">Guardar</button>
-        <button class="btn btn-primary" ng-click="cancel()">Cancelar</button>
+        <button type="submit" class="btn btn-danger" ng-disabled="form.bookForm.$invalid">Guardar</button>
+        <button class="btn btn-danger" ng-click="cancel()">Cancelar</button>
     </div>
 </form>
