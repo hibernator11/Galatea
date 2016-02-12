@@ -2,9 +2,9 @@
 
 module.exports = {
   app: {
-    title: 'iBVMC',
-    description: 'Crea tu propia biblioteca Miguel de Cervantes Virtual',
-    keywords: 'biblioteca digital, listas de obras, reseñas',
+    title: 'Galatea',
+    description: 'Crea tu propia Biblioteca Virtual Miguel de Cervantes',
+    keywords: 'biblioteca digital, listas de obras, reseñas, grupos de usuarios',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   port: process.env.PORT || 3000,

@@ -67,8 +67,8 @@
               <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
               <div class="row">
                 <div class="col-md-12">
-                  <span class="label label-info" ng-show="language">{{language}}</span>
-                  <span class="label label-info" ng-show="mediaType">{{mediaType}}</span>
+                  <span class="label label-danger" ng-show="language">{{language}}</span>
+                  <span class="label label-danger" ng-show="mediaType">{{mediaType}}</span>
                 </div>
               </div>
             </div>
@@ -169,8 +169,8 @@
         </div>
 
         <div class="form-group input-panel text-right">
-          <input type="submit" value="Crear" class="btn btn-primary">
-          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+          <input type="submit" value="Crear" class="btn btn-danger">
+          <input type="button" value="Cancelar" class="btn btn-danger" ng-click="showList();">
         </div>
        </div> 
       </fieldset>

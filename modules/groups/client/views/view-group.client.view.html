@@ -50,6 +50,9 @@
                             <li ng-show="authentication.user._id === group.user._id">
                               <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
                             </li>
+                            <li ng-show="authentication.user"> 
+                              <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
+                            </li>
                             <li>
                               <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
                             </li>
@@ -90,9 +93,9 @@
       </div>
 
       <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
-       <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+       <!--<button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>-->
        <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
-       <button ng-click="setPublicStatus()" href="#" class="btn btn-warning" >Publicar</button>
+       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
       </div>
 
       <div class="alert alert-warning col-xs-12" ng-show="error">

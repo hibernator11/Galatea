@@ -1471,7 +1471,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         $scope.booklist = Booklists.get({
             booklistId: $scope.booklistId
         });
-    }
+    };
     
     // Create new Group
     $scope.create = function (isValid) {
@@ -1628,7 +1628,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
                 }
             });
         }
-    }
+    };
 
     $scope.$watch('group.ratings', function(value) {
         if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
@@ -2204,7 +2204,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 }
             });
         }
-    }
+    };
 
     $scope.$watch('review.ratings', function(value) {
         if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
