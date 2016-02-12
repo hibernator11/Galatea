@@ -40,11 +40,12 @@ exports.update = function (req, res) {
   var group = req.group;
 
   if(req.group.user.id === req.user.id){
-      group.title = req.body.title;//TODO revisarr
+      group.name = req.body.name;
       group.content = req.body.content;
       group.status = req.body.status;
-      group.comments = req.body.comments;
       group.ratings = req.body.ratings;
+      group.comments = req.body.comments;
+      group.followers = req.body.followers;
   }else{
       group.ratings = req.body.ratings;
       group.comments = req.body.comments;

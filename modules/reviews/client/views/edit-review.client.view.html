@@ -1,8 +1,8 @@
-<section ng-controller="ReviewsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == review.user._id">
+<section ng-controller="ReviewsController" ng-init="findOne()" class="container" ng-show="authentication.user._id === review.user._id">
 
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list">Mis reseñas</a></li>
-          <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
+          <li class="active">{{ review.title | htmlLimit: 100 }}</li>
       </ol>
 
       <div class="alert alert-warning" ng-show="error">
@@ -10,9 +10,9 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
-      <div class="top-icons">
+      <!--<div class="top-icons">
           <a tooltip="Volver" tooltip-placement="top" ui-sref="reviews.view({reviewId: review._id})"><i class="fa fa-arrow-left fa-2x"></i></a>
-      </div>
+      </div>-->
 
 
     <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
@@ -20,7 +20,7 @@
       <fieldset>
 
         <div class="well" style="margin-right: 0px;margin-left: 0px;">
-         <div class="bs-callout bs-callout-primary">
+         <div class="bs-callout bs-callout-danger">
           <h4>Modifica la reseña</h4>
           Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
          </div>
@@ -30,8 +30,8 @@
          </div>
 
          <div class="form-group input-panel" style="text-align:right">
-          <input type="submit" value="Guardar" class="btn btn-primary">
-          <input type="button" value="Cancelar" class="btn btn-primary" ng-click="showList();">
+          <input type="submit" value="Guardar" class="btn btn-danger">
+          <input type="button" value="Cancelar" class="btn btn-danger" ng-click="showList();">
          </div>
         </div> <!-- well -->
       </fieldset>
@@ -43,16 +43,16 @@
                <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
             </div>
             <div class="col-xs-9 col-md-9">
-              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="http://www.cervantesvirtual.com/obra/{{review.slug}}" target="_blank">Ver obra en catálogo <i class="glyphicon glyphicon-new-window"></i></a></h4>
+              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{review.slug | mountCover}}" target="_blank"><i class="glyphicon glyphicon-new-window"></i> Ver obra en catálogo</a></h4>
               <p>{{ review.title | htmlLimit: 200}}</p>
-              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 200"></p>
               <div class="row">
               <div class="col-md-12">
-                  <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                  <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                  <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
-                  <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                  <span class="label label-info" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
+                  <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+                  <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                  <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
+                  <span class="label label-danger" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
+                  <span class="label label-danger" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
               </div>
               </div>
             </div>

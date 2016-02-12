@@ -1,6 +1,6 @@
-<section ng-controller="ReviewsController" ng-init="findOne();" class="container">
+<section ng-controller="ReviewsController" ng-init="findOne();" >
 
-      <ol class="breadcrumb">
+      <!--<ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
           <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
       </ol>
@@ -10,11 +10,11 @@
              <i class="glyphicon glyphicon-edit"></i><br>
              Editar reseña
           </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status === 'draft'" ng-click="setPublicReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status === 'draft'" ng-click="setPublicStatus()">
              <i class="glyphicon glyphicon-eye-open"></i><br>
              Publicar reseña
           </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status !== 'draft'" ng-click="setDraftReviewStatus()">
+          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status !== 'draft'" ng-click="setDraftStatus()">
              <i class="glyphicon glyphicon-eye-close"></i><br>
              Deshacer publicación
           </a>
@@ -26,7 +26,63 @@
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
-      </div>
+      </div>-->
+      
+  <div class="page-header">
+    <div class="container">
+        <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
+        <h2>{{ review.name | htmlLimit: 200 }}</h2>
+    </div>
+  </div>    
+    
+    <div class="container">    
+        <div class="row">
+             <div class="col-md-12 col-xs-12">
+                 <ul class="profileNav-list">
+                     <li class="profileNav-item pull-left">
+                         <span class="profileNav-label">Comentarios</span>
+                         <span class="profileNav-value" data-is-compact="false">{{review.comments.length}}</span>
+                     </li>
+                     <li class="profileNav-item">
+                         <span class="profileNav-label">Valoraciones</span>
+                         <span class="profileNav-value" data-is-compact="false">{{review.ratings.length}}</span>
+                     </li>
+                     <li class="profileNav-item">
+                         <span class="profileNav-label">Publicado</span>
+                         <span class="profileNav-value" data-is-compact="false">{{review.status === 'public' ? 'Si' : 'No' }}</span>
+                     </li>
+                     <li class="profileNav-item pull-right">
+                        <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="reviews.edit({reviewId: review._id})" class="btn btn-danger"><i class="fa fa-pencil"></i> Editar</a> 
+                     </li>
+                     <li class="profileNav-item pull-right" ng-show="review.status === 'draft'">
+                        <a tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                     </li>
+                     <li class="profileNav-item pull-right" >
+                        <span class="dropdown" dropdown>
+                            <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                                <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                            </a>
+                            <ul class="dropdown-menu" dropdown-menu>
+                            <li ng-show="authentication.user._id === review.user._id"> 
+                              <a ui-sref="reviews.edit({reviewId: review._id})"><i class="glyphicon glyphicon-edit"></i> Editar reseña</a>
+                            </li>
+                            <li ng-show="authentication.user._id === review.user._id">
+                              <a ng-show="review.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar reseña</a>
+                            </li>
+                            <li ng-show="authentication.user._id === review.user._id">
+                              <a ng-show="review.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                            </li>
+                            <li ng-show="authentication.user._id === review.user._id">
+                              <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?"><i class="glyphicon glyphicon-trash"></i> Eliminar reseña</a>
+                            </li>
+                            <li>
+                              <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                            </li>
+                            </ul>
+                     </li>
+                 </ul>
+             </div>
+         </div> 
 
       <div class="alert alert-success col-xs-12" ng-show="messageok">
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
@@ -51,24 +107,24 @@
          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
          <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 
-         <div class="well" ng-show="review.status === 'public'">
+         <!--<div class="well" ng-show="review.status === 'public'">
            <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
            <h4 ng-show="isReadonly">Tu valoración</h4>
            <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="review.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
 
            <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
-         </div>
+         </div>-->
 
 
          <div class="row">
-             <div class="col-md-12 col-xs-12">
+             <!--<div class="col-md-12 col-xs-12">
                 <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                 <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
                 <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
                 <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>-->
 
-                <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                <!--<span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
                   <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
                   </span>
@@ -82,11 +138,19 @@
                      {{review.mediaType}}
                   </span>
                 </span>
-             </div>
+             </div>-->
              <div class="col-md-12 col-xs-12 social-links" ng-show="review.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                 <a tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                   <i class="fa fa-star"></i> Valora la reseña
+                 </a>
+
+                 <div style="margin-bottom:10px" class="col-md-12 col-xs-12" ng-show="showRatingBar">
+                   <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+                   <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+                 </div>
              </div>
            </div> <!-- col-md-12 .col-xs-12-->
 
@@ -133,12 +197,12 @@
          <div class="form-group">
            <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
            <div class="col-sm-10">
-              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5"></textarea>
+              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
            </div>
          </div>
          <div class="form-group">
            <div class="col-sm-offset-2 col-sm-10">                    
-              <button class="btn btn-info btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+              <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
            </div>
          </div>            
         </form>

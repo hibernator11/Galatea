@@ -12,8 +12,7 @@
 }
 
 .social-links {
-    margin: 2px;
-    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .booklist-description {
@@ -173,6 +172,7 @@ div.tooltip-inner {
 
 .global-nav:hover, .global-nav:active, .global-nav:focus {
     border-bottom: 5px solid #0084b4;
+    border-bottom: 5px solid #B43C2C;
     transition: all .15s ease-in-out;
 }
 
@@ -180,6 +180,7 @@ div.tooltip-inner {
 .navbar-default .navbar-nav > li > a:focus,
 .navbar-default .navbar-nav > li > a:active {
     color: #337ab7;
+    
 }
 
 .input-panel {
@@ -406,7 +407,7 @@ span.rating {
 }
 
 .page-header {
-    background-color: #2B7BB9;
+    background-color: #bfbfbf;
     color: white;
     height: 175px;
 }
@@ -544,4 +545,36 @@ span.rating {
 .carousel-control span.glyphicon.glyphicon-chevron-right,
 .carousel-control span.glyphicon.glyphicon-chevron-left{
     color:grey;
+}
+
+.profileNav-list {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.profileNav-item {
+    display: inline-block;
+    padding: 2px;
+}
+
+.profileNav-label {
+    color: #66757f;
+    font-size: 11px;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    transition: color .15s ease-in-out;
+}
+
+.profileNav-value {
+    font-size: 18px;
+    padding-top: 3px;
+    font-weight: 500;
+    transition: color .15s ease-in-out;
+}
+
+.profileNav-label, .profileNav-value {
+    display: block;
+    text-align: center;
 }

@@ -1,31 +1,72 @@
-<section ng-controller="ReviewsController" ng-init="find()" class="container">
+<section ng-controller="ReviewsController" ng-init="find()">
 
- <div class="row">
+ <!--<div class="row">
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="reviews.list">Mis reseñas</a></li>
       </ol>
- </div>
+ </div>-->
 
- <div class="row">
+ <!--<div class="row">
       <div class="menu col-xs-12">
           <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
              <i class="glyphicon glyphicon-plus"></i><br>
              Reseña
           </a>
-          <!--<a href="#" class="btn btn-info col-sm-3">
+          <a href="#" class="btn btn-info col-sm-3">
              <i class="glyphicon glyphicon-cloud"></i><br>
              Cloud
           </a>
           <a href="#" class="btn btn-info col-sm-3">
              <i class="glyphicon glyphicon-cog"></i><br>
              Tools
-          </a>-->
+          </a>
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
- </div>
+ </div>-->
+ 
+  <div class="page-header">
+    <div class="container">
+        <h1><i class="fa fa-pencil-square-o"></i> Mis reseñas</h1>
+        <h2></h2>
+    </div>
+  </div>    
+    
+  <div class="container">
+
+    <div class="row">
+        <ul class="profileNav-list">
+            <li class="profileNav-item pull-left">
+                <span class="profileNav-label">Grupos</span>
+                <span class="profileNav-value" data-is-compact="false">{{reviews.length}}</span>
+            </li>
+            <li class="profileNav-item">
+                <span class="profileNav-label">Seguidor de</span>
+                <span class="profileNav-value" data-is-compact="false">{{reviews.length}}</span>
+            </li>
+            <li class="profileNav-item">
+                <span class="profileNav-label">Comentarios</span>
+                <span class="profileNav-value" data-is-compact="false">{{reviews.length}}</span>
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Crear reseña" tooltip-placement="top" href="#" ui-sref="reviews.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear reseña</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <span class="dropdown" dropdown>
+                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu" dropdown-menu>
+                    <li>
+                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+ 
  <div class="row">  
       <div class="list-group col-xs-12">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
@@ -36,15 +77,12 @@
         <div class="media-body">
           <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
           <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-          <!--<p class="text-muted">
-            <span ng-show="review.language" class="glyphicon glyphicon-tag"></span> {{review.language}}
-          </p>-->
           <p class="text-muted">
-            <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-            <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-            <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-            <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-            <span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
+            <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
+            <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+            <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+            <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+            <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
                 <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
                 </span>
@@ -70,5 +108,6 @@
         No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
       </div>
 
+</div>
 </section>
 <footer-generic></footer-generic>

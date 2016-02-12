@@ -1,79 +1,116 @@
-<section ng-controller="GroupsController" ng-init="find()" class="container">
+<section ng-controller="GroupsController" ng-init="find()">
 
- <div class="row">
-      <ol class="breadcrumb">
-          <li class="active">Mis grupos</li>
-      </ol>
- </div>
+ <div class="page-header">
+    <div class="container">
+        <h1><i class="fa fa-users"></i> Mis grupos</h1>
+        <h2></h2>
+    </div>
+  </div>    
+    
+  <div class="container">    
 
- <div class="row">
-      <div class="menu col-xs-12">
-          <a href="#" ui-sref="groups.create" class="btn col-sm-4 col-xs-4 col-md-4">
-             <i class="glyphicon glyphicon-plus"></i><br>
-             Grupo
-          </a>
-          <a href="#" class="btn col-sm-4 col-xs-4 col-md-4">
-             <i class="glyphicon glyphicon-user"></i><br>
-             Seguidor
-          </a>
-          <!--<a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cog"></i><br>
-             Tools
-          </a>-->
-          <a href="#" class="btn col-sm-4 col-xs-4 col-md-4" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>
- </div>
- <div class="row">  
-      <div class="list-group col-xs-12">
-      <a ng-repeat="group in groups" ui-sref="groups.view({groupId: group._id})" class="list-group-item">
-        <div class="media">
-        <div class="media-left" ng-switch on="group.type">
-          <img ng-switch-when="obra" ng-if="group.uuid" style="width: 80px;height: 120px;" ng-src="{{group.uuid | mountCover}}" alt="{{group.title}}" class="media-object">
-          <span style="font-size: 30px;padding: 20px;" ng-switch-when="autor" class="glyphicon glyphicon-user" aria-hidden="true"></span>
-          <span style="font-size: 30px;padding: 20px;" ng-switch-when="lista" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-          <span style="font-size: 30px;padding: 20px;" ng-switch-when="general" class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
-        </div>
-        <div class="media-body">
-          <h5 class="media-heading">{{ group.name | htmlLimit: 200 }}</h5>
-          <p class="text-muted" ng-show="group.authorName">Grupo sobre el autor {{group.authorName}}</p>
-          <p class="text-muted" ng-show="group.title">{{group.title}}</p>
-          <p class="text-muted" ng-show="group.reproduction">{{group.reproduction}}</p>
-          <!--<p class="text-muted">
-            <span ng-show="group.language" class="glyphicon glyphicon-tag"></span> {{group.language}}
-          </p>-->
-          <p class="text-muted">
-            <span class="label label-info" ng-show="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-            <span class="label label-info" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-            <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-            <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-            <!--<span class="label label-info" ng-show="group.mediaType" ng-switch on="group.mediaType">
-                <span ng-switch-when="audio">
-                    <i class="glyphicon glyphicon-headphones"></i> {{group.mediaType}}
-                </span>
-                <span ng-switch-when="video">
-                    <i class="glyphicon glyphicon-film"></i> {{group.mediaType}}
-                </span>
-                <span ng-switch-when="texto">
-                    <i class="glyphicon glyphicon-book"></i> {{group.mediaType}}
-                </span>
-                <span ng-switch-default>
-                    {{group.mediaType}}
-                </span>
-            </span>-->
-          </p>
-          <p class="text-muted" ng-show="group.content" ng-bind-html="group.content | htmlLimit: 200"></p>
-        </div>
-        </div> <!-- media -->
-      </a> 
-      </div> <!-- repeat -->
- </div>
+    <div class="row">
+        <ul class="profileNav-list">
+            <li class="profileNav-item pull-left">
+                <span class="profileNav-label">Grupos</span>
+                <span class="profileNav-value" data-is-compact="false">{{groups.length}}</span>
+            </li>
+            <li class="profileNav-item">
+                <span class="profileNav-label">Seguidor de</span>
+                <span class="profileNav-value" data-is-compact="false">{{groups.length}}</span>
+            </li>
+            <li class="profileNav-item">
+                <span class="profileNav-label">Comentarios</span>
+                <span class="profileNav-value" data-is-compact="false">{{groups.length}}</span>
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Crear grupo" tooltip-placement="top" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <span class="dropdown" dropdown>
+                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu" dropdown-menu>
+                    <li ng-show="authentication.user._id === group.user._id"> 
+                        <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
+                    </li>
+                    <li ng-show="authentication.user._id === group.user._id">
+                        <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
+                    </li>
+                    <li ng-show="authentication.user._id === group.user._id">
+                        <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                    </li>
+                    <li ng-show="authentication.user._id === group.user._id">
+                        <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
+                    </li>
+                    <li>
+                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div> 
 
+    <div class="row">  
+      
       <div class="alert alert-warning text-center" ng-if="groups.$resolved && !groups.length">
         No ha creado ningún grupo todavía, ¿<a ui-sref="groups.create">desea crear un grupo</a>?
       </div>
+    
+    
+       <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul class="event-list">
+                        <li ng-repeat="group in groups" ui-sref="groups.view({groupId: group._id})"> 
+                            <time datetime="2014-07-20">
+                                <!--<span class="day">4</span>-->
+                                <!--<span class="month">Jul</span>-->
+                                <span class="year">2014</span>
+                                <span class="time">ALL DAY</span>
+                                
+                                <span class="month" ng-switch on="group.type">
+                                    <span ng-switch-when="obra">
+                                      <i class="glyphicon glyphicon-book"></i><br><br> Obra
+                                    </span>
+                                    <span ng-switch-when="lista">
+                                      <i class="glyphicon glyphicon-th-list"></i><br><br> Lista
+                                    </span>
+                                    <span ng-switch-when="autor">
+                                      <i class="glyphicon glyphicon-user"></i><br><br> Autor
+                                    </span>
+                                    <span ng-switch-default>
+                                      <i class="fa fa-comments"></i><br><br> Tema
+                                    </span>
+                                </span>
+                            </time>
+                            
+                            <!--<img class="pull-right" ng-if="group.uuid" style="width: 80px;height: 120px;" ng-src="{{group.uuid | mountCover}}" alt="{{group.title}}">-->
+          
+                            <div class="info">
+                                <h2 class="title">{{ group.name | htmlLimit: 150 }}</h2>
+                                <p class="desc" ng-show="group.content" ng-bind-html="group.content | htmlLimit: 150"></p>
+                                <p class="desc"><span class="label label-default" ng-if="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
+                                <span class="label label-default" ng-if="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span>
+                                <span class="label label-default"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+                                <span class="label label-default"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+                                </p>
+                            </div>
+                            <div class="social">
+                                <ul>
+                                <li class="facebook" style="width:33%;"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}/{{group._id}}"><span class="fa fa-facebook"></span></a></li>
+                                <li class="twitter" style="width:34%;"><a ng-href="https://twitter.com/home?status={{location}}/{{group._id}}"><span class="fa fa-twitter"></span></a></li>
+                                <li class="google-plus" style="width:33%;"><a href="#google-plus"><span class="fa fa-google-plus"></span></a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    
 
 </section>
 <footer-generic></footer-generic>

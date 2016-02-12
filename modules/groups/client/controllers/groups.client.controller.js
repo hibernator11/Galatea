@@ -89,6 +89,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     $scope.showDescriptionPanel = false;
     $scope.booklists = '';
     
+    $scope.showRatingBar = false;
+    
     $scope.selectTypeAction = function() {
         if($scope.type === 'obra'){
             $scope.showWorkPanel = true;
@@ -157,7 +159,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         $scope.booklist = Booklists.get({
             booklistId: $scope.booklistId
         });
-    }
+    };
     
     // Create new Group
     $scope.create = function (isValid) {
@@ -222,7 +224,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
         }
     };
 
-    // Update existing Review
+    // Update existing Group
     $scope.update = function (isValid) {
         $scope.error = null;
 
@@ -301,6 +303,20 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
           $scope.error = errorResponse.data.message;
       });
     };
+    
+    $scope.checkRatingBar = function (){
+        $scope.showRatingBar = true;
+        if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
+            angular.forEach($scope.group.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                    $scope.showRatingBar = false;
+                    $scope.error = "No puedes votar dos veces el mismo grupo";
+                }
+            });
+        }
+    };
 
     $scope.$watch('group.ratings', function(value) {
         if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
@@ -328,6 +344,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
 
           $scope.group.$update(function () {
               $scope.messageok = 'El grupo se ha valorado correctamente.';
+              $scope.showRatingBar = false;
           }, function (errorResponse) {
               $scope.error = errorResponse.data.message;
           });

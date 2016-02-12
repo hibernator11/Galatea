@@ -1,6 +1,46 @@
-<section ng-controller="BooklistsController" ng-init="find()" class="container">
+<section ng-controller="BooklistsController" ng-init="find()">
 
-   <div class="row">
+    <div class="page-header">
+    <div class="container">
+        <h1><i class="fa fa-th-list"></i> Mis listas de obras</h1>
+        <h2></h2>
+    </div>
+  </div>    
+    
+  <div class="container">
+
+    <div class="row">
+        <ul class="profileNav-list">
+            <li class="profileNav-item pull-left">
+                <span class="profileNav-label">Listas</span>
+                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
+            </li>
+            <!--<li class="profileNav-item">
+                <span class="profileNav-label">Seguidor de</span>
+                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
+            </li>
+            <li class="profileNav-item">
+                <span class="profileNav-label">Comentarios</span>
+                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
+            </li>-->
+            <li class="profileNav-item pull-right">
+                <a tooltip="Crear lista" tooltip-placement="top" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <span class="dropdown" dropdown>
+                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu" dropdown-menu>
+                    <li>
+                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    
+   <!--<div class="row">
       <ol class="breadcrumb">
           <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
       </ol>
@@ -19,13 +59,13 @@
           <a href="#" class="btn btn-info col-sm-3">
              <i class="glyphicon glyphicon-cog"></i><br>
              Tools
-          </a>-->
+          </a>
           <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
              <i class="glyphicon glyphicon-question-sign"></i><br>
              Ayuda
           </a>
       </div>
-   </div>
+   </div>-->
   
    <div class="row">
       <div class="list-group col-xs-12">
@@ -42,7 +82,7 @@
           <span class="label label-pill label-danger pull-right">{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}}</span>
 
           <ul class="list-inline">
-            <li ng-repeat="tag in booklist.tags"><span class="label label-info"><i class="glyphicon glyphicon-tag"></i> {{tag.name}}</span></li>
+            <li ng-repeat="tag in booklist.tags"><span class="label label-danger"><i class="glyphicon glyphicon-tag"></i> {{tag.name}}</span></li>
           </ul>
         </a>
       </div>
@@ -51,6 +91,7 @@
       <div class="alert alert-warning text-center" ng-if="booklists.$resolved && !booklists.length">
         No ha creado ninguna lista todavía, ¿<a ui-sref="booklists.create">desea crear una</a>?
       </div>
+</div>
 
 </section>
 <footer-generic></footer-generic>

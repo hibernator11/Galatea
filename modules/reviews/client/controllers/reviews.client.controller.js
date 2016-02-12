@@ -82,6 +82,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.isReadonly = false;
     $scope.percent = 0;
     
+    $scope.showRatingBar = false;
     
     $scope.tinymceOptions = {
         language_url : 'modules/reviews/client/language-tinymce/es.js' 
@@ -217,7 +218,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     // update review status draft
-    $scope.setDraftReviewStatus = function () {
+    $scope.setDraftStatus = function () {
       $scope.review.status = "draft";
       
       $scope.review.$update(function () {
@@ -228,7 +229,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     // update review status public
-    $scope.setPublicReviewStatus = function () {
+    $scope.setPublicStatus = function () {
       $scope.review.status = "public";
       
       $scope.review.$update(function () {
@@ -236,6 +237,20 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
       }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
       });
+    };
+    
+    $scope.checkRatingBar = function (){
+        $scope.showRatingBar = true;
+        if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
+            angular.forEach($scope.review.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                    $scope.showRatingBar = false;
+                    $scope.error = "No puedes votar dos veces la misma reseña";
+                }
+            });
+        }
     };
 
     $scope.$watch('review.ratings', function(value) {
