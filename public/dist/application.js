@@ -911,60 +911,43 @@ var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
 
 angular.module('booklists').controller('BooklistPaginationController', ['$scope', '$filter', 'Booklists',
   function ($scope, $filter, Booklists) {
-      
-    $scope.init = function(typeSearch){
-        $scope.typeSearch = typeSearch;
+    
+    $scope.init = function(status){
+        $scope.status = status;
         $scope.pagedItems = [];
         $scope.itemsPerPage = 10;
         $scope.currentPage = 1;
-        
         $scope.find();
     }
     
     $scope.figureOutItemsToDisplay = function () {
       
-      $scope.filteredItems = $filter('filter')($scope.booklists, {
+      $scope.pagedItems = $filter('filter')($scope.booklists, {
         $: $scope.search
       });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
     };
-
+    
     $scope.pageChanged = function () {
-      $scope.find();
+        $scope.find();
     };
       
     $scope.find = function () {
         var query = '';
-        if($scope.typeSearch === 'public'){
+        if($scope.status === 'public'){
             query = {status:'public', page:$scope.currentPage};
         }else{
             query = {page:$scope.currentPage};
         }
+
         Booklists.query(query, function (data) {
             $scope.booklists = data[0].booklists;
             $scope.total = data[0].total;
             
-            console.log($scope.booklists.length);
-            
-            $scope.filteredItems = $filter('filter')($scope.booklists, {
+            $scope.pagedItems = $filter('filter')($scope.booklists, {
                 $: $scope.search
             });
-            console.log('filteredItems:' + $scope.filteredItems.length);
-            
-            
-            $scope.filterLength = $scope.filteredItems.length;
-            var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-            var end = begin + $scope.itemsPerPage;
-            $scope.pagedItems = $scope.filteredItems.slice(begin, end);
-            console.log('begin:' + begin);
-            console.log('end:' + end);
-            console.log('pagedItems:' + $scope.pagedItems.length);
         });
     };
-    
   }
 ]);
 
@@ -1512,6 +1495,10 @@ angular.module('groups').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('groups.search', {
+        url: '/search',
+        templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html'
+      })
       .state('groups.create', {
         url: '/create',
         templateUrl: 'modules/groups/client/views/create-group.client.view.html',
@@ -1538,64 +1525,9 @@ angular.module('groups').config(['$stateProvider',
 
 'use strict';
 
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
-// controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
-    $scope.result = 'hidden';
-    $scope.resultMessage = '';
-    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
-    $scope.submitButtonDisabled = false;
-    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
-    
-    $scope.submit = function(contactform) {
-        $scope.submitted = true;
-        $scope.submitButtonDisabled = true;
-        if (contactform.$valid) {
-            console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
-
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
-            $modalInstance.close($scope.result);
-        } else {
-            $scope.submitButtonDisabled = false;
-            $scope.resultMessage = 'Failed <img src="http://www.chaosm.net/blog/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">  Please fill out all the fields.';
-            $scope.result='bg-danger';
-        }
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -2056,7 +1988,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$wi
     };
 
     $scope.showHelpInformation = function () {
-       var modalInstance = $modal.open({
+       $modal.open({
             templateUrl: '/modules/groups/client/views/modal-help-information.html',
             controller: ModalHelpInstanceCtrl,
             scope: $scope
@@ -2081,6 +2013,110 @@ angular.module('groups').filter('mountRecord', [function () {
 }]);
 
 
+
+'use strict';
+
+// controller for modal email window
+var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            console.log('contact form valid');
+            /*$http({
+                method  : 'POST',
+                url     : 'contact-form.php',
+                data    : $.param($scope.formData),  //param method from jQuery
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
+            }).success(function(data){
+                console.log(data);
+                if (data.success) { //success comes from the return json object*/
+                    $scope.submitButtonDisabled = true;
+                    //$scope.resultMessage = data.message;
+                    //$scope.result='bg-success';
+                    $scope.result = {
+                        css: 'bg-success',
+                        message: 'Correo enviado correctamente'
+                    };
+
+                /*} else {
+                    $scope.submitButtonDisabled = false;
+                    $scope.resultMessage = data.message;
+                    $scope.result='bg-danger';
+                }
+            });*/
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error por favor rellene todos los campos.';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
+
+
+'use strict';
+
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+'use strict';
+
+angular.module('groups').controller('GroupPaginationController', ['$scope', '$filter', 'Groups',
+  function ($scope, $filter, Groups) {
+      
+    $scope.init = function(status){
+        $scope.status = status;
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = 10;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.figureOutItemsToDisplay = function () {
+      
+      $scope.pagedItems = $filter('filter')($scope.groups, {
+        $: $scope.search
+      });
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+      
+    $scope.find = function () {
+        var query = '';
+        if($scope.status === 'public'){
+            query = {status:'public', page:$scope.currentPage};
+        }else{
+            query = {page:$scope.currentPage};
+        }
+
+        Groups.query(query, function (data) {
+            $scope.groups = data[0].groups;
+            $scope.total = data[0].total;
+            
+            $scope.pagedItems = $filter('filter')($scope.groups, {
+                $: $scope.search
+            });
+        });
+    };
+  }
+]);
 
 'use strict';
 
@@ -2144,6 +2180,10 @@ angular.module('reviews').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('reviews.search', {
+        url: '/search',
+        templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html'
+      })
       .state('reviews.uuid', {
         url: '/uuid/:uuid',
         templateUrl: 'modules/reviews/client/views/list-reviews-uuid.client.view.html',
@@ -2176,14 +2216,6 @@ angular.module('reviews').config(['$stateProvider',
 ]);
 
 'use strict';
-
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-ModalHelpInstanceCtrl.$inject = ["$scope", "$modalInstance"];
 
 // controller for modal email window
 var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
@@ -2234,9 +2266,66 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
 };
 ModalEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance"];
 
+
+
+'use strict';
+
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalHelpInstanceCtrl.$inject = ["$scope", "$modalInstance"];
+'use strict';
+
+angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$filter', 'Reviews',
+  function ($scope, $filter, Reviews) {
+      
+    $scope.init = function(status){
+        $scope.status = status;
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = 10;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.figureOutItemsToDisplay = function () {
+      
+      $scope.pagedItems = $filter('filter')($scope.reviews, {
+        $: $scope.search
+      });
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+      
+    $scope.find = function () {
+        var query = '';
+        if($scope.status === 'public'){
+            query = {status:'public', page:$scope.currentPage};
+        }else{
+            query = {page:$scope.currentPage};
+        }
+
+        Reviews.query(query, function (data) {
+            $scope.reviews = data[0].reviews;
+            $scope.total = data[0].total;
+            
+            $scope.pagedItems = $filter('filter')($scope.reviews, {
+                $: $scope.search
+            });
+        });
+    };
+  }
+]);
+
+'use strict';
+
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -2364,7 +2453,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.findByUuid = function () {
         $http.get('api/reviews/uuid/' + $stateParams.uuid).success(function (response) {
             $scope.reviews = response;
-            //console.log('workJson:' + $scope.getWorkJson());
             $scope.getWorkJson();
         }).error(function (response) {
             $scope.error = response.message;
@@ -2576,7 +2664,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
 
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
+            templateUrl: '/modules/reviews/client/views/modal-email-form.html',
             controller: ModalEmailInstanceCtrl,
             scope: $scope,
             resolve: {
@@ -2596,7 +2684,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     $scope.showHelpInformation = function () {
-       var modalInstance = $modal.open({
+       $modal.open({
             templateUrl: '/modules/reviews/client/views/modal-help-information.html',
             controller: ModalHelpInstanceCtrl,
             scope: $scope

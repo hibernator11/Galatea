@@ -35,7 +35,7 @@
         </ul>
     </div>
     
-   <div class="row">
+    <div class="row">
       <div class="list-group col-xs-12">
         <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
           <h4 class="list-group-item-heading" ng-bind="booklist.title"></h4>
@@ -55,13 +55,13 @@
           </ul>
         </a>
       </div>
-   </div>
+    </div>
       
-    <pagination ng-if="pagedItems.length" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
+    <pagination total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
   
-      <div class="alert alert-warning text-center" ng-if="!pagedItems.length">
+    <div class="alert alert-warning text-center" ng-if="!pagedItems.length">
         No ha creado ninguna lista todavía, ¿<a ui-sref="booklists.create">desea crear una</a>?
-      </div>
+    </div>
 </div>
 
 </section>

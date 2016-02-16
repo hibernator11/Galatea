@@ -17,6 +17,10 @@ angular.module('groups').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('groups.search', {
+        url: '/search',
+        templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html'
+      })
       .state('groups.create', {
         url: '/create',
         templateUrl: 'modules/groups/client/views/create-group.client.view.html',

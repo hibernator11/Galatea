@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('booklists').controller('BooklistPaginationController', ['$scope', '$filter', 'Booklists',
-  function ($scope, $filter, Booklists) {
-    
+angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$filter', 'Reviews',
+  function ($scope, $filter, Reviews) {
+      
     $scope.init = function(status){
         $scope.status = status;
         $scope.pagedItems = [];
@@ -13,7 +13,7 @@ angular.module('booklists').controller('BooklistPaginationController', ['$scope'
     
     $scope.figureOutItemsToDisplay = function () {
       
-      $scope.pagedItems = $filter('filter')($scope.booklists, {
+      $scope.pagedItems = $filter('filter')($scope.reviews, {
         $: $scope.search
       });
     };
@@ -30,11 +30,11 @@ angular.module('booklists').controller('BooklistPaginationController', ['$scope'
             query = {page:$scope.currentPage};
         }
 
-        Booklists.query(query, function (data) {
-            $scope.booklists = data[0].booklists;
+        Reviews.query(query, function (data) {
+            $scope.reviews = data[0].reviews;
             $scope.total = data[0].total;
             
-            $scope.pagedItems = $filter('filter')($scope.booklists, {
+            $scope.pagedItems = $filter('filter')($scope.reviews, {
                 $: $scope.search
             });
         });

@@ -83,23 +83,42 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-  var query = '';
-  if(req.user){
-    query = {user:req.user};
-
-    Review.find(query).sort('-created').populate('user', 'displayName').exec(function (err, reviews) {
+    var query = '';
+    if(req.query.status){
+        query = {status:'public'};
+    }
+    else if(req.user){
+        query = {user:req.user};
+    }
+    
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    var per_page =10;
+  
+    Review.find(query).sort('-created').
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, reviews) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(reviews);
+          
+          Review.find(query)
+            .distinct('_id')
+            .count(function (err, count) {
+              var result = [{
+                 total : count,
+                 reviews: reviews
+              }];
+
+              res.json(result);
+        }); 
       }
     });
-  }else{
-    // if user is not logged in empty result
-    res.json({});
-  }
+  
 };
 
 /**

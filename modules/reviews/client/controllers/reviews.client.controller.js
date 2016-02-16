@@ -1,63 +1,8 @@
 'use strict';
 
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
-// controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
-    $scope.result = 'hidden';
-    $scope.resultMessage = '';
-    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
-    $scope.submitButtonDisabled = false;
-    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
-    
-    $scope.submit = function(contactform) {
-        $scope.submitted = true;
-        $scope.submitButtonDisabled = true;
-        if (contactform.$valid) {
-            console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
-
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
-            $modalInstance.close($scope.result);
-        } else {
-            $scope.submitButtonDisabled = false;
-            $scope.resultMessage = 'Por favor complete todos los campos.';
-            $scope.result='bg-danger';
-        }
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -185,7 +130,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.findByUuid = function () {
         $http.get('api/reviews/uuid/' + $stateParams.uuid).success(function (response) {
             $scope.reviews = response;
-            //console.log('workJson:' + $scope.getWorkJson());
             $scope.getWorkJson();
         }).error(function (response) {
             $scope.error = response.message;
@@ -397,7 +341,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
 
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
+            templateUrl: '/modules/reviews/client/views/modal-email-form.html',
             controller: ModalEmailInstanceCtrl,
             scope: $scope,
             resolve: {
@@ -417,7 +361,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     $scope.showHelpInformation = function () {
-       var modalInstance = $modal.open({
+       $modal.open({
             templateUrl: '/modules/reviews/client/views/modal-help-information.html',
             controller: ModalHelpInstanceCtrl,
             scope: $scope

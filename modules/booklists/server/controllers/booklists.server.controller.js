@@ -122,10 +122,6 @@ exports.list = function (req, res) {
         }); 
       }
     });
-  /*}else{
-    // if user is not logged in empty result
-    res.json({});
-  }*/
 };
 
 //query = {books: {$elemMatch: {uuid: req.params.uuid}}};console.log(query);
