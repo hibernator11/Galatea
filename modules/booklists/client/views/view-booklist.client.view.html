@@ -1,29 +1,5 @@
 <section ng-controller="BooklistsController" ng-init="findOne()">
 
-      <!--<ol class="breadcrumb">
-          <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
-          <li class="active">{{ booklist.title | htmlLimit: 100 }}</li>
-      </ol>
-
-      <div class="menu col-xs-12" ng-show="authentication.user._id === booklist.user._id">
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="booklists.edit({booklistId: booklist._id})">
-             <i class="glyphicon glyphicon-edit"></i><br>
-             Editar Lista
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showBookForm()">
-             <i class="glyphicon glyphicon-plus"></i><br>
-             Añadir obras
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?">
-             <i class="glyphicon glyphicon-trash"></i><br>
-             Eliminar lista
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>-->
-      
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Lista de obras</h1>
@@ -36,21 +12,29 @@
              <div class="col-md-12 col-xs-12">
                  <ul class="profileNav-list">
                      <li class="profileNav-item pull-left">
+                         <span class="profileNav-label">Obras</span>
+                         <span class="profileNav-value" data-is-compact="false">{{booklist.books.length}}</span>
+                     </li>
+                     <li class="profileNav-item pull-left">
                          <span class="profileNav-label">Comentarios</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.comments.length}}</span>
                      </li>
-                     <!--<li class="profileNav-item">
+                     <li class="profileNav-item">
+                         <span class="profileNav-label">Seguidores</span>
+                         <span class="profileNav-value" data-is-compact="false">{{booklist.followers.length}}</span>
+                     </li>
+                     <li class="profileNav-item">
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.ratings.length}}</span>
-                     </li>-->
+                     </li>
                      <li class="profileNav-item">
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
                      <li class="profileNav-item pull-right">
-                        <a tooltip="Editar lista" tooltip-placement="top" href="#" ui-sref="booklists.edit({booklistId: booklist._id})" class="btn btn-danger"><i class="fa fa-pencil"></i> Editar</a> 
+                        <a tooltip="Seguir" tooltip-placement="top" href="#" ng-click="addFollower()" class="btn btn-danger"><i class="fa fa-user-plus"></i> Seguir</a> 
                      </li>
-                     <li class="profileNav-item pull-right" ng-show="review.status === 'draft'">
+                     <li class="profileNav-item pull-right" ng-show="booklist.status === 'draft'">
                         <a tooltip="Publicar lista" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                      </li>
                      <li class="profileNav-item pull-right">
@@ -58,7 +42,7 @@
                      </li>
                      <li class="profileNav-item pull-right" >
                         <span class="dropdown" dropdown>
-                            <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                            <a tooltip="Más acciones de usuario" tooltip-placement  ="top" href="" class="dropdown-toggle" dropdown-toggle>
                                 <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" dropdown-menu>
@@ -87,16 +71,21 @@
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
        <strong>Resultado:</strong> {{messageok}}
       </div>
+        
+      <div class="alert alert-warning col-xs-12" ng-show="error">
+       <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+       <strong>Aviso:</strong> {{error}}
+      </div>
       
         <hr>
 
       <div class="booklist-description row">
         <div class="col-md-8">
             <h3>{{ booklist.title | htmlLimit: 200 }}</h3>
-            <h5 ng-show="booklist.comments">Descripción</h5>
-            <p ng-show="booklist.comments"><small><em class="text-muted">{{booklist.comments}}</em></small></p>
+            <h5 ng-show="booklist.description">Descripción</h5>
+            <p ng-show="booklist.description"><small><em class="text-muted">{{booklist.description}}</em></small></p>
             <p>
-              <ul class="list-inline">
+              <ul class="list-inline" ng-if="booklist.tags">
               <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
               </ul>
             </p>
@@ -106,7 +95,16 @@
             <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
             <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
             <a tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+            <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                <i class="fa fa-star"></i> Valorar la lista
+            </a>
           </div>
+            
+           <div style="margin-bottom:10px" class="col-md-12 col-xs-12" ng-show="showRatingBar">
+                <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="booklist.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+
+                <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+             </div>  
         </div>
         
       </div>
@@ -116,7 +114,7 @@
        <div class="row">
          <div class="col-sm-3 col-xs-3 col-md-2">
            <a ng-href="{{book.slug | mountRecord }}" target="_blank">
-             <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive">
+             <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
            </a>
          </div>
          <div class="col-sm-7 col-xs-9 col-md-8">
@@ -153,13 +151,55 @@
            </a>
          </div>
        </div> <!-- row -->
-       <hr>
-     </div> <!-- repeat books -->
-
-     <div class="alert alert-warning" ng-show="booklist.books.length === 0">
+       
+       <div class="alert alert-warning" ng-show="booklist.books.length === 0">
        <a href="#" ng-click="showBookForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
        <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
+       </div>
+       
+       <hr>
+       
+     </div> <!-- repeat books -->
+     
+
+     <div ng-show="booklist.comments.length > 0">
+      <h4>Últimos comentarios</h4>	
+
+      <div ng-repeat="comment in booklist.comments" class="media">
+        <div class="media-left">
+          <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+        </div>
+        <div class="media-body">
+            <small>
+            <em class="text-muted">
+            Añadido el
+            <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+             por
+            <span ng-bind="comment.user.displayName"></span>
+            </em>
+            </small>
+            <p ng-bind="comment.content"></p>
+        </div>
+      </div>
+      <hr>
+     </div> <!-- last comments -->
+     
+     <div ng-show="booklist.status === 'public'">
+        <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+         <div class="form-group">
+           <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
+           <div class="col-sm-10">
+              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
+           </div>
+         </div>
+         <div class="form-group">
+           <div class="col-sm-offset-2 col-sm-10">                    
+              <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+           </div>
+         </div>            
+        </form>
      </div>
+
+    
   </div>
 </section>
-<footer-generic></footer-generic>

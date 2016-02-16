@@ -349,6 +349,10 @@ angular.module('booklists').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('booklists.search', {
+        url: '/search',
+        templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html'
+      })
       .state('booklists.create', {
         url: '/create',
         templateUrl: 'modules/booklists/client/views/create-booklist.client.view.html',
@@ -375,60 +379,376 @@ angular.module('booklists').config(['$stateProvider',
 
 'use strict';
 
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
+// Booklists controller
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
+    $scope.authentication = Authentication;
 
-// controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
-    $scope.result = 'hidden';
-    $scope.resultMessage = '';
-    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
-    $scope.submitButtonDisabled = false;
-    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    $scope.location = $location.absUrl();
+
+    $scope.warningopen = true;
+    $scope.messageok = '';
     
-    $scope.submit = function(contactform) {
-        $scope.submitted = true;
-        $scope.submitButtonDisabled = true;
-        if (contactform.$valid) {
-            console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
+    $scope.year = new Date();
+    
+    $scope.form = {};
+    $scope.txtcomment = '';
+    
+    $scope.max = 5;
+    $scope.rate = 0;
+    $scope.isReadonly = false;
+    $scope.percent = 0;
+    $scope.showRatingBar = false;
 
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
+    // Create new Booklist
+    $scope.create = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'booklistForm');
+
+            return false;
+        }
+
+        // Create new Booklist object
+        var booklist = new Booklists({
+            title: this.title,
+            description: this.description,
+            tags: this.tags,
+            visible: this.visible
+        });
+
+        // Redirect after save
+        booklist.$save(function (response) {
+            $location.path('booklists/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.description = '';
+            $scope.tags = '';
+            $scope.books = '';
+            $scope.visible = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Remove existing Booklist
+    $scope.remove = function (booklist) {
+        if (booklist) {
+            booklist.$remove();
+
+            for (var i in $scope.booklists) {
+                if ($scope.booklists[i] === booklist) {
+                    $scope.booklists.splice(i, 1);
                 }
-            });*/
-            $modalInstance.close($scope.result);
+            }
         } else {
-            $scope.submitButtonDisabled = false;
-            $scope.resultMessage = 'Failed <img src="http://www.chaosm.net/blog/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">  Please fill out all the fields.';
-            $scope.result='bg-danger';
+            $scope.booklist.$remove(function () {
+                $location.path('booklists');
+            });
         }
     };
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+    // Update existing Booklist
+    $scope.update = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'booklistForm');
+
+            return false;
+        }
+
+        var booklist = $scope.booklist;
+
+        booklist.$update(function () {
+            $location.path('booklists/' + booklist._id);
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
     };
-};
+
+    $scope.showList = function(){
+        $location.path('booklists');
+    };
+
+    // Find a list of Booklists
+    $scope.find = function () {
+        Booklists.query({}, function (data) {
+                              $scope.booklists = data[0].booklists;
+                              $scope.total = data[0].total;
+                           });
+    };
+
+    // Set visible field
+    $scope.updateBooklist = function () {
+        $scope.booklist.$update(function () {
+            //$location.path('booklists/' + booklist._id);
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Find existing Booklist
+    $scope.findOne = function () {
+      $scope.booklist = Booklists.get({
+        booklistId: $stateParams.booklistId
+      });
+    };
+
+    $scope.removeBook = function (item){
+        var index = $scope.booklist.books.indexOf(item);
+        $scope.booklist.books.splice(index,1);
+
+        $scope.booklist.$update(function () {
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Find existing Subjects in BVMC catalogue
+    $scope.getSubject = function(val) {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+            params: {
+                q: val,
+                maxRows: 10
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+                var result = {
+                        name:item.nombre, 
+                        identifierSubject: item.id
+                    };
+                return result;
+            });
+        });
+    };
+    
+    // update booklist status draft
+    $scope.setDraftStatus = function () {
+      $scope.booklist.status = "draft";
+      
+      $scope.booklist.$update(function () {
+          $scope.messageok = 'La lista se ha cambiado a estado borrador.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // update booklist status public
+    $scope.setPublicStatus = function () {
+      $scope.booklist.status = "public";
+      
+      $scope.booklist.$update(function () {
+          $scope.messageok = 'La lista se ha publicado correctamente.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.addComment = function() {
+      if ($scope.form.commentForm.$valid) {
+            
+        var comment = {
+                    content: $scope.txtcomment,
+                    user: $scope.authentication.user
+        };
+
+        $scope.booklist.comments.unshift(comment);
+
+        $scope.booklist.$update(function () {
+            $scope.txtcomment = '';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+      }
+    };
+    
+    $scope.addFollower = function() {
+      if ($scope.authentication.user) {
+          
+        if ($scope.authentication.user._id !== $scope.booklist.user._id) {
+            var follower = {
+                    user: $scope.authentication.user
+            };
+            
+            var found = false;
+            for(var i = 0; i <  $scope.booklist.followers.length; i++) {
+                if ( $scope.booklist.followers[i].user === $scope.authentication.user._id) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                $scope.booklist.followers.push(follower);
+
+                $scope.booklist.$update(function () {
+                    $scope.messageok = 'Ahora eres seguidor de esta lsita de obras.' + $scope.authentication.user._id;
+                }, function (errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            }else{
+                $scope.error = 'Ya eres seguidor de la lista.';
+            }
+        }else{
+            $scope.error = 'Eres el creador de esta lista y por tanto ya eres seguidor.';
+        }
+      }else{
+          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
+      }
+    };
+
+    // update Tag event
+    $scope.updateTag = function(val) {
+        
+        var booklist = $scope.booklist;
+
+        booklist.$update(function () {
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+    
+    $scope.checkRatingBar = function (){
+        $scope.showRatingBar = true;
+        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+            angular.forEach($scope.booklist.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                    $scope.showRatingBar = false;
+                    $scope.error = "No puedes votar dos veces el mismo grupo";
+                }
+            });
+        }
+    };
+
+    $scope.$watch('booklist.ratings', function(value) {
+        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+            angular.forEach($scope.booklist.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                }
+            });
+        }
+    });
+    
+    $scope.$watch('rate', function(value) {
+
+       if (!angular.isUndefined($scope.rate) && 
+           !angular.isUndefined($scope.booklist) &&
+           !angular.isUndefined($scope.booklist.ratings) && !$scope.isReadonly) {
+            
+          var rating = {
+                rate: value,
+                user: $scope.authentication.user
+          };
+
+          $scope.booklist.ratings.push(rating);
+
+          $scope.booklist.$update(function () {
+              $scope.messageok = 'La lista se ha valorado correctamente.';
+              $scope.showRatingBar = false;
+          }, function (errorResponse) {
+              $scope.error = errorResponse.data.message;
+          });
+        }
+    });
+    
+    $scope.hoveringOver = function(value) {
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+
+      if(value === 1)
+        $scope.overStar = 'Me gusta poco';
+      else if(value === 2)
+        $scope.overStar = 'Me gusta';
+      else if(value === 3)
+        $scope.overStar = 'Me gusta bastante';
+      else if(value === 4)
+        $scope.overStar = 'Me gusta mucho';
+      else if(value === 5)
+        $scope.overStar = 'Me encanta';
+    };
+
+    $scope.showBookForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-book-form.html',
+            controller: ModalBookInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                bookForm: function () {
+                    return $scope.bookForm;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selectedItem = selectedItem;
+            
+            // Create new book object
+            var book = {
+                    title: $scope.selectedItem.title,
+                    comments: $scope.selectedItem.comments,
+                    identifierWork: $scope.selectedItem.identifierWork,
+                    slug: $scope.selectedItem.slug,
+                    uuid: $scope.selectedItem.uuid,
+                    reproduction: $scope.selectedItem.reproduction,
+                    language: $scope.selectedItem.language,
+                    mediaType: $scope.selectedItem.mediaType
+            };
+
+            $scope.booklist.books.push(book);
+
+            $scope.booklist.$update(function () {
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+            
+        }, function () {
+            $scope.selectedItem = '';
+        });
+    };
+
+    $scope.showEmailForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
+            controller: ModalEmailInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selectedItem = selectedItem;
+ 
+            $scope.messageok = selectedItem.message;
+            
+        }, function () {
+            $scope.selectedItem = '';
+        });
+    };
+
+    $scope.showHelpInformation = function () {
+       $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
+    };
+  }
+]);
+
+
+
+
+'use strict';
 
 // controller for modal book window
 var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
@@ -510,224 +830,143 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
 };
 ModalBookInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance"];
 
-// Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
-    $scope.authentication = Authentication;
 
-    $scope.location = $location.absUrl();
+'use strict';
 
-    $scope.warningopen = true;
-    $scope.messageok = '';
+angular.module('booklists').controller('ModalConfirmCtrl', ["$scope", "$modalInstance", "text", function ($scope, $modalInstance, text) {
+
+  $scope.text = text;
+
+  $scope.ok = function () {
+    $modalInstance.close(true);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('Cancelar');
+  };
+}]);
+
+
+
+'use strict';
+
+var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
     
-    $scope.year = new Date();
-
-    // Create new Booklist
-    $scope.create = function (isValid) {
-        $scope.error = null;
-
-        if (!isValid) {
-            $scope.$broadcast('show-errors-check-validity', 'booklistForm');
-
-            return false;
-        }
-
-        // Create new Booklist object
-        var booklist = new Booklists({
-            title: this.title,
-            description: this.description,
-            tags: this.tags,
-            visible: this.visible
-        });
-
-        // Redirect after save
-        booklist.$save(function (response) {
-            $location.path('booklists/' + response._id);
-
-            // Clear form fields
-            $scope.title = '';
-            $scope.description = '';
-            $scope.tags = '';
-            $scope.books = '';
-            $scope.visible = '';
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-        });
-    };
-
-    // Remove existing Booklist
-    $scope.remove = function (booklist) {
-        if (booklist) {
-            booklist.$remove();
-
-            for (var i in $scope.booklists) {
-                if ($scope.booklists[i] === booklist) {
-                    $scope.booklists.splice(i, 1);
-                }
-            }
-        } else {
-            $scope.booklist.$remove(function () {
-                $location.path('booklists');
-            });
-        }
-    };
-
-    // Update existing Booklist
-    $scope.update = function (isValid) {
-        $scope.error = null;
-
-        if (!isValid) {
-            $scope.$broadcast('show-errors-check-validity', 'booklistForm');
-
-            return false;
-        }
-
-        var booklist = $scope.booklist;
-
-        booklist.$update(function () {
-            $location.path('booklists/' + booklist._id);
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
-        });
-    };
-
-    $scope.showList = function(){
-        $location.path('booklists');
-    };
-
-    // Find a list of Booklists
-    $scope.find = function () {
-        $scope.booklists = Booklists.query();
-    };
-
-    // Set visible field
-    $scope.updateBooklist = function () {
-        $scope.booklist.$update(function () {
-            //$location.path('booklists/' + booklist._id);
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
-        });
-    };
-
-    // Find existing Booklist
-    $scope.findOne = function () {
-      $scope.booklist = Booklists.get({
-        booklistId: $stateParams.booklistId
-      });
-    };
-
-    $scope.removeBook = function (item){
-        var index = $scope.booklist.books.indexOf(item);
-        $scope.booklist.books.splice(index,1);
-
-        $scope.booklist.$update(function () {
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
-        });
-    };
-
-    // Find existing Subjects in BVMC catalogue
-    $scope.getSubject = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
-            params: {
-                q: val,
-                maxRows: 10
-            }
-        }).then(function(response){
-            return response.data.lista.map(function(item){
-                var result = {
-                        name:item.nombre, 
-                        identifierSubject: item.id
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            console.log('contact form valid');
+            /*$http({
+                method  : 'POST',
+                url     : 'contact-form.php',
+                data    : $.param($scope.formData),  //param method from jQuery
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
+            }).success(function(data){
+                console.log(data);
+                if (data.success) { //success comes from the return json object*/
+                    $scope.submitButtonDisabled = true;
+                    //$scope.resultMessage = data.message;
+                    //$scope.result='bg-success';
+                    $scope.result = {
+                        css: 'bg-success',
+                        message: 'Correo enviado correctamente'
                     };
-                return result;
-            });
-        });
+
+                /*} else {
+                    $scope.submitButtonDisabled = false;
+                    $scope.resultMessage = data.message;
+                    $scope.result='bg-danger';
+                }
+            });*/
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error: por favor rellene todos los campos';
+            $scope.result='bg-danger';
+        }
     };
 
-    // update Tag event
-    $scope.updateTag = function(val) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
+
+
+'use strict';
+
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+'use strict';
+
+angular.module('booklists').controller('BooklistPaginationController', ['$scope', '$filter', 'Booklists',
+  function ($scope, $filter, Booklists) {
+      
+    $scope.init = function(typeSearch){
+        $scope.typeSearch = typeSearch;
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = 10;
+        $scope.currentPage = 1;
         
-        var booklist = $scope.booklist;
-
-        booklist.$update(function () {
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
-        });
+        $scope.find();
+    }
+    
+    $scope.figureOutItemsToDisplay = function () {
+      
+      $scope.filteredItems = $filter('filter')($scope.booklists, {
+        $: $scope.search
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
     };
 
-    $scope.showBookForm = function () {
-        var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-book-form.html',
-            controller: ModalBookInstanceCtrl,
-            scope: $scope,
-            resolve: {
-                bookForm: function () {
-                    return $scope.bookForm;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
+    $scope.pageChanged = function () {
+      $scope.find();
+    };
+      
+    $scope.find = function () {
+        var query = '';
+        if($scope.typeSearch === 'public'){
+            query = {status:'public', page:$scope.currentPage};
+        }else{
+            query = {page:$scope.currentPage};
+        }
+        Booklists.query(query, function (data) {
+            $scope.booklists = data[0].booklists;
+            $scope.total = data[0].total;
             
-            // Create new book object
-            var book = {
-                    title: $scope.selectedItem.title,
-                    comments: $scope.selectedItem.comments,
-                    identifierWork: $scope.selectedItem.identifierWork,
-                    slug: $scope.selectedItem.slug,
-                    uuid: $scope.selectedItem.uuid,
-                    reproduction: $scope.selectedItem.reproduction,
-                    language: $scope.selectedItem.language,
-                    mediaType: $scope.selectedItem.mediaType
-            };
-
-            $scope.booklist.books.push(book);
-
-            $scope.booklist.$update(function () {
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            console.log($scope.booklists.length);
+            
+            $scope.filteredItems = $filter('filter')($scope.booklists, {
+                $: $scope.search
             });
+            console.log('filteredItems:' + $scope.filteredItems.length);
             
-        }, function () {
-            $scope.selectedItem = '';
-        });
-    };
-
-    $scope.showEmailForm = function () {
-        var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
-            scope: $scope,
-            resolve: {
-                emailForm: function () {
-                    return $scope.emailForm;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
- 
-            $scope.messageok = selectedItem.message;
             
-        }, function () {
-            $scope.selectedItem = '';
+            $scope.filterLength = $scope.filteredItems.length;
+            var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+            var end = begin + $scope.itemsPerPage;
+            $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+            console.log('begin:' + begin);
+            console.log('end:' + end);
+            console.log('pagedItems:' + $scope.pagedItems.length);
         });
     };
-
-    $scope.showHelpInformation = function () {
-       var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-help-information.html',
-            controller: ModalHelpInstanceCtrl,
-            scope: $scope
-       });
-    };
+    
   }
 ]);
-
-
-
 
 'use strict';
 
@@ -799,19 +1038,6 @@ angular.module('booklists').service('ConfirmService', ["$modal", function($modal
   };
   
   return service;
-}]);
-
-angular.module('booklists').controller('ModalConfirmCtrl', ["$scope", "$modalInstance", "text", function ($scope, $modalInstance, text) {
-
-  $scope.text = text;
-
-  $scope.ok = function () {
-    $modalInstance.close(true);
-  };
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
 }]);
 
 'use strict';
@@ -1367,7 +1593,7 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     };
 };
 
-// Reviews controller
+// Groups controller
 angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
   function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
     $scope.authentication = Authentication;

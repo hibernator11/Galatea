@@ -1,142 +1,8 @@
 'use strict';
 
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
-// controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
-    $scope.result = 'hidden';
-    $scope.resultMessage = '';
-    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
-    $scope.submitButtonDisabled = false;
-    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
-    
-    $scope.submit = function(contactform) {
-        $scope.submitted = true;
-        $scope.submitButtonDisabled = true;
-        if (contactform.$valid) {
-            console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
-
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
-            $modalInstance.close($scope.result);
-        } else {
-            $scope.submitButtonDisabled = false;
-            $scope.resultMessage = 'Failed <img src="http://www.chaosm.net/blog/wp-includes/images/smilies/icon_sad.gif" alt=":(" class="wp-smiley">  Please fill out all the fields.';
-            $scope.result='bg-danger';
-        }
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-
-// controller for modal book window
-var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
-    
-    $scope.identifierWork = '';
-    $scope.slug = '';
-    $scope.title = '';
-    $scope.uuid = '';
-    $scope.reproduction = '';
-    $scope.language = '';
-    $scope.mediaType = '';
-
-    $scope.form = {};
-    $scope.submitForm = function () {
-        if ($scope.form.bookForm.$valid) {
-            
-            $scope.selectedItem = {
-                        title:$scope.title,
-                        comments: $scope.form.bookForm.comments.$modelValue,
-                        identifierWork: $scope.identifierWork,
-                        slug: $scope.slug,
-                        uuid: $scope.uuid,
-                        reproduction: $scope.reproduccion,
-                        language: $scope.language,
-                        mediaType: $scope.mediaType,
-            };
-
-            $modalInstance.close($scope.selectedItem);
-        }
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-
-    // when select one item on typeahead
-    $scope.setWorkValues = function(val) { // this gets executed when an item is selected
-        $scope.identifierWork = val.identifierWork;
-        $scope.slug = val.slug;
-        $scope.uuid = val.uuid;
-        $scope.reproduction = val.reproduction;
-        $scope.title = val.title;
-        $scope.language = val.language;
-        $scope.mediaType = val.mediaType;
-    };
-
-
-    // Find existing Books in BVMC catalogue
-    $scope.getWork = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
-            params: {
-                q: val
-            }
-        }).then(function(response){
-            return response.data.lista.map(function(item){
-     
-                var txtMediaType = '';
-                angular.forEach(item.formaSoporte, function(mt) {
-     
-                    if(txtMediaType !== '')
-                        txtMediaType += ', ';
-                 
-                    txtMediaType += mt.nombre;
-                });
-
-                var result = {
-                        title:item.titulo, 
-                        identifierWork: item.idEntidadDocumental,
-                        slug: item.slug,
-                        uuid: item.uuid,
-                        reproduction: item.reproduccion,
-                        language: item.idioma,
-                        mediaType: txtMediaType
-                    };
-                return result;
-            });
-        });
-    };
-};
-
 // Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
-  function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -145,6 +11,15 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.messageok = '';
     
     $scope.year = new Date();
+    
+    $scope.form = {};
+    $scope.txtcomment = '';
+    
+    $scope.max = 5;
+    $scope.rate = 0;
+    $scope.isReadonly = false;
+    $scope.percent = 0;
+    $scope.showRatingBar = false;
 
     // Create new Booklist
     $scope.create = function (isValid) {
@@ -221,7 +96,10 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     // Find a list of Booklists
     $scope.find = function () {
-        $scope.booklists = Booklists.query();
+        Booklists.query({}, function (data) {
+                              $scope.booklists = data[0].booklists;
+                              $scope.total = data[0].total;
+                           });
     };
 
     // Set visible field
@@ -267,6 +145,81 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             });
         });
     };
+    
+    // update booklist status draft
+    $scope.setDraftStatus = function () {
+      $scope.booklist.status = "draft";
+      
+      $scope.booklist.$update(function () {
+          $scope.messageok = 'La lista se ha cambiado a estado borrador.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // update booklist status public
+    $scope.setPublicStatus = function () {
+      $scope.booklist.status = "public";
+      
+      $scope.booklist.$update(function () {
+          $scope.messageok = 'La lista se ha publicado correctamente.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.addComment = function() {
+      if ($scope.form.commentForm.$valid) {
+            
+        var comment = {
+                    content: $scope.txtcomment,
+                    user: $scope.authentication.user
+        };
+
+        $scope.booklist.comments.unshift(comment);
+
+        $scope.booklist.$update(function () {
+            $scope.txtcomment = '';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+      }
+    };
+    
+    $scope.addFollower = function() {
+      if ($scope.authentication.user) {
+          
+        if ($scope.authentication.user._id !== $scope.booklist.user._id) {
+            var follower = {
+                    user: $scope.authentication.user
+            };
+            
+            var found = false;
+            for(var i = 0; i <  $scope.booklist.followers.length; i++) {
+                if ( $scope.booklist.followers[i].user === $scope.authentication.user._id) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                $scope.booklist.followers.push(follower);
+
+                $scope.booklist.$update(function () {
+                    $scope.messageok = 'Ahora eres seguidor de esta lsita de obras.' + $scope.authentication.user._id;
+                }, function (errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            }else{
+                $scope.error = 'Ya eres seguidor de la lista.';
+            }
+        }else{
+            $scope.error = 'Eres el creador de esta lista y por tanto ya eres seguidor.';
+        }
+      }else{
+          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
+      }
+    };
 
     // update Tag event
     $scope.updateTag = function(val) {
@@ -277,6 +230,69 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
         });
+    };
+    
+    $scope.checkRatingBar = function (){
+        $scope.showRatingBar = true;
+        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+            angular.forEach($scope.booklist.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                    $scope.showRatingBar = false;
+                    $scope.error = "No puedes votar dos veces el mismo grupo";
+                }
+            });
+        }
+    };
+
+    $scope.$watch('booklist.ratings', function(value) {
+        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+            angular.forEach($scope.booklist.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.isReadonly = true;
+                    $scope.rate = value.rate;
+                }
+            });
+        }
+    });
+    
+    $scope.$watch('rate', function(value) {
+
+       if (!angular.isUndefined($scope.rate) && 
+           !angular.isUndefined($scope.booklist) &&
+           !angular.isUndefined($scope.booklist.ratings) && !$scope.isReadonly) {
+            
+          var rating = {
+                rate: value,
+                user: $scope.authentication.user
+          };
+
+          $scope.booklist.ratings.push(rating);
+
+          $scope.booklist.$update(function () {
+              $scope.messageok = 'La lista se ha valorado correctamente.';
+              $scope.showRatingBar = false;
+          }, function (errorResponse) {
+              $scope.error = errorResponse.data.message;
+          });
+        }
+    });
+    
+    $scope.hoveringOver = function(value) {
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+
+      if(value === 1)
+        $scope.overStar = 'Me gusta poco';
+      else if(value === 2)
+        $scope.overStar = 'Me gusta';
+      else if(value === 3)
+        $scope.overStar = 'Me gusta bastante';
+      else if(value === 4)
+        $scope.overStar = 'Me gusta mucho';
+      else if(value === 5)
+        $scope.overStar = 'Me encanta';
     };
 
     $scope.showBookForm = function () {
@@ -341,7 +357,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     };
 
     $scope.showHelpInformation = function () {
-       var modalInstance = $modal.open({
+       $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-help-information.html',
             controller: ModalHelpInstanceCtrl,
             scope: $scope

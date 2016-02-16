@@ -30,7 +30,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/booklists/:booklistId',
       permissions: ['get']
     }]
-  }, /*{
+  }, {
     roles: ['guest'],
     allows: [{
       resources: '/api/booklists',
@@ -39,7 +39,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/booklists/:booklistId',
       permissions: ['get']
     }]
-  }*/]);
+  }]);
 };
 
 /**
@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 console.log("booklists.server.policy isAllowed");
   // If a booklist is being processed and the current user created it then allow any manipulation
-  if (req.booklist && req.user && req.booklist.user.id === req.user.id) {
+  if (req.booklist && req.user /*&& req.booklist.user.id === req.user.id*/) {
     return next();
   }
 

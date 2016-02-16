@@ -1,32 +1,5 @@
 <section ng-controller="ReviewsController" ng-init="find()">
 
- <!--<div class="row">
-      <ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list">Mis reseñas</a></li>
-      </ol>
- </div>-->
-
- <!--<div class="row">
-      <div class="menu col-xs-12">
-          <a href="#" ui-sref="reviews.create" class="btn col-sm-6 col-xs-6 col-md-6">
-             <i class="glyphicon glyphicon-plus"></i><br>
-             Reseña
-          </a>
-          <a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cloud"></i><br>
-             Cloud
-          </a>
-          <a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cog"></i><br>
-             Tools
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>
- </div>-->
- 
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Mis reseñas</h1>
@@ -67,7 +40,7 @@
         </ul>
     </div>
  
- <div class="row">  
+    <div class="row">  
       <div class="list-group col-xs-12">
       <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
@@ -97,17 +70,15 @@
                 </span>
             </span>
           </p>
-          <!--<p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit"></p>-->
         </div>
         </div> <!-- media -->
       </a> 
       </div> <!-- repeat -->
- </div>
+    </div>
 
-      <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
+    <div class="alert alert-warning text-center" ng-if="reviews.$resolved && !reviews.length">
         No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?
-      </div>
+    </div>
 
 </div>
 </section>
-<footer-generic></footer-generic>

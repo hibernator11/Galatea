@@ -55,7 +55,7 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
     };
 };
 
-// Reviews controller
+// Groups controller
 angular.module('groups').controller('GroupsController', ['$scope', '$http', '$window', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
   function ($scope, $http, $window, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
     $scope.authentication = Authentication;

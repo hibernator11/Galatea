@@ -25,10 +25,11 @@ var BooklistSchema = new Schema({
     default: '',
     trim: true
   },
-  visible: {
-    type: Boolean,
-    default: '',
-    trim: true
+  status: {
+    type: String,
+    enum : ['draft','public'],
+    default: 'draft',
+    required: 'El campo estado no puede ser nulo'
   },
   tags: [{
     name: String,
@@ -47,7 +48,39 @@ var BooklistSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  ratings: [{
+    rate: Number,
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  followers: [{
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  comments: [{
+    content: String,
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    }
+  }],
 });
 
 mongoose.model('Booklist', BooklistSchema);

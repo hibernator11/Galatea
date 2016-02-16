@@ -1,11 +1,5 @@
 <section ng-controller="GroupsController" ng-init="findOne();" >
-    <!--<div class="row">
-      <ol class="breadcrumb">
-          <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
-          <li class="active">{{ group.name | htmlLimit: 100 }}</li>
-      </ol>
-    </div> -->
- 
+
 <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-users"></i> Grupo</h1>
@@ -62,31 +56,6 @@
              </div>
          </div> 
     
-    <!--<div class="row">
-      <div class="menu col-xs-12" ng-show="authentication.user._id === group.user._id">
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="groups.edit({groupId: group._id})">
-             <i class="glyphicon glyphicon-edit"></i><br>
-             Editar grupo
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status === 'draft'" ng-click="setPublicStatus()">
-             <i class="glyphicon glyphicon-eye-open"></i><br>
-             Publicar grupo
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="group.status !== 'draft'" ng-click="setDraftStatus()">
-             <i class="glyphicon glyphicon-eye-close"></i><br>
-             Deshacer publicación
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?">
-             <i class="glyphicon glyphicon-trash"></i><br>
-             Eliminar grupo
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>
-    </div>-->
-
       <div class="alert alert-success col-xs-12" ng-show="messageok">
        <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
        <strong>Resultado:</strong> {{messageok}}
@@ -111,21 +80,12 @@
          <h1 class="title">{{ group.name | htmlLimit: 200 }}</h1>
          <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
          
-         
-             <!--<div class="col-md-12 col-xs-12">
-                <span class="label label-info" ng-show="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                <span class="label label-info" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-                <span class="label label-info"><i class="fa fa-users"></i> {{group.followers.length}} {{group.followers.length == 1 ? 'Seguidor' : 'Seguidores'}}</span>
-                <span class="label label-info" ng-show="group.language"><i class="glyphicon glyphicon-tag"></i> {{group.language}}</span>
-                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-             </div>-->
              <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
                  <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
-                   <i class="fa fa-star"></i> Valora el grupo
+                   <i class="fa fa-star"></i> Valorar el grupo
                  </a>
              </div>
              
@@ -201,4 +161,3 @@
     </div> <!-- container -->     
      
 </section>
-<footer-generic></footer-generic>

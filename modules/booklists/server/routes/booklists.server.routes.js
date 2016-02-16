@@ -12,10 +12,6 @@ module.exports = function (app) {
     .get(booklists.list)
     .post(booklists.create);
 
-  // Booklists paginate
-  app.route('/api/booklists/page/:page')
-     .get(booklists.booklistPaginate);
-
   // Single booklist routes
   app.route('/api/booklists/:booklistId').all(booklistsPolicy.isAllowed)
     .get(booklists.read)

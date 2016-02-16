@@ -38,12 +38,21 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var booklist = req.booklist;
-
-  booklist.title = req.body.title;
-  booklist.description = req.body.description;
-  booklist.tags = req.body.tags;
-  booklist.books = req.body.books;
-  booklist.visible = req.body.visible;
+  
+  if(req.booklist.user.id === req.user.id){
+      booklist.title = req.body.title;
+      booklist.description = req.body.description;
+      booklist.tags = req.body.tags;
+      booklist.books = req.body.books;
+      booklist.status = req.body.status;
+      booklist.ratings = req.body.ratings;
+      booklist.comments = req.body.comments;
+      booklist.followers = req.body.followers;
+  }else{
+      booklist.ratings = req.body.ratings;
+      booklist.comments = req.body.comments;
+      booklist.followers = req.body.followers;
+  }
 
   booklist.save(function (err) {
     if (err) {
@@ -78,57 +87,48 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-  var query = '';
-  if(req.user){
-    query = {user:req.user};
-
-    Booklist.find(query).sort('-created').populate('user', 'displayName').exec(function (err, booklists) {
+    var query = '';
+    if(req.query.status){
+        query = {status:'public'};
+    }
+    else if(req.user){
+        query = {user:req.user};
+    }
+    
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    var per_page =10;
+  
+    Booklist.find(query).sort('-created').
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, booklists) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(booklists);
+          
+          Booklist.find(query)
+            .distinct('_id')
+            .count(function (err, count) {
+              var result = [{
+                 total : count,
+                 booklists: booklists
+              }];
+
+          res.json(result);
+        }); 
       }
     });
-  }else{
+  /*}else{
     // if user is not logged in empty result
     res.json({});
-  }
+  }*/
 };
 
 //query = {books: {$elemMatch: {uuid: req.params.uuid}}};console.log(query);
-
-/**
-* Paginate List booklist
-**/
-exports.booklistPaginate = function(req, res){
- 
-    var page = 1;
-    if(req.params.page){
-        page = req.params.page;
-    }
-    var per_page =10;
-
-    var query = '';
-    if(req.user){
-        query = {user:req.user};
-
-        Booklist.find(query).sort('-created').skip((page-1)*per_page).limit(per_page).populate('user', 'displayName').exec(function(err, booklists) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.json(booklists);
-            }
-        });
-    }else{
-        // if user is not logged in empty result
-        res.json({});
-    }
-};
-
 
 /**
  * Book middleware
@@ -141,7 +141,9 @@ exports.booklistByID = function (req, res, next, id) {
     });
   }
 
-  Booklist.findById(id).populate('user', 'displayName').exec(function (err, booklist) {
+  Booklist.findById(id).populate('user', 'displayName')
+                       .populate('comments.user', 'displayName profileImageURL')
+                       .exec(function (err, booklist) {
     if (err) {
       return next(err);
     } else if (!booklist) {

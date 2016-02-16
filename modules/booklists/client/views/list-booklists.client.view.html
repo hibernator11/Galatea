@@ -1,4 +1,4 @@
-<section ng-controller="BooklistsController" ng-init="find()">
+<section ng-controller="BooklistPaginationController" ng-init="init()">
 
     <div class="page-header">
     <div class="container">
@@ -12,19 +12,14 @@
     <div class="row">
         <ul class="profileNav-list">
             <li class="profileNav-item pull-left">
-                <span class="profileNav-label">Listas</span>
-                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
+                <span class="profileNav-label">Total listas</span>
+                <span class="profileNav-value" data-is-compact="false">{{total}}</span>
             </li>
-            <!--<li class="profileNav-item">
-                <span class="profileNav-label">Seguidor de</span>
-                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
-            </li>
-            <li class="profileNav-item">
-                <span class="profileNav-label">Comentarios</span>
-                <span class="profileNav-value" data-is-compact="false">{{booklists.length}}</span>
-            </li>-->
             <li class="profileNav-item pull-right">
                 <a tooltip="Crear lista" tooltip-placement="top" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Buscar listas" tooltip-placement="top" href="#" ui-sref="booklists.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar listas</a> 
             </li>
             <li class="profileNav-item pull-right">
                 <span class="dropdown" dropdown>
@@ -40,45 +35,19 @@
         </ul>
     </div>
     
-   <!--<div class="row">
-      <ol class="breadcrumb">
-          <li><a href="#" ui-sref="booklists.list()">Mis listas</a></li>
-      </ol>
-   </div>
-
-   <div class="row">
-      <div class="menu col-xs-12">
-          <a href="#" ui-sref="booklists.create" class="btn col-sm-6 col-xs-6 col-md-6">
-             <i class="glyphicon glyphicon-plus"></i><br>
-             Lista
-          </a>
-          <!--<a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cloud"></i><br>
-             Cloud
-          </a>
-          <a href="#" class="btn btn-info col-sm-3">
-             <i class="glyphicon glyphicon-cog"></i><br>
-             Tools
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-6" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>
-   </div>-->
-  
    <div class="row">
       <div class="list-group col-xs-12">
-        <a ng-repeat="booklist in booklists" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
+        <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
           <h4 class="list-group-item-heading" ng-bind="booklist.title"></h4>
 
           <small class="list-group-item-text">
             Creada en
             <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
-            <!-- por
-            <span ng-bind="booklist.user.displayName"></span> -->
           </small>
-          <!--<i ng-if="booklist.visible" class="glyphicon glyphicon-eye-open"></i><i ng-if="!booklist.visible" class="glyphicon glyphicon-eye-close"></i>-->
+          <div>
+          <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+          <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+          </div> 
           <span class="label label-pill label-danger pull-right">{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}}</span>
 
           <ul class="list-inline">
@@ -87,11 +56,12 @@
         </a>
       </div>
    </div>
+      
+    <pagination ng-if="pagedItems.length" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
   
-      <div class="alert alert-warning text-center" ng-if="booklists.$resolved && !booklists.length">
+      <div class="alert alert-warning text-center" ng-if="!pagedItems.length">
         No ha creado ninguna lista todavía, ¿<a ui-sref="booklists.create">desea crear una</a>?
       </div>
 </div>
 
 </section>
-<footer-generic></footer-generic>

@@ -1,33 +1,5 @@
 <section ng-controller="ReviewsController" ng-init="findOne();" >
 
-      <!--<ol class="breadcrumb">
-          <li><a href="#" ui-sref="reviews.list()">Mis reseñas</a></li>
-          <li class="active">{{ review.title | limitTo: 100 }}{{review.title.length > 100 ? '...' : ''}}</li>
-      </ol>
-
-      <div class="menu col-xs-12" ng-show="authentication.user._id === review.user._id">
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ui-sref="reviews.edit({reviewId: review._id})">
-             <i class="glyphicon glyphicon-edit"></i><br>
-             Editar reseña
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status === 'draft'" ng-click="setPublicStatus()">
-             <i class="glyphicon glyphicon-eye-open"></i><br>
-             Publicar reseña
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-show="review.status !== 'draft'" ng-click="setDraftStatus()">
-             <i class="glyphicon glyphicon-eye-close"></i><br>
-             Deshacer publicación
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?">
-             <i class="glyphicon glyphicon-trash"></i><br>
-             Eliminar reseña
-          </a>
-          <a href="#" class="btn col-sm-6 col-xs-6 col-md-3" ng-click="showHelpInformation();">
-             <i class="glyphicon glyphicon-question-sign"></i><br>
-             Ayuda
-          </a>
-      </div>-->
-      
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
@@ -107,44 +79,13 @@
          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
          <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 
-         <!--<div class="well" ng-show="review.status === 'public'">
-           <h4 ng-show="!isReadonly">¿Te gusta esta reseña?</h4>
-           <h4 ng-show="isReadonly">Tu valoración</h4>
-           <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="review.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
-
-           <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
-         </div>-->
-
-
          <div class="row">
-             <!--<div class="col-md-12 col-xs-12">
-                <span class="label label-info" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                <span class="label label-info" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                <span class="label label-info"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-                <span class="label label-info" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                <span class="label label-info"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>-->
-
-                <!--<span class="label label-info" ng-show="review.mediaType" ng-switch on="review.mediaType">
-                  <span ng-switch-when="audio">
-                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
-                  </span>
-                  <span ng-switch-when="video">
-                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
-                  </span>
-                  <span ng-switch-when="texto">
-                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
-                  </span>
-                  <span ng-switch-default>
-                     {{review.mediaType}}
-                  </span>
-                </span>
-             </div>-->
              <div class="col-md-12 col-xs-12 social-links" ng-show="review.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
                  <a tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
-                   <i class="fa fa-star"></i> Valora la reseña
+                   <i class="fa fa-star"></i> Valorar la reseña
                  </a>
 
                  <div style="margin-bottom:10px" class="col-md-12 col-xs-12" ng-show="showRatingBar">
@@ -155,7 +96,7 @@
            </div> <!-- col-md-12 .col-xs-12-->
 
            <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
-      </div> <!- row -->
+      </div> <!-- row -->
      
       <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
          <a ng-href="{{review.slug | mountRecord }}" target="_blank">
@@ -209,4 +150,3 @@
      </div>
 
 </section>
-<footer-generic></footer-generic>
