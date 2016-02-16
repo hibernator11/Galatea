@@ -11,6 +11,33 @@
   </div>
   
     <div class="container">
+    
+    <div class="row">
+        <ul class="profileNav-list">
+            <li class="profileNav-item pull-left">
+                <span class="profileNav-label">Total listas</span>
+                <span class="profileNav-value" data-is-compact="false">{{total}}</span>
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Crear lista" tooltip-placement="top" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Mis listas" tooltip-placement="top" href="#" ui-sref="booklists.list" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis listas</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <span class="dropdown" dropdown>
+                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                </a>
+                <ul class="dropdown-menu" dropdown-menu>
+                    <li>
+                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>        
+        
     <div class="row">
       <div class="list-group col-xs-12">
         <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
