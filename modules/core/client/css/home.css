@@ -526,3 +526,12 @@ span.rating {
     display: block;
     text-align: center;
 }
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    background-color: #B43C2C;
+    border-color: #B43C2C;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #B43C2C;
+}
