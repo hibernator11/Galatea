@@ -106,11 +106,6 @@ angular.element(document).ready(function () {
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('articles');
-
-'use strict';
-
-// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('booklists', ['ngTagsInput']);
 
 'use strict';
@@ -136,171 +131,6 @@ ApplicationConfiguration.registerModule('reviews', ['ui.tinymce']);
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
-// Configuring the Articles module
-angular.module('articles').run(['Menus',
-  function (Menus) {
-    // Add the articles dropdown item
-    Menus.addMenuItem('topbar', {
-      title: 'Articles',
-      state: 'articles',
-      type: 'dropdown',
-      roles: ['*']
-    });
-
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'List Articles',
-      state: 'articles.list'
-    });
-
-    // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'Create Articles',
-      state: 'articles.create',
-      roles: ['user']
-    });
-  }
-]);
-
-'use strict';
-
-// Setting up route
-angular.module('articles').config(['$stateProvider',
-  function ($stateProvider) {
-    // Articles state routing
-    $stateProvider
-      .state('articles', {
-        abstract: true,
-        url: '/articles',
-        template: '<ui-view/>'
-      })
-      .state('articles.list', {
-        url: '',
-        templateUrl: 'modules/articles/client/views/list-articles.client.view.html'
-      })
-      .state('articles.create', {
-        url: '/create',
-        templateUrl: 'modules/articles/client/views/create-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      })
-      .state('articles.view', {
-        url: '/:articleId',
-        templateUrl: 'modules/articles/client/views/view-article.client.view.html'
-      })
-      .state('articles.edit', {
-        url: '/:articleId/edit',
-        templateUrl: 'modules/articles/client/views/edit-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      });
-  }
-]);
-
-'use strict';
-
-// Articles controller
-angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Articles',
-  function ($scope, $stateParams, $location, Authentication, Articles) {
-    $scope.authentication = Authentication;
-
-    // Create new Article
-    $scope.create = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      // Create new Article object
-      var article = new Articles({
-        title: this.title,
-        content: this.content
-      });
-
-      // Redirect after save
-      article.$save(function (response) {
-        $location.path('articles/' + response._id);
-
-        // Clear form fields
-        $scope.title = '';
-        $scope.content = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Remove existing Article
-    $scope.remove = function (article) {
-      if (article) {
-        article.$remove();
-
-        for (var i in $scope.articles) {
-          if ($scope.articles[i] === article) {
-            $scope.articles.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.article.$remove(function () {
-          $location.path('articles');
-        });
-      }
-    };
-
-    // Update existing Article
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      var article = $scope.article;
-
-      article.$update(function () {
-        $location.path('articles/' + article._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Find a list of Articles
-    $scope.find = function () {
-      $scope.articles = Articles.query();
-    };
-
-    // Find existing Article
-    $scope.findOne = function () {
-      $scope.article = Articles.get({
-        articleId: $stateParams.articleId
-      });
-    };
-  }
-]);
-
-'use strict';
-
-//Articles service used for communicating with the articles REST endpoints
-angular.module('articles').factory('Articles', ['$resource',
-  function ($resource) {
-    return $resource('api/articles/:articleId', {
-      articleId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
 
 'use strict';
 
@@ -351,7 +181,10 @@ angular.module('booklists').config(['$stateProvider',
       })
       .state('booklists.search', {
         url: '/search',
-        templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html'
+        templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('booklists.create', {
         url: '/create',
@@ -1497,7 +1330,10 @@ angular.module('groups').config(['$stateProvider',
       })
       .state('groups.search', {
         url: '/search',
-        templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html'
+        templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('groups.create', {
         url: '/create',
@@ -2182,7 +2018,10 @@ angular.module('reviews').config(['$stateProvider',
       })
       .state('reviews.search', {
         url: '/search',
-        templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html'
+        templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('reviews.uuid', {
         url: '/uuid/:uuid',
@@ -3213,7 +3052,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {
-      $location.path('/inicio');
+      $location.path('/home');
     }
 
     $scope.signup = function (isValid) {
@@ -3249,10 +3088,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
-        if($state.previous.state.name === 'home')
-            $state.previous.state.name = 'inicio';
+        //if($state.previous.state.name === 'home')
+        //    $state.previous.state.name = 'inicio';
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'inicio', $state.previous.params);
+        //$state.go($state.previous.state.name || 'inicio', $state.previous.params);
+        // And redirect to the previous or home page
+        $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });

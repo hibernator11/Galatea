@@ -10,7 +10,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {
-      $location.path('/inicio');
+      $location.path('/home');
     }
 
     $scope.signup = function (isValid) {
@@ -46,10 +46,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
-        if($state.previous.state.name === 'home')
-            $state.previous.state.name = 'inicio';
+        //if($state.previous.state.name === 'home')
+        //    $state.previous.state.name = 'inicio';
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'inicio', $state.previous.params);
+        //$state.go($state.previous.state.name || 'inicio', $state.previous.params);
+        // And redirect to the previous or home page
+        $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });

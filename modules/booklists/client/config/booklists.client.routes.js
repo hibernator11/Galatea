@@ -19,7 +19,10 @@ angular.module('booklists').config(['$stateProvider',
       })
       .state('booklists.search', {
         url: '/search',
-        templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html'
+        templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('booklists.create', {
         url: '/create',

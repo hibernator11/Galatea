@@ -19,7 +19,10 @@ angular.module('reviews').config(['$stateProvider',
       })
       .state('reviews.search', {
         url: '/search',
-        templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html'
+        templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('reviews.uuid', {
         url: '/uuid/:uuid',
