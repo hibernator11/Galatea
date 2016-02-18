@@ -1430,8 +1430,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.booklist = '';
             
             // load booklists
-            $scope.booklists = Booklists.query();
-            
+            $http.get('/api/booklists')
+                    .success(function(data) {
+                        $scope.booklists = data[0].booklists;
+                        console.log(data);
+                    })
+                    .error(function(data) {
+                        console.log('Error: ' + data);
+                    });
+
         }else if($scope.type === 'general'){
             $scope.showBookListPanel = false;
             $scope.showDescriptionPanel = true;

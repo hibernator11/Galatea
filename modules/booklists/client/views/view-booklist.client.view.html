@@ -76,8 +76,13 @@
        <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
        <strong>Aviso:</strong> {{error}}
       </div>
-      
-        <hr>
+        
+      <div class="alert alert-warning col-xs-12" ng-show="booklist.status === 'draft' && warningopen">
+       <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
+       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
+      </div>
+
+      <hr>
 
       <div class="booklist-description row">
         <div class="col-md-8">
