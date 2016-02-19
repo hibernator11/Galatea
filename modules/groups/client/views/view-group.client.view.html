@@ -107,7 +107,7 @@
          </a>
       </div>
          
-      <div ng-if="group.type === 'lista' && group.books" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+      <div ng-if="group.type === 'lista' && group.books.length > 0" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
           <carousel interval="myInterval" no-wrap="noWrapSlides">
                 <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
                   <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;">
