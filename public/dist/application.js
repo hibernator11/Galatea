@@ -1483,6 +1483,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
 
             return false;
         }
+        
+        console.log("type" + $scope.type);
+        console.log("source" + $scope.source);
+        if($scope.type === "lista" && angular.isUndefined($scope.source)){
+            console.log("Error lista null");
+            $scope.error = "Por favor seleccione una lista";
+
+            return false;
+        }
 
         // Create new Group object
         var group = new Groups({

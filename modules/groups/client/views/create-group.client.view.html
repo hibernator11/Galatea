@@ -24,7 +24,7 @@
           Puedes crear un grupo de una obra, de un autor o de una lista de obras.
          </div>
             
-          <select class="form-control" style="width:30%;" ng-model="type" ng-change="selectTypeAction()">
+          <select class="form-control" style="width:30%;" ng-model="type" ng-change="selectTypeAction()" required>
             <option value="">---Por favor selecciona---</option>
             <option value="obra">Obra</option>
             <option value="autor">Autor</option>
@@ -100,10 +100,10 @@
 
          <div class="form-group input-panel">
           <div class="row">
-              <select class="form-control" style="width:30%;" ng-model="booklistId" ng-change="selectBookListAction()" required>
-            <option value="">---Por favor selecciona una lista---</option>
-            <option ng-repeat="booklist in booklists" value="{{booklist._id}}">{{booklist.title}}</option>
-          </select>
+            <select class="form-control" style="width:30%;" ng-model="booklistId" ng-change="selectBookListAction()" required>
+              <option value="">---Por favor selecciona una lista---</option>
+              <option ng-repeat="booklist in booklists" value="{{booklist._id}}">{{booklist.title}}</option>
+            </select>
           </div>
          </div>
          
@@ -125,10 +125,11 @@
                  <h3>{{ booklist.title | htmlLimit: 150}}</h3>
                  <h5 ng-show="booklist.description">Descripción</h5>
                  <p ng-show="booklist.description"><small><em class="text-muted">{{booklist.description}}</em></small></p>
-                 <p><ul class="list-inline">
-                    <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-info"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+                 <div>
+                     <ul class="list-inline">
+                        <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-info"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
                     </ul>
-                 </p>
+                 </div>
              </div>
          </div>
             
@@ -146,7 +147,7 @@
 
         <div class="form-group input-panel">
           <input name="name" type="text" ng-model="name" id="name" class="form-control" placeholder="Nombre para el grupo" required>
-          <div ng-messages="groupForm.namee.$error" role="alert">
+          <div ng-messages="groupForm.name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">El nombre del grupo es necesario.</p>
           </div>
         </div>

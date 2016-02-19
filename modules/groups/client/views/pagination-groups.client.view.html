@@ -52,7 +52,9 @@
      <div class="row">
       <div class="list-group col-xs-12">
         <a ng-repeat="group in pagedItems" ui-sref="groups.view({groupId: group._id})" class="list-group-item">
-          <h4 class="list-group-item-heading" ng-bind="group.title"></h4>
+          <h4 class="list-group-item-heading" ng-bind="group.name | htmlLimit: 100"></h4>
+          <h5 class="list-group-item-heading" ng-show="group.title">Grupo sobre {{group.title | htmlLimit: 100}}</h5>
+          <h5 class="list-group-item-heading" ng-show="group.authorName">Grupo sobre el autor {{group.authorName}}</h5>
 
           <small class="list-group-item-text">
             Creado en
