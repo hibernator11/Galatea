@@ -46,21 +46,25 @@
                                 <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" dropdown-menu>
-                            <li ng-show="authentication.user._id === booklist.user._id"> 
-                              <a ui-sref="booklists.edit({booklistId: booklist._id})"><i class="glyphicon glyphicon-edit"></i> Editar lista</a>
-                            </li>
-                            <li ng-show="authentication.user._id === booklist.user._id">
-                              <a ng-show="booklist.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar lista</a>
-                            </li>
-                            <li ng-show="authentication.user._id === booklist.user._id">
-                              <a ng-show="booklist.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
-                            </li>
-                            <li ng-show="authentication.user._id === booklist.user._id">
-                              <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?"><i class="glyphicon glyphicon-trash"></i> Eliminar lista</a>
-                            </li>
-                            <li>
-                              <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                            </li>
+                              <li>
+                                <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                              </li>
+                              <li ng-show="authentication.user._id === booklist.user._id"> 
+                                <a ui-sref="booklists.edit({booklistId: booklist._id})"><i class="glyphicon glyphicon-edit"></i> Editar lista</a>
+                              </li>
+                              <li ng-show="authentication.user._id === booklist.user._id">
+                                <a ng-show="booklist.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar lista</a>
+                              </li>
+                              <li ng-show="authentication.user._id === booklist.user._id">
+                                <a ng-show="booklist.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                              </li>
+                              <li ng-show="authentication.user._id === booklist.user._id">
+                                <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?"><i class="glyphicon glyphicon-trash"></i> Eliminar lista</a>
+                              </li>
+                              <li class="divider"></li>
+                              <li ng-show="authentication.user._id === booklist.user._id">
+                                <a ng-click="createGroupFromBooklist()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta lista</a>
+                              </li>
                             </ul>
                      </li>
                  </ul>
@@ -89,11 +93,11 @@
             <h3>{{ booklist.title | htmlLimit: 200 }}</h3>
             <h5 ng-show="booklist.description">Descripción</h5>
             <p ng-show="booklist.description"><small><em class="text-muted">{{booklist.description}}</em></small></p>
-            <p>
+            <div>
               <ul class="list-inline" ng-if="booklist.tags">
-              <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+                <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
               </ul>
-            </p>
+            </div>
         </div>
         <div class="col-md-4">
           <div class="pull-right">
@@ -101,7 +105,7 @@
             <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
             <a tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
             <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
-                <i class="fa fa-star"></i> Valorar la lista
+                <i class="fa fa-star"></i> Valorar
             </a>
           </div>
             

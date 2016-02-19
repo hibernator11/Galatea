@@ -1,19 +1,14 @@
 <section ng-controller="GroupsController" ng-init="findOne()" class="container" ng-show="authentication.user._id == group.user._id">
 
-      <ol class="breadcrumb">
-          <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
-          <li class="active">{{ group.name | htmlLimit: 100 }}</li>
-      </ol>
+    <ol class="breadcrumb">
+        <li><a href="#" ui-sref="groups.list()">Mis grupos</a></li>
+        <li class="active">{{ group.name | htmlLimit: 100 }}</li>
+    </ol>
 
-      <div class="alert alert-warning" ng-show="error">
-       <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
-       <strong>Aviso:</strong> {{error}}
-      </div>
-
-      <!--<div class="top-icons">
-          <a tooltip="Volver" tooltip-placement="top" ng-href="groups/{{group._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
-      </div>-->
-
+    <div class="alert alert-warning" ng-show="error">
+        <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+        <strong>Aviso:</strong> {{error}}
+    </div>
 
     <form name="groupForm" class="form-horizontal" ng-submit="update(groupForm.$valid)">
 

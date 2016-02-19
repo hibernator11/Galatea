@@ -1,8 +1,8 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews', 'Groups',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews, Groups) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -33,6 +33,25 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         language_url : 'modules/reviews/client/language-tinymce/es.js' 
     };
     
+    $scope.createGroupFromReview = function () {
+        // Create new Group object
+        var group = new Groups({
+            name: $scope.review.title,
+            content: $scope.review.content,
+            type: "obra",
+            source: $scope.review.identifierWork,
+            uuid: $scope.review.uuid,
+            reproduction: $scope.review.reproduction,
+            title: $scope.review.title
+        });
+
+        // Redirect after save
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
     
     // Create new Review
     $scope.create = function (isValid) {

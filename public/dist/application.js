@@ -213,8 +213,8 @@ angular.module('booklists').config(['$stateProvider',
 'use strict';
 
 // Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Groups',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Groups) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -264,6 +264,23 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
+    };
+    
+    $scope.createGroupFromBooklist = function () {
+        // Create new Group object
+        var group = new Groups({
+            name: $scope.booklist.title,
+            content: $scope.booklist.description,
+            type: "lista",
+            books: $scope.booklist.books
+        });
+
+        // Redirect after save
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });    
     };
 
     // Remove existing Booklist
@@ -1484,10 +1501,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             return false;
         }
         
-        console.log("type" + $scope.type);
-        console.log("source" + $scope.source);
         if($scope.type === "lista" && angular.isUndefined($scope.source)){
-            console.log("Error lista null");
             $scope.error = "Por favor seleccione una lista";
 
             return false;
@@ -2179,8 +2193,8 @@ angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews) {
+angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Reviews', 'Groups',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Reviews, Groups) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -2211,6 +2225,25 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         language_url : 'modules/reviews/client/language-tinymce/es.js' 
     };
     
+    $scope.createGroupFromReview = function () {
+        // Create new Group object
+        var group = new Groups({
+            name: $scope.review.title,
+            content: $scope.review.content,
+            type: "obra",
+            source: $scope.review.identifierWork,
+            uuid: $scope.review.uuid,
+            reproduction: $scope.review.reproduction,
+            title: $scope.review.title
+        });
+
+        // Redirect after save
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
     
     // Create new Review
     $scope.create = function (isValid) {

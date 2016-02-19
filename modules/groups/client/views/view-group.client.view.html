@@ -32,24 +32,24 @@
                                 <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" dropdown-menu>
-                            <li ng-show="authentication.user._id === group.user._id"> 
-                              <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
-                            </li>
-                            <li ng-show="authentication.user._id === group.user._id">
-                              <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
-                            </li>
-                            <li ng-show="authentication.user._id === group.user._id">
-                              <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
-                            </li>
-                            <li ng-show="authentication.user._id === group.user._id">
-                              <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
-                            </li>
-                            <li ng-show="authentication.user"> 
-                              <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
-                            </li>
-                            <li>
-                              <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                            </li>
+                              <li>
+                                <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                              </li>
+                              <li ng-show="authentication.user._id === group.user._id"> 
+                                <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
+                              </li>
+                              <li ng-show="authentication.user._id === group.user._id">
+                                <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
+                              </li>
+                              <li ng-show="authentication.user._id === group.user._id">
+                                <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                              </li>
+                              <li ng-show="authentication.user._id === group.user._id">
+                                <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
+                              </li>
+                              <li ng-show="authentication.user"> 
+                                <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
+                              </li>
                             </ul>
                      </li>
                  </ul>
@@ -84,7 +84,7 @@
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
                  <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
-                   <i class="fa fa-star"></i> Valorar el grupo
+                   <i class="fa fa-star"></i> Valorar
                  </a>
              </div>
              
@@ -100,8 +100,11 @@
       <div ng-if="group.type === 'obra' && group.uuid" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
          <a ng-href="{{group.source | mountRecord }}" target="_blank">
              <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
-         </a><br>
-         <a class="btn btn-danger" ng-href="{{group.source | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         </a>
+         <a style="margin-top:3px" class="btn btn-danger btn-sm full-width" ng-href="{{group.source | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         <a style="margin-top:3px" tooltip="Ver las reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: group.uuid})" class="btn btn-danger btn-sm full-width">
+            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver reseñas
+         </a>
       </div>
          
       <div ng-if="group.type === 'lista' && group.books" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">

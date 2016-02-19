@@ -1,8 +1,8 @@
 'use strict';
 
 // Booklists controller
-angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Reviews',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Reviews) {
+angular.module('booklists').controller('BooklistsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Booklists', 'Groups',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Booklists, Groups) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -52,6 +52,23 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
+    };
+    
+    $scope.createGroupFromBooklist = function () {
+        // Create new Group object
+        var group = new Groups({
+            name: $scope.booklist.title,
+            content: $scope.booklist.description,
+            type: "lista",
+            books: $scope.booklist.books
+        });
+
+        // Redirect after save
+        group.$save(function (response) {
+            $location.path('groups/' + response._id);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });    
     };
 
     // Remove existing Booklist
