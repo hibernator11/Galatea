@@ -12,7 +12,7 @@
   
     <div class="container">
         
-    <div class="row">
+    <div class="row" ng-controller="ReviewsController">
         <ul class="profileNav-list">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Reseñas</span>
@@ -22,7 +22,7 @@
                 <a tooltip="Crear reseña" tooltip-placement="top" href="#" ui-sref="reviews.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear reseña</a> 
             </li>
             <li class="profileNav-item pull-right">
-                <a tooltip="Mis reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis reseñas</a> 
+                <a tooltip="Mis reseñas" tooltip-placement="top" href="#" ui-sref="reviews.list" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis reseñas</a> 
             </li>
             <li class="profileNav-item pull-right">
                 <span class="dropdown" dropdown>
@@ -39,7 +39,7 @@
     </div>
         
     
-        <div class="row">  
+    <div class="row">  
       <div class="list-group col-xs-12">
       <a ng-repeat="review in pagedItems" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
         <div class="media">
@@ -47,8 +47,8 @@
           <img style="width: 80px;height: 120px;" ng-src="{{review.uuid | mountCover }}" alt="{{review.title}}" class="media-object">
         </div>
         <div class="media-body">
-          <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
-          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+          <h5 class="media-heading" ng-bind-html="review.title | htmlLimit: 200"></h5>
+          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 100"></p>
           <p><small class="list-group-item-text">
             Creada en
             <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
@@ -80,7 +80,7 @@
       </div> <!-- repeat -->
     </div>
 
-    <pagination total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
+    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
     </div> 
 
 </section>

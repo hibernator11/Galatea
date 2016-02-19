@@ -11,7 +11,7 @@
   </div>
         
     <div class="container">
-        <div class="row">
+        <div class="row" ng-controller="GroupsController">
         <ul class="profileNav-list">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Grupos</span>
@@ -61,10 +61,7 @@
             <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
           </small>
           <div>
-          <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-          <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-          </div> 
-          <span class="label label-danger" ng-switch on="group.type">
+            <span class="label label-danger" ng-switch on="group.type">
                 <span ng-switch-when="obra">
                   <i class="glyphicon glyphicon-book"></i> Obra
                 </span>
@@ -78,11 +75,15 @@
                   <i class="fa fa-comments"></i> Tema
                 </span>
             </span>
+            <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+            <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
+          </div> 
+
         </a>
       </div>
     </div>
 
-        <pagination total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
+        <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Último" last-text="Siguiente" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
     </div> 
 
 </section>

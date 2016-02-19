@@ -15,12 +15,12 @@
                     <a ng-repeat="review in reviews" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
                         <div class="media">
                             <div class="media-left">
-                                <img style="width: 80px;height: 120px;" ng-src="{{uuid | mountCover }}" alt="{{title}}" class="media-object">
+                                <img ng-if="uuid" style="width: 80px;height: 120px;" ng-src="{{uuid | mountCover }}" alt="{{title}}" class="media-object">
                             </div>
                             <div class="media-body">
                                 <h5 class="media-heading">Reseñado por {{ review.user.displayName | htmlLimit: 200 }}</h5>
           
-                                <p class="text-muted">
+                                <div>
                                     <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                                     <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
                                     <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
@@ -39,7 +39,7 @@
                                             {{review.mediaType}}
                                         </span>
                                     </span>
-                                </p>
+                                </div>
                                 <p class="text-muted" ng-show="review.content" ng-bind-html="review.content | htmlLimit: 200"></p>
                             </div>
                         </div> <!-- media -->

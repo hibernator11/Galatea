@@ -10,15 +10,9 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
-      <!--<div class="top-icons">
-          <a tooltip="Volver" tooltip-placement="top" ui-sref="reviews.view({reviewId: review._id})"><i class="fa fa-arrow-left fa-2x"></i></a>
-      </div>-->
-
-
     <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
 
       <fieldset>
-
         <div class="well" style="margin-right: 0px;margin-left: 0px;">
          <div class="bs-callout bs-callout-danger">
           <h4>Modifica la reseña</h4>
@@ -38,24 +32,24 @@
     </form>
 
 
-      <div class="row well" style="margin-right: 0px;margin-left: 0px;">
-            <div class="col-xs-3 col-md-3" ng-show="review.uuid">
-               <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9">
-              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{review.slug | mountCover}}" target="_blank"><i class="glyphicon glyphicon-new-window"></i> Ver obra en catálogo</a></h4>
-              <p>{{ review.title | htmlLimit: 200}}</p>
-              <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 200"></p>
-              <div class="row">
-              <div class="col-md-12">
+    <div class="row well" style="margin-right: 0px;margin-left: 0px;" ng-if="review.slug && review.uuid">
+        <div class="col-xs-3 col-md-3">
+            <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
+        </div>
+        <div class="col-xs-9 col-md-9">
+            <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{review.slug | mountCover}}" target="_blank"><i class="glyphicon glyphicon-new-window"></i> Ver obra en catálogo</a></h4>
+            <p>{{ review.title | htmlLimit: 200}}</p>
+            <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 200"></p>
+            <div class="row">
+                <div class="col-md-12">
                   <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                   <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
                   <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
                   <span class="label label-danger" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
                   <span class="label label-danger" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
-              </div>
-              </div>
+                </div>
             </div>
-      </div>
+        </div>
+    </div>
 
 </section>
