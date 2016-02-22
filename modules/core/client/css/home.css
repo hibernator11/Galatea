@@ -40,18 +40,13 @@
 /*
  hover efects and reviews slider
 */
-.border-cover {
-    border: 1px solid #d07212;
-    margin-bottom: 5px;
-}
 .caption {
     background: white;
     width:100%;
-    height:100%;
+    height:97%;
     padding:2%;
     text-align:center;
     color: black;
-    border: 1px solid #d07212;
     position: absolute;
     top: 0;
     left: 0;
@@ -67,24 +62,26 @@
 }
 
 .flip-panel {
-  cursor:pointer;
+    cursor:pointer;
 
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
   
-  -webkit-transition: -webkit-transform .4s;
-  -moz-transition: -moz-transform .4s;
+    -webkit-transition: -webkit-transform .4s;
+    -moz-transition: -moz-transform .4s;
   
-  -webkit-transform: perspective(800px) rotateY(0deg);
-  -moz-transform: perspective(800px) rotateY(0deg);
+    -webkit-transform: perspective(800px) rotateY(0deg);
+    -moz-transform: perspective(800px) rotateY(0deg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+    margin-bottom: 5px;
 }
 .flip-hide-back-panel {
-  -webkit-transform: perspective(800px) rotateY(180deg);
-  -moz-transform: perspective(800px) rotateY(180deg);
+    -webkit-transform: perspective(800px) rotateY(180deg);
+    -moz-transform: perspective(800px) rotateY(180deg);
 }
 .flip-hide-front-panel {
-  -webkit-transform: perspective(800px) rotateY(-180deg);
-  -moz-transform: perspective(800px) rotateY(-180deg);
+    -webkit-transform: perspective(800px) rotateY(-180deg);
+    -moz-transform: perspective(800px) rotateY(-180deg);
 }
 
 /*
