@@ -66,15 +66,14 @@
       </div>
 
       <div class="alert alert-warning col-xs-12" ng-show="review.status === 'draft' && warningopen">
-       <button ng-click="warningopen = !warningopen" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
        <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
       </div>
-
+        
       <div class="alert alert-warning" ng-show="error">
        <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
        <strong>Aviso:</strong> {{error}}
       </div>
-
 
      <hr>
      <div class="row">

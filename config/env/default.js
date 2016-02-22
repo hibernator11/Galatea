@@ -3,7 +3,7 @@
 module.exports = {
   app: {
     title: 'Galatea',
-    description: 'Crea tu propia Biblioteca Virtual Miguel de Cervantes',
+    description: 'La red social de la Biblioteca Virtual Miguel de Cervantes',
     keywords: 'biblioteca digital, listas de obras, reseñas, grupos de usuarios',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },

@@ -22,7 +22,7 @@ var GroupSchema = new Schema({
   },
   type: {
     type: String,
-    enum : ['obra','autor','lista','general'],
+    enum : ['obra','autor','lista','tema'],
     default: 'general',
     required: 'El campo tipo de grupo no puede ser nulo'
   },
@@ -41,6 +41,11 @@ var GroupSchema = new Schema({
     default: '',
     trim: true,
     required: 'El campo nombre no puede ser nulo'
+  },
+  themeName: {
+    type: String,
+    default: '',
+    trim: true
   },
   authorName: {
     type: String,

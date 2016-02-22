@@ -21,7 +21,8 @@ module.exports = {
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ng-tags-input/ng-tags-input.min.js',
         'public/lib/tinymce-dist/tinymce.js',
-        'public/lib/angular-ui-tinymce/src/tinymce.js'
+        'public/lib/angular-ui-tinymce/src/tinymce.js',
+        'public/lib/jquery/dist/jquery.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

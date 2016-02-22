@@ -129,7 +129,7 @@ exports.listPublic = function(req, res){
  
     var query = {status:'public', type:'obra'};
 
-    Group.find(query).sort('-created').limit(10).populate('user', 'displayName').exec(function(err, groups) {
+    Group.find(query).sort('-created').limit(6).populate('user', 'displayName').exec(function(err, groups) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)

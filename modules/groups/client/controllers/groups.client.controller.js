@@ -31,6 +31,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.showWorkPanel = false;
     $scope.showBookListPanel = false;
     $scope.showAuthorPanel = false;
+    $scope.showThemePanel = false;
     $scope.showDescriptionPanel = false;
     $scope.booklists = '';
     
@@ -42,30 +43,37 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.showDescriptionPanel = true;
             $scope.showAuthorPanel = false;
             $scope.showBookListPanel = false;
+            $scope.showThemePanel = false;
             $scope.booklists = '';
             $scope.authorName = '';
+            $scope.themeName = '';
             $scope.booklist = '';
         }else if($scope.type === 'autor'){
             $scope.showAuthorPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showBookListPanel = false;
+            $scope.showThemePanel = false;
             $scope.booklists = '';
             $scope.uuid = '';
             $scope.slug = '';
             $scope.reproduction = '';
             $scope.title = '';
             $scope.booklist = '';
+            $scope.authorName = '';
+            $scope.themeName = '';
         }else if($scope.type === 'lista'){
             $scope.showBookListPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
+            $scope.showThemePanel = false;
             $scope.uuid = '';
             $scope.slug = '';
             $scope.reproduction = '';
             $scope.title = '';
             $scope.authorName = '';
+            $scope.themeName = '';
             $scope.booklist = '';
             
             // load booklists
@@ -78,8 +86,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                         console.log('Error: ' + data);
                     });
 
-        }else if($scope.type === 'general'){
+        }else if($scope.type === 'tema'){
             $scope.showBookListPanel = false;
+            $scope.showThemePanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
@@ -88,6 +97,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.reproduction = '';
             $scope.title = '';
             $scope.authorName = '';
+            $scope.themeName = '';
             $scope.books = '';
             $scope.booklist = '';
         }else{
@@ -95,12 +105,14 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.showAuthorPanel = false;
             $scope.showDescriptionPanel = false;
             $scope.showBookListPanel = false;
+            $scope.showThemePanel = false;
             $scope.booklists = '';
             $scope.uuid = '';
             $scope.slug = '';
             $scope.reproduction = '';
             $scope.title = '';
             $scope.authorName = '';
+            $scope.themeName = '';
             $scope.booklist = '';
         }
     };
@@ -139,6 +151,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             reproduction: $scope.reproduction,
             title: $scope.title,
             authorName: $scope.authorName,
+            themeName: $scope.themeName,
             books: $scope.booklist.books
         });
 
@@ -206,7 +219,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $location.path('groups');
     };
 
-    $scope.openReview = function(groupId) {
+    $scope.openGroup = function(groupId) {
         $location.path('groups/' + groupId);
     };
 
@@ -452,6 +465,31 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.authorId = val.authorId;
         $scope.authorName = val.authorName;
         $scope.source = val.authorId;
+    };
+    
+    // Find existing Subjects in BVMC catalogue
+    $scope.getSubject = function(val) {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+            params: {
+                q: val,
+                maxRows: 10
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+                var result = {
+                        themeName:item.nombre, 
+                        themeId: item.id
+                    };
+                return result;
+            });
+        });
+    };
+    
+    // when select one item on typeahead
+    $scope.setThemeValues = function(val) { // this gets executed when an item is selected
+        $scope.themeId = val.themeId;
+        $scope.themeName = val.themeName;
+        $scope.source = val.themeId;
     };
 
     $scope.showEmailForm = function () {

@@ -90,12 +90,15 @@ exports.list = function (req, res) {
     else if(req.user){
         query = {user:req.user};
     }
-    
+    console.log('req.query.page:' + req.query.page);
     var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
-    var per_page =10;
+    var per_page = 10;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=50){
+        per_page = req.query.itemsPerPage;
+    }
   
     Review.find(query).sort('-created').
             skip((page-1)*per_page).limit(per_page).

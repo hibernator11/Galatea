@@ -3,89 +3,22 @@
 <div class="row">
     <h4 class="section-title">Consulta los últimos grupos</h4>
 </div>
-
-<div class="row vertical-align" >
-  <div class="col-md-4">
-    <div ng-click="openReview(groups[0]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
+    
+<div class="row">
+  <div class="col-md-4" ng-repeat="group in groups">
+    <div ng-click="openGroup(group._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
       <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[0].uuid | mountCover }}"/>
+        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{group.uuid | mountCover }}"/>
       </div>
       <div class="caption">
-        <h4>{{ groups[0].name | htmlLimit: 200 }}</h4>
-        <p style="font-style: italic">por {{ groups[0].user.displayName }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[0]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[0]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
+        <h4>{{ group.name | htmlLimit: 200 }}</h4>
+        <p style="font-style: italic">por {{ group.user.displayName }}</p>
+        <p><a href="#" ui-sref="groups.view({groupId: group._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
+        <a href="#" ui-sref="groups.view({groupId: group._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>
     </div>
-
   </div> <!-- col-md-4 -->
-
-  <div class="col-md-2">
-    <div ng-click="openReview(groups[1]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
-      <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[1].uuid | mountCover }}"/>
-      </div>
-      <div class="caption">
-        <h5>{{ groups[1].name | htmlLimit: 30 }}</h5>
-        <p style="font-style: italic">por {{ groups[1].user.displayName | htmlLimit: 30 }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[1]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[1]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
-      </div>
-    </div>
-    <div ng-click="openReview(groups[2]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
-      <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[2].uuid | mountCover }}"/>
-      </div>
-      <div class="caption">
-        <h5>{{ groups[2].name | htmlLimit: 30 }}</h5>
-        <p style="font-style: italic">por {{ groups[2].user.displayName | htmlLimit: 30 }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[2]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Leer</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[2]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
-      </div>
-    </div>
-  </div> 
-
-  <div class="col-md-4">
-
-    <div ng-click="openReview(groups[3]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
-      <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[3].uuid | mountCover }}"/>
-      </div>
-      <div class="caption">
-        <h4>{{ groups[3].name | htmlLimit: 200 }}</h4>
-        <p style="font-style: italic">por {{groups[3].user.displayName }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[3]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[3]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-2">
-   <div ng-click="openReview(groups[4]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
-      <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[4].uuid | mountCover }}"/>
-      </div>
-      <div class="caption">
-        <h5>{{ groups[4].name | htmlLimit: 30 }}</h5>
-        <p style="font-style: italic">por {{ groups[4].user.displayName | htmlLimit: 30 }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[4]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[4]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
-      </div>
-   </div>
-   <div ng-click="openReview(groups[5]._id)" flip class="row col-md-12" ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
-      <div>
-        <img width="100%" class="img-responsive" ng-if="groups" ng-src="{{groups[5].uuid | mountCover }}"/>
-      </div>
-      <div class="caption">
-        <h5>{{ groups[5].name | htmlLimit: 30 }}</h5>
-        <p style="font-style: italic">por {{ groups[5].user.displayName | htmlLimit: 30 }}</p>
-        <p><a href="#" ui-sref="groups.view({groupId: groups[5]._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
-        <a href="#" ui-sref="groups.view({groupId: groups[5]._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
-      </div>
-    </div>
-  </div>
-
-</div> <!-- row -->
+</div>    
 
 <div class="row">
   <div class="col-md-2 col-md-offset-10"><a tooltip="Ver más grupos" tooltip-placement="top" href="#" ui-sref="groups.search"><h4 style="color:#B43C2C">Ver más grupos</h4></a> </div>

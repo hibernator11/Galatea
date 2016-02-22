@@ -13,7 +13,14 @@
 
 <div class="container">
     <div ng-include src="'modules/core/client/views/row-news.view.html'"></div>
+    <div class="row">
+        <h4 class="section-title">Consulta las últimas reseñas</h4>
+    </div>
     <div ng-include src="'modules/reviews/client/views/slider-reviews.client.view.html'"></div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-10"><a tooltip="Ver más reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search"><h4 style="color:#B43C2C">Ver más reseñas</h4></a></div>
+    </div>
+    <hr>
     <div ng-include src="'modules/groups/client/views/slider-groups.client.view.html'"></div>
 </div> 
 

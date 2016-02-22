@@ -29,7 +29,7 @@
             <option value="obra">Obra</option>
             <option value="autor">Autor</option>
             <option value="lista">Lista de obras</option>
-            <option value="general">General</option>
+            <option value="tema">Tema</option>
           </select>
       </div>
     
@@ -86,7 +86,7 @@
             <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de autor de nuestro catálogo por favor.
             </div>
-            <p ng-show="form.groupForm.name.$invalid && !form.groupForm.name.$pristine" class="help-block">Introduzca un autor.</p>
+            <p ng-show="form.groupForm.authorName.$invalid && !form.groupForm.authorName.$pristine" class="help-block">Introduzca un autor.</p>
           </div>
          </div>
         </div>
@@ -134,6 +134,27 @@
          </div>
             
         </div>
+        
+        <div class="well" ng-show="showThemePanel">
+         <div class="bs-callout bs-callout-danger">
+          <h4>Escribe el tema del grupo</h4>
+          Comienza a escribir y te ayudaremos con el vocabulario de nuestro catálogo.
+         </div>
+
+         <div class="form-group input-panel">
+          <div class="row">
+            <input type="text" ng-model="themeName" placeholder="Escribe el tema del grupo" typeahead-on-select="setThemeValues($item)" typeahead="theme.themeName for theme in getSubject($viewValue)" typeahead-loading="loadingThemes" typeahead-no-results="noResults" class="form-control" required>
+            <i ng-show="loadingThemes" class="glyphicon glyphicon-refresh"></i>
+            <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
+                <strong>Aviso:</strong> No se han encontrado resultados. Introduce un tema de nuestro catálogo por favor.
+            </div>
+            <p ng-show="form.groupForm.themeName.$invalid && !form.groupForm.themeName.$pristine" class="help-block">Introduzca un tem.</p>
+          </div>
+         </div>
+            
+        </div>
+        
+        
         
 
     <form name="groupForm" class="form-horizontal" ng-submit="create(groupForm.$valid)">
