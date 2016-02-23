@@ -540,3 +540,9 @@ span.rating {
 .pagination > li > a, .pagination > li > span {
     color: #B43C2C;
 }
+
+.dropdown-menu-work .dropdown-menu {
+    max-height: 500px;
+    overflow-y: auto;
+    max-width: 90%;
+}

@@ -247,8 +247,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         var booklist = new Booklists({
             title: this.title,
             description: this.description,
-            tags: this.tags,
-            visible: this.visible
+            tags: this.tags
         });
 
         // Redirect after save
@@ -260,7 +259,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             $scope.description = '';
             $scope.tags = '';
             $scope.books = '';
-            $scope.visible = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
@@ -272,7 +270,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             name: $scope.booklist.title,
             content: $scope.booklist.description,
             type: "lista",
-            books: $scope.booklist.books
+            books: $scope.booklist.books,
+            source: $scope.booklist._id
         });
 
         // Redirect after save
@@ -548,7 +547,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
                     uuid: $scope.selectedItem.uuid,
                     reproduction: $scope.selectedItem.reproduction,
                     language: $scope.selectedItem.language,
-                    mediaType: $scope.selectedItem.mediaType
+                    mediaType: $scope.selectedItem.mediaType,
+                    authors: $scope.selectedItem.authors
             };
 
             $scope.booklist.books.push(book);
@@ -610,6 +610,7 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.submitForm = function () {
@@ -624,6 +625,7 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                         reproduction: $scope.reproduccion,
                         language: $scope.language,
                         mediaType: $scope.mediaType,
+                        authors: $scope.authors,
             };
 
             $modalInstance.close($scope.selectedItem);
@@ -643,14 +645,16 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
     };
 
 
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -663,6 +667,15 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                  
                     txtMediaType += mt.nombre;
                 });
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
 
                 var result = {
                         title:item.titulo, 
@@ -671,7 +684,8 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: txtMediaType
+                        mediaType: txtMediaType,
+                        authors: authors
                     };
                 return result;
             });
@@ -1420,6 +1434,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.txtcomment = '';
@@ -1454,6 +1469,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.authorName = '';
             $scope.themeName = '';
             $scope.booklist = '';
+            $scope.authors = '';
         }else if($scope.type === 'autor'){
             $scope.showAuthorPanel = true;
             $scope.showDescriptionPanel = true;
@@ -1578,6 +1594,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.reproduction = '';
             $scope.language = '';
             $scope.mediaType = '';
+            $scope.authors = '';
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -1806,7 +1823,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
-                maxRows: 10
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -1819,6 +1836,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                  
                     mediatype += mt.nombre;
                 });
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
 
                 var result = {
                         title:item.titulo, 
@@ -1827,7 +1853,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: mediatype
+                        mediaType: mediatype,
+                        authors: authors
                     };
                 return result;
             });
@@ -1843,6 +1870,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
         $scope.source = val.slug;
     };
     
@@ -2279,6 +2307,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.txtcomment = '';
@@ -2326,7 +2355,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.$broadcast('show-errors-check-validity', 'reviewForm');
 
             return false;
-        }
+        }console.log('authors:' + $scope.authors);
 
         // Create new Review object
         var review = new Reviews({
@@ -2337,7 +2366,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             uuid: $scope.uuid,
             reproduction: $scope.reproduction,
             language: $scope.language,
-            mediaType: $scope.mediaType 
+            mediaType: $scope.mediaType, 
+            authors: $scope.authors
         });
 
         // Redirect after save
@@ -2354,6 +2384,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.reproduction = '';
             $scope.language = '';
             $scope.mediaType = '';
+            $scope.authors = '';
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -2567,6 +2598,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                     mediaType += mt.nombre;
                 });
                 
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
+                
                 $scope.identifierWork = item.idEntidadDocumental;
                 $scope.slug = item.slug;
                 $scope.uuid = item.uuid;
@@ -2574,6 +2614,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 $scope.title = item.titulo;
                 $scope.language = item.idioma;
                 $scope.mediaType = mediaType;
+                $scope.authors = authors;
             });
         });
     };
@@ -2584,7 +2625,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
-                maxRows: 10
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -2597,7 +2638,16 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                  
                     mediatype += mt.nombre;
                 });
-
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
+                
                 var result = {
                         title:item.titulo, 
                         identifierWork: item.idEntidadDocumental,
@@ -2605,7 +2655,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: mediatype
+                        mediaType: mediatype,
+                        authors: authors
                     };
                 return result;
             });
@@ -2621,6 +2672,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
     };
 
     $scope.showEmailForm = function () {
@@ -3164,8 +3216,8 @@ angular.module('users.admin').controller('UserController', ['$scope', '$state', 
 
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$modal', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function ($scope, $state, $http, $modal, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -3174,7 +3226,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {
-      $location.path('/home');
+      $location.path('/');
     }
 
     $scope.signup = function (isValid) {
@@ -3191,7 +3243,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go($state.previous.state.name, $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -3215,7 +3267,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // And redirect to the previous or home page
         //$state.go($state.previous.state.name || 'inicio', $state.previous.params);
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go($state.previous.state.name, $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -3230,9 +3282,26 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       // Effectively call OAuth authentication route:
       $window.location.href = url;
     };
+    
+    $scope.showLOPDInformation = function () {
+       $modal.open({
+            templateUrl: '/modules/users/client/views/authentication/modal-lopd-information.html',
+            controller: ModalLOPDInstanceCtrl,
+            scope: $scope
+       });
+    };
   }
 ]);
 
+'use strict';
+
+// controller for modal help window
+var ModalLOPDInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalLOPDInstanceCtrl.$inject = ["$scope", "$modalInstance"];
 'use strict';
 
 angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', 'Authentication', 'PasswordValidator',

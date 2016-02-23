@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$modal', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function ($scope, $state, $http, $modal, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -10,7 +10,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     // If user is signed in then redirect back home
     if ($scope.authentication.user) {
-      $location.path('/home');
+      $location.path('/');
     }
 
     $scope.signup = function (isValid) {
@@ -27,7 +27,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go($state.previous.state.name, $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -51,7 +51,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // And redirect to the previous or home page
         //$state.go($state.previous.state.name || 'inicio', $state.previous.params);
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go($state.previous.state.name, $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -65,6 +65,14 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
       // Effectively call OAuth authentication route:
       $window.location.href = url;
+    };
+    
+    $scope.showLOPDInformation = function () {
+       $modal.open({
+            templateUrl: '/modules/users/client/views/authentication/modal-lopd-information.html',
+            controller: ModalLOPDInstanceCtrl,
+            scope: $scope
+       });
     };
   }
 ]);

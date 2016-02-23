@@ -48,6 +48,17 @@
             </div>
           </div>
         </div>
+        
+        <div class="form-group" show-errors>
+          <label for="lopd">
+              <input type="checkbox" id="lopd" name="lopd" ng-model="lopd" placeholder="Aceptar condiciones de uso" required>
+              He leído y acepto las <a ng-click="showLOPDInformation();" > condiciones de la Política de Protección de Datos</a>. En caso de negativa al tratamiento de datos, no podrá tratarse esta información.
+          </label>
+          <div ng-messages="userForm.lopd.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Acepta las condiciones de Política de Protección de Datos por favor.</p>
+          </div>
+        </div> 
+  
         <div class="form-group" ng-show="!userForm.password.$error.required">
           <label>Seguridad de la contraseña</label>
           <progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></progressbar>

@@ -16,10 +16,10 @@ var ReviewSchema = new Schema({
   },
   status: {
     type: String,
+    enum : ['draft','public'],
     default: 'draft',
-    trim: true,
     required: 'El campo estado no puede ser nulo'
-  },
+  },  
   title: {
     type: String,
     default: '',
@@ -70,6 +70,9 @@ var ReviewSchema = new Schema({
     type: String,
   },
   language: {
+    type: String,
+  },
+  authors: {
     type: String,
   },
   user: {

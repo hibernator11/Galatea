@@ -37,8 +37,10 @@
             <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
         </div>
         <div class="col-xs-9 col-md-9">
-            <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{review.slug | mountCover}}" target="_blank"><i class="glyphicon glyphicon-new-window"></i> Ver obra en catálogo</a></h4>
-            <p>{{ review.title | htmlLimit: 200}}</p>
+            <h3>
+                <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ review.slug | mountRecord }}" target="_blank"><p ng-bind="review.title | htmlLimit: 200"></p></a>
+            </h3>
+            <h4 style="color:#B43C2C" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
             <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 200"></p>
             <div class="row">
                 <div class="col-md-12">

@@ -14,6 +14,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.txtcomment = '';
@@ -61,7 +62,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.$broadcast('show-errors-check-validity', 'reviewForm');
 
             return false;
-        }
+        }console.log('authors:' + $scope.authors);
 
         // Create new Review object
         var review = new Reviews({
@@ -72,7 +73,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             uuid: $scope.uuid,
             reproduction: $scope.reproduction,
             language: $scope.language,
-            mediaType: $scope.mediaType 
+            mediaType: $scope.mediaType, 
+            authors: $scope.authors
         });
 
         // Redirect after save
@@ -89,6 +91,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.reproduction = '';
             $scope.language = '';
             $scope.mediaType = '';
+            $scope.authors = '';
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -302,6 +305,15 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                     mediaType += mt.nombre;
                 });
                 
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
+                
                 $scope.identifierWork = item.idEntidadDocumental;
                 $scope.slug = item.slug;
                 $scope.uuid = item.uuid;
@@ -309,6 +321,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 $scope.title = item.titulo;
                 $scope.language = item.idioma;
                 $scope.mediaType = mediaType;
+                $scope.authors = authors;
             });
         });
     };
@@ -319,7 +332,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
-                maxRows: 10
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -332,7 +345,16 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                  
                     mediatype += mt.nombre;
                 });
-
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
+                
                 var result = {
                         title:item.titulo, 
                         identifierWork: item.idEntidadDocumental,
@@ -340,7 +362,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: mediatype
+                        mediaType: mediatype,
+                        authors: authors
                     };
                 return result;
             });
@@ -356,6 +379,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
     };
 
     $scope.showEmailForm = function () {

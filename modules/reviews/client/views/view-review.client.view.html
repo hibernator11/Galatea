@@ -3,7 +3,7 @@
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
-        <h2>{{ review.title | htmlLimit: 150 }}</h2>
+        <!--<h2>{{ review.title | htmlLimit: 150 }}</h2>-->
     </div>
   </div>    
     
@@ -79,6 +79,7 @@
      <div class="row">
        <div class="col-md-9">
          <h1 class="title">{{ review.title | htmlLimit: 200 }}</h1>
+         <h4 style="color:#B43C2C" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
          <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
 

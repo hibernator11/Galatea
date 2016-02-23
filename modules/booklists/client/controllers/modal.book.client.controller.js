@@ -10,6 +10,7 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.submitForm = function () {
@@ -24,6 +25,7 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                         reproduction: $scope.reproduccion,
                         language: $scope.language,
                         mediaType: $scope.mediaType,
+                        authors: $scope.authors,
             };
 
             $modalInstance.close($scope.selectedItem);
@@ -43,14 +45,16 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
     };
 
 
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?maxRows=12&callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
-                q: val
+                q: val,
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -63,6 +67,15 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                  
                     txtMediaType += mt.nombre;
                 });
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
 
                 var result = {
                         title:item.titulo, 
@@ -71,7 +84,8 @@ var ModalBookInstanceCtrl = function ($scope, $http, $modalInstance) {
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: txtMediaType
+                        mediaType: txtMediaType,
+                        authors: authors
                     };
                 return result;
             });

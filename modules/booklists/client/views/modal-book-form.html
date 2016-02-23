@@ -13,8 +13,18 @@
           Comienza a escribir el título de la obra sobre la que vas a escribir la reseña. Te mostraremos los resultados de nuestro catálogo.
          </div>
 
-        <div class="input-panel">
-            <input type="text" ng-model="title" placeholder="Busca un título en el catálogo" typeahead-on-select="setWorkValues($item)" typeahead="work.title for work in getWork($viewValue)" typeahead-loading="loadingWorks" typeahead-no-results="noResults" class="form-control" required>
+        <div class="input-panel dropdown-menu-work">
+            
+            <input type="text" ng-model="title" 
+                   placeholder="Escribe el título de la obra de la reseña" 
+                   typeahead-on-select="setWorkValues($item)"
+                   typeahead="item as item.title for item in getWork($viewValue)"
+                   typeahead-loading="loadingWorks" 
+                   typeahead-no-results="noResults"
+                   typeahead-template-url="/modules/booklists/client/views/custom.select.template.html"
+                   typeahead-min-length="4"
+                   class="form-control" required>
+            
             <i ng-show="loadingWorks" class="glyphicon glyphicon-refresh"></i>
             <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un título de nuestro catálogo por favor.
@@ -29,12 +39,14 @@
                <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
             </div>
             <div class="col-xs-9 col-md-9 section-box">
-              <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{slug | mountRecord }}" target="_blank">Ver obra en catálogo <span class="glyphicon glyphicon-new-window"></span></a></h4>
-              <p>{{ title | htmlLimit: 200 }}</p>
+              <h3>
+                  <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ slug | mountRecord }}" target="_blank"><p ng-bind="title | htmlLimit: 200"></p></a>
+              </h3>
+              <h4 style="color:#B43C2C" ng-show="authors" ng-bind="authors | htmlLimit: 200"></h4>
               <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
               <div class="row rating-desc">
                 <div class="col-md-12">
-                  <span class="label label-danger" ng-show="language">{{language}}</span>
+                  <!--<span class="label label-danger" ng-show="language">{{language}}</span> -->
                   <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
                     <span ng-switch-when="audio">
                       <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}

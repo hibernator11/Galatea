@@ -70,7 +70,8 @@ var GroupSchema = new Schema({
     slug: String,
     reproduction: String,
     mediaType: String,
-    language: String
+    language: String,
+    authors: String,
   }],
   content: {
     type: String,

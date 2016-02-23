@@ -46,7 +46,7 @@
                     </a> 
                 </div> <!-- list-group -->
     
-                <div class="alert alert-warning text-center" ng-show="!reviews.length">
+                <div class="alert alert-warning text-center" ng-if="reviews" ng-show="!reviews.length">
                     No existe ninguna reseña sobre esta obra, ¿<a ui-sref="reviews.create">desea crear una</a>?
                 </div>
     

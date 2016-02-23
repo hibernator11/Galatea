@@ -14,6 +14,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.reproduction = '';
     $scope.language = '';
     $scope.mediaType = '';
+    $scope.authors = '';
 
     $scope.form = {};
     $scope.txtcomment = '';
@@ -48,6 +49,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.authorName = '';
             $scope.themeName = '';
             $scope.booklist = '';
+            $scope.authors = '';
         }else if($scope.type === 'autor'){
             $scope.showAuthorPanel = true;
             $scope.showDescriptionPanel = true;
@@ -172,6 +174,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.reproduction = '';
             $scope.language = '';
             $scope.mediaType = '';
+            $scope.authors = '';
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
@@ -400,7 +403,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
-                maxRows: 10
+                maxRows: 30
             }
         }).then(function(response){
             return response.data.lista.map(function(item){
@@ -413,6 +416,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                  
                     mediatype += mt.nombre;
                 });
+                
+                var authors = '';
+                angular.forEach(item.autores, function(author) {
+     
+                    if(authors !== '')
+                        authors += '. ';
+                 
+                    authors += author.nombre;
+                });
 
                 var result = {
                         title:item.titulo, 
@@ -421,7 +433,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                         uuid: item.uuid,
                         reproduction: item.reproduccion,
                         language: item.idioma,
-                        mediaType: mediatype
+                        mediaType: mediatype,
+                        authors: authors
                     };
                 return result;
             });
@@ -437,6 +450,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.title = val.title;
         $scope.language = val.language;
         $scope.mediaType = val.mediaType;
+        $scope.authors = val.authors;
         $scope.source = val.slug;
     };
     

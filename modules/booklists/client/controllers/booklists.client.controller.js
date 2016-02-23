@@ -35,8 +35,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         var booklist = new Booklists({
             title: this.title,
             description: this.description,
-            tags: this.tags,
-            visible: this.visible
+            tags: this.tags
         });
 
         // Redirect after save
@@ -48,7 +47,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             $scope.description = '';
             $scope.tags = '';
             $scope.books = '';
-            $scope.visible = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
@@ -60,7 +58,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             name: $scope.booklist.title,
             content: $scope.booklist.description,
             type: "lista",
-            books: $scope.booklist.books
+            books: $scope.booklist.books,
+            source: $scope.booklist._id
         });
 
         // Redirect after save
@@ -336,7 +335,8 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
                     uuid: $scope.selectedItem.uuid,
                     reproduction: $scope.selectedItem.reproduction,
                     language: $scope.selectedItem.language,
-                    mediaType: $scope.selectedItem.mediaType
+                    mediaType: $scope.selectedItem.mediaType,
+                    authors: $scope.selectedItem.authors
             };
 
             $scope.booklist.books.push(book);
