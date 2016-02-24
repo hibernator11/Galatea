@@ -23,7 +23,7 @@
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{group.ratings.length}}</span>
                      </li>
-                     <li class="profileNav-item pull-right">
+                     <li class="profileNav-item pull-right" ng-show="authentication.user && authentication.user._id !== group.user._id && !showAddComments()">
                         <a tooltip="Seguir" tooltip-placement="top" href="#" ng-click="addFollower()" class="btn btn-danger"><i class="fa fa-user-plus"></i> Seguir</a> 
                      </li>
                      <li class="profileNav-item pull-right" >
@@ -32,9 +32,6 @@
                                 <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" dropdown-menu>
-                              <li>
-                                <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                              </li>
                               <li ng-show="authentication.user._id === group.user._id"> 
                                 <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
                               </li>
@@ -50,7 +47,12 @@
                               <li ng-show="authentication.user"> 
                                 <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
                               </li>
+                              <li class="divider" ng-show="authentication.user._id === group.user._id"></li>
+                              <li>
+                                <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                              </li>
                             </ul>
+                        </span>
                      </li>
                  </ul>
              </div>
@@ -82,8 +84,8 @@
              <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-                 <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                 <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                 <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                 <a ng-if="authentication.user" tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
                    <i class="fa fa-star"></i> Valorar
                  </a>
              </div>
@@ -118,12 +120,36 @@
           </carousel>
           <a style="margin-top: 5px" tooltip="Ver todas las obras de la lista" tooltip-placement="bottom" href="#" class="btn btn-danger" ui-sref="booklists.view({booklistId: group.source})" >Ver la lista completa <span class="glyphicon glyphicon-zoom-in"></span></a>
       </div>
+         
+         
+      <div ng-show="authentication.user._id === group.user._id" class="well well-sm col-md-3 col-md-offset-9 col-xs-10 col-xs-offset-2 text-center">
+            <legend style="font-weight: bold;font-size: 15px;" class="text-center">Añadir miembros</legend>
+            <div class="input-group">
+                <input type="text" ng-model="memberName" 
+                         placeholder="Escribe el nombre del usuario" 
+                         typeahead-on-select="addMember($item)" 
+                         typeahead="item as item.displayName for item in getUsersLike($viewValue)" 
+                         typeahead-loading="loadingUsers"
+                         typeahead-template-url="/modules/users/client/views/usercustom.select.template.html"
+                         typeahead-min-length="3"
+                         typeahead-no-results="noResults" class="form-control" required>
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
+            <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
+                <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de usuario por favor.
+            </div>
+            <p><span class="profileNav-value" data-is-compact="false">{{group.members.length}}</span> Miembros</p>
+     </div>
+         
    </div>
    
    <hr>
      
    <div ng-show="group.comments.length > 0">
-      <h4>Últimos comentarios</h4>	
+      <h4>Actividad reciente</h4>	
 
       <div ng-repeat="comment in group.comments" class="media">
         <div class="media-left">
@@ -144,10 +170,10 @@
       <hr>
      </div> <!-- last comments -->
      
-     <div ng-show="group.status === 'public'">
+     <div ng-show="showAddComments()">
         <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
          <div class="form-group">
-           <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
+           <label for="txtcomment" class="col-sm-2 control-label">Escribe un commentario</label>
            <div class="col-sm-10">
               <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
            </div>

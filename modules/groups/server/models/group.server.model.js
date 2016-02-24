@@ -105,7 +105,7 @@ var GroupSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  followers: [{
+  members: [{
     user: {
       type: Schema.ObjectId,
       ref: 'User'
@@ -113,7 +113,13 @@ var GroupSchema = new Schema({
     created: {
       type: Date,
       default: Date.now
-    }
+    },
+    status: {
+      type: String,
+      enum : ['invitado','pendiente','aceptado'],
+      default: 'pendiente',
+      required: 'El campo estado no puede ser nulo'
+      },
   }],
 });
 

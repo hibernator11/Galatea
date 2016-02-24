@@ -61,16 +61,6 @@ var BooklistSchema = new Schema({
       default: Date.now
     }
   }],
-  followers: [{
-    user: {
-      type: Schema.ObjectId,
-      ref: 'User'
-    },
-    created: {
-      type: Date,
-      default: Date.now
-    }
-  }],
   comments: [{
     content: String,
     user: {

@@ -47,11 +47,9 @@ exports.update = function (req, res) {
       booklist.status = req.body.status;
       booklist.ratings = req.body.ratings;
       booklist.comments = req.body.comments;
-      booklist.followers = req.body.followers;
   }else{
       booklist.ratings = req.body.ratings;
       booklist.comments = req.body.comments;
-      booklist.followers = req.body.followers;
   }
 
   booklist.save(function (err) {

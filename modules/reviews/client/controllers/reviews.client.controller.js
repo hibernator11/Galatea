@@ -62,7 +62,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.$broadcast('show-errors-check-validity', 'reviewForm');
 
             return false;
-        }console.log('authors:' + $scope.authors);
+        }
 
         // Create new Review object
         var review = new Reviews({

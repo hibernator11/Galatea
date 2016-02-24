@@ -59,6 +59,8 @@
           <small class="list-group-item-text">
             Creado en
             <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+            por 
+            <span ng-bind="group.user.displayName"></span>
           </small>
           <div>
             <span class="label label-danger" ng-switch on="group.type">

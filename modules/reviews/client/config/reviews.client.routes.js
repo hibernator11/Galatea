@@ -20,16 +20,16 @@ angular.module('reviews').config(['$stateProvider',
       .state('reviews.search', {
         url: '/search',
         templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.uuid', {
         url: '/uuid/:uuid',
         templateUrl: 'modules/reviews/client/views/list-reviews-uuid.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.create', {
         url: '/create',
@@ -41,9 +41,9 @@ angular.module('reviews').config(['$stateProvider',
       .state('reviews.view', {
         url: '/:reviewId',
         templateUrl: 'modules/reviews/client/views/view-review.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.edit', {
         url: '/:reviewId/edit',

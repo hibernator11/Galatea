@@ -3,7 +3,6 @@
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
-        <!--<h2>{{ review.title | htmlLimit: 150 }}</h2>-->
     </div>
   </div>    
     
@@ -23,7 +22,7 @@
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{review.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
-                     <li class="profileNav-item pull-right">
+                     <li class="profileNav-item pull-right" ng-if="authentication.user._id === review.user._id">
                         <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="reviews.edit({reviewId: review._id})" class="btn btn-danger"><i class="fa fa-pencil"></i> Editar</a> 
                      </li>
                      <li class="profileNav-item pull-right" ng-show="review.status === 'draft'">
@@ -38,23 +37,24 @@
                               <li>
                                 <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
                               </li>
-                              <li ng-show="authentication.user._id === review.user._id"> 
+                              <li ng-if="authentication.user._id === review.user._id"> 
                                 <a ui-sref="reviews.edit({reviewId: review._id})"><i class="glyphicon glyphicon-edit"></i> Editar reseña</a>
                               </li>
-                              <li ng-show="authentication.user._id === review.user._id">
+                              <li ng-if="authentication.user._id === review.user._id">
                                 <a ng-show="review.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar reseña</a>
                               </li>
-                              <li ng-show="authentication.user._id === review.user._id">
+                              <li ng-if="authentication.user._id === review.user._id">
                                 <a ng-show="review.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
                               </li>
-                              <li ng-show="authentication.user._id === review.user._id">
+                              <li ng-if="authentication.user._id === review.user._id">
                                 <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?"><i class="glyphicon glyphicon-trash"></i> Eliminar reseña</a>
                               </li>
-                              <li class="divider"></li>
-                              <li ng-show="authentication.user._id === review.user._id">
+                              <li ng-if="authentication.user._id === review.user._id" class="divider"></li>
+                              <li ng-if="authentication.user._id === review.user._id">
                                 <a ng-click="createGroupFromReview()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta reseña</a>
                               </li>
                             </ul>
+                        </span>
                      </li>
                  </ul>
              </div>
@@ -87,8 +87,8 @@
              <div class="col-md-12 col-xs-12 social-links" ng-show="review.status === 'public'">
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-                 <a tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                 <a tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                 <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                 <a ng-if="authentication.user" tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
                    <i class="fa fa-star"></i> Valorar
                  </a>
 
@@ -106,16 +106,15 @@
          <a ng-href="{{review.slug | mountRecord }}" target="_blank">
              <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
-         <a class="btn btn-danger btn-sm full-width" ng-href="{{review.slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
-         <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
+         <a tooltip="Ver obra en catálogo" tooltip-placement="top" class="btn btn-danger btn-sm full-width" ng-href="{{review.slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="bottom" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
             <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver más reseñas
          </a>
       </div>
    </div>
    
-   <hr>
-     
-   <div ng-show="review.comments.length > 0">
+   <div ng-if="review.comments.length > 0">
+      <hr> 
       <h4>Últimos comentarios</h4>	
 
       <div ng-repeat="comment in review.comments" class="media">
@@ -137,7 +136,7 @@
       <hr>
      </div> <!-- last comments -->
      
-     <div ng-show="review.status === 'public'">
+     <div ng-show="review.status === 'public' && authentication.user">
         <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
          <div class="form-group">
            <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>

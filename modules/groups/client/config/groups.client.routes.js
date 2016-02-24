@@ -20,9 +20,9 @@ angular.module('groups').config(['$stateProvider',
       .state('groups.search', {
         url: '/search',
         templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('groups.create', {
         url: '/create',
@@ -34,9 +34,9 @@ angular.module('groups').config(['$stateProvider',
       .state('groups.view', {
         url: '/:groupId',
         templateUrl: 'modules/groups/client/views/view-group.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('groups.edit', {
         url: '/:groupId/edit',

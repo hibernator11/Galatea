@@ -202,41 +202,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
       }
     };
     
-    $scope.addFollower = function() {
-      if ($scope.authentication.user) {
-          
-        if ($scope.authentication.user._id !== $scope.booklist.user._id) {
-            var follower = {
-                    user: $scope.authentication.user
-            };
-            
-            var found = false;
-            for(var i = 0; i <  $scope.booklist.followers.length; i++) {
-                if ( $scope.booklist.followers[i].user === $scope.authentication.user._id) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                $scope.booklist.followers.push(follower);
-
-                $scope.booklist.$update(function () {
-                    $scope.messageok = 'Ahora eres seguidor de esta lsita de obras.' + $scope.authentication.user._id;
-                }, function (errorResponse) {
-                    $scope.error = errorResponse.data.message;
-                });
-            }else{
-                $scope.error = 'Ya eres seguidor de la lista.';
-            }
-        }else{
-            $scope.error = 'Eres el creador de esta lista y por tanto ya eres seguidor.';
-        }
-      }else{
-          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
-      }
-    };
-
     // update Tag event
     $scope.updateTag = function(val) {
         

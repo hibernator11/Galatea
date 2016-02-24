@@ -182,9 +182,9 @@ angular.module('booklists').config(['$stateProvider',
       .state('booklists.search', {
         url: '/search',
         templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('booklists.create', {
         url: '/create',
@@ -196,9 +196,9 @@ angular.module('booklists').config(['$stateProvider',
       .state('booklists.view', {
         url: '/:booklistId',
         templateUrl: 'modules/booklists/client/views/view-booklist.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('booklists.edit', {
         url: '/:booklistId/edit',
@@ -414,41 +414,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
       }
     };
     
-    $scope.addFollower = function() {
-      if ($scope.authentication.user) {
-          
-        if ($scope.authentication.user._id !== $scope.booklist.user._id) {
-            var follower = {
-                    user: $scope.authentication.user
-            };
-            
-            var found = false;
-            for(var i = 0; i <  $scope.booklist.followers.length; i++) {
-                if ( $scope.booklist.followers[i].user === $scope.authentication.user._id) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                $scope.booklist.followers.push(follower);
-
-                $scope.booklist.$update(function () {
-                    $scope.messageok = 'Ahora eres seguidor de esta lsita de obras.' + $scope.authentication.user._id;
-                }, function (errorResponse) {
-                    $scope.error = errorResponse.data.message;
-                });
-            }else{
-                $scope.error = 'Ya eres seguidor de la lista.';
-            }
-        }else{
-            $scope.error = 'Eres el creador de esta lista y por tanto ya eres seguidor.';
-        }
-      }else{
-          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
-      }
-    };
-
     // update Tag event
     $scope.updateTag = function(val) {
         
@@ -1390,9 +1355,9 @@ angular.module('groups').config(['$stateProvider',
       .state('groups.search', {
         url: '/search',
         templateUrl: 'modules/groups/client/views/pagination-groups.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('groups.create', {
         url: '/create',
@@ -1404,9 +1369,9 @@ angular.module('groups').config(['$stateProvider',
       .state('groups.view', {
         url: '/:groupId',
         templateUrl: 'modules/groups/client/views/view-group.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('groups.edit', {
         url: '/:groupId/edit',
@@ -1421,8 +1386,8 @@ angular.module('groups').config(['$stateProvider',
 'use strict';
 
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists', 'Users',
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Groups, Booklists, Users) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
@@ -1459,54 +1424,47 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.showRatingBar = false;
     
     $scope.selectTypeAction = function() {
+        
+        // init variables
+        $scope.booklist = '';
+        $scope.themeName = '';
+        $scope.authorName = '';
+        $scope.booklists = '';
+        $scope.uuid = '';
+        $scope.slug = '';
+        $scope.reproduction = '';
+        $scope.title = '';
+        $scope.authors = '';
+        $scope.books = '';
+        
         if($scope.type === 'obra'){
             $scope.showWorkPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showAuthorPanel = false;
             $scope.showBookListPanel = false;
             $scope.showThemePanel = false;
-            $scope.booklists = '';
-            $scope.authorName = '';
-            $scope.themeName = '';
-            $scope.booklist = '';
-            $scope.authors = '';
         }else if($scope.type === 'autor'){
             $scope.showAuthorPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showBookListPanel = false;
             $scope.showThemePanel = false;
-            $scope.booklists = '';
-            $scope.uuid = '';
-            $scope.slug = '';
-            $scope.reproduction = '';
-            $scope.title = '';
-            $scope.booklist = '';
-            $scope.authorName = '';
-            $scope.themeName = '';
         }else if($scope.type === 'lista'){
             $scope.showBookListPanel = true;
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
             $scope.showThemePanel = false;
-            $scope.uuid = '';
-            $scope.slug = '';
-            $scope.reproduction = '';
-            $scope.title = '';
-            $scope.authorName = '';
-            $scope.themeName = '';
-            $scope.booklist = '';
-            
+                        
             // load booklists
             $http.get('/api/booklists')
-                    .success(function(data) {
-                        $scope.booklists = data[0].booklists;
-                        console.log(data);
-                    })
-                    .error(function(data) {
-                        console.log('Error: ' + data);
-                    });
+                .success(function(data) {
+                    $scope.booklists = data[0].booklists;
+                    console.log(data);
+                })
+                .error(function(data) {
+                    console.log('Error: ' + data);
+                });
 
         }else if($scope.type === 'tema'){
             $scope.showBookListPanel = false;
@@ -1514,28 +1472,12 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.showDescriptionPanel = true;
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
-            $scope.uuid = '';
-            $scope.slug = '';
-            $scope.reproduction = '';
-            $scope.title = '';
-            $scope.authorName = '';
-            $scope.themeName = '';
-            $scope.books = '';
-            $scope.booklist = '';
         }else{
             $scope.showWorkPanel = false;
             $scope.showAuthorPanel = false;
             $scope.showDescriptionPanel = false;
             $scope.showBookListPanel = false;
             $scope.showThemePanel = false;
-            $scope.booklists = '';
-            $scope.uuid = '';
-            $scope.slug = '';
-            $scope.reproduction = '';
-            $scope.title = '';
-            $scope.authorName = '';
-            $scope.themeName = '';
-            $scope.booklist = '';
         }
     };
     
@@ -1675,6 +1617,26 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         groupId: $stateParams.groupId
       });
     };
+    
+    $scope.showAddComments = function () {
+        
+        if ($scope.group && 
+            $scope.authentication.user &&
+            $scope.group.user &&
+            $scope.authentication.user._id === $scope.group.user._id){
+            console.log("showAddComments true admin group");
+            return true;
+        }else if($scope.group.status === 'public' && $scope.authentication.user){
+            for(var i = 0; i <  $scope.group.members.length; i++) {
+                if ( $scope.group.members[i].status === 'aceptado' && 
+                     $scope.group.members[i].user._id === $scope.authentication.user._id) {
+                     console.log("showAddComments true user aceptado");
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
 
     // update group status draft
     $scope.setDraftStatus = function () {
@@ -1780,43 +1742,43 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
       }
     };
     
-    $scope.addFollower = function() {
-      if ($scope.authentication.user) {
-          
-        if ($scope.authentication.user._id !== $scope.group.user._id) {
-            var follower = {
-                    user: $scope.authentication.user
+    $scope.addMember = function(item) {
+      
+        if ($scope.authentication.user._id === $scope.group.user._id) {
+            
+            var member = {
+                user: item.userId,
+                status: 'invitado'
             };
             
             var found = false;
-            for(var i = 0; i <  $scope.group.followers.length; i++) {
-                console.log('$scope.group.followers[i]._id:' + $scope.group.followers[i].user);
-                if ( $scope.group.followers[i].user === $scope.authentication.user._id) {
+            for(var i = 0; i <  $scope.group.members.length; i++) {
+                if ( $scope.group.members[i].user._id === member._id) {
                     found = true;
                     break;
                 }
             }
 
             if(!found){
-                $scope.group.followers.push(follower);
+                $scope.group.members.push(member);
 
                 $scope.group.$update(function () {
-                    $scope.messageok = 'Ahora eres seguidor de este grupo.' + $scope.authentication.user._id;
+                    $scope.messageok = 'Invitación enviada.';
+                    $scope.error = '';
                 }, function (errorResponse) {
+                    $scope.messageok = '';
                     $scope.error = errorResponse.data.message;
                 });
             }else{
-                $scope.error = 'Ya eres seguidor del grupo.';
+                $scope.messageok = '';
+                $scope.error = 'El usuario ' + item.displayName + ' ya forma parte del grupo.';
             }
         }else{
-            $scope.error = 'Eres el creador de este grupo y por tanto ya eres seguidor.';
+            $scope.messageok = '';
+            $scope.error = 'Eres el creador de este grupo y por tanto ya formas parte del grupo.';
         }
-      }else{
-          $scope.error = 'Para ser seguidor debes introducir tu usuario y contraseña.';
-      }
     };
     
-
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
@@ -1924,6 +1886,22 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.themeId = val.themeId;
         $scope.themeName = val.themeName;
         $scope.source = val.themeId;
+    };
+    
+    $scope.getUsersLike = function(val) {
+        // load users like
+        return $http.get('/api/userslike/' + val)
+        .then(function(response){
+            return response.data.map(function(item){
+                var result = {
+                        displayName:item.displayName, 
+                        userId: item._id,
+                        profileImageURL: item.profileImageURL
+                    };
+                return result;
+            });
+        });
+               
     };
 
     $scope.showEmailForm = function () {
@@ -2143,16 +2121,16 @@ angular.module('reviews').config(['$stateProvider',
       .state('reviews.search', {
         url: '/search',
         templateUrl: 'modules/reviews/client/views/pagination-reviews.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.uuid', {
         url: '/uuid/:uuid',
         templateUrl: 'modules/reviews/client/views/list-reviews-uuid.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.create', {
         url: '/create',
@@ -2164,9 +2142,9 @@ angular.module('reviews').config(['$stateProvider',
       .state('reviews.view', {
         url: '/:reviewId',
         templateUrl: 'modules/reviews/client/views/view-review.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('reviews.edit', {
         url: '/:reviewId/edit',
@@ -2355,7 +2333,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.$broadcast('show-errors-check-validity', 'reviewForm');
 
             return false;
-        }console.log('authors:' + $scope.authors);
+        }
 
         // Create new Review object
         var review = new Reviews({

@@ -20,10 +20,6 @@
                          <span class="profileNav-value" data-is-compact="false">{{booklist.comments.length}}</span>
                      </li>
                      <li class="profileNav-item">
-                         <span class="profileNav-label">Seguidores</span>
-                         <span class="profileNav-value" data-is-compact="false">{{booklist.followers.length}}</span>
-                     </li>
-                     <li class="profileNav-item">
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.ratings.length}}</span>
                      </li>
@@ -31,13 +27,10 @@
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
-                     <li class="profileNav-item pull-right">
-                        <a tooltip="Seguir" tooltip-placement="top" href="#" ng-click="addFollower()" class="btn btn-danger"><i class="fa fa-user-plus"></i> Seguir</a> 
-                     </li>
                      <li class="profileNav-item pull-right" ng-show="booklist.status === 'draft'">
                         <a tooltip="Publicar lista" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                      </li>
-                     <li class="profileNav-item pull-right">
+                     <li class="profileNav-item pull-right" ng-show="authentication.user._id === booklist.user._id">
                         <a tooltip="Añadir obra" tooltip-placement="top" href="#" ng-click="showBookForm()" class="btn btn-danger"><i class="fa fa-plus"></i> Añadir obra</a> 
                      </li>
                      <li class="profileNav-item pull-right" >
@@ -61,11 +54,12 @@
                               <li ng-show="authentication.user._id === booklist.user._id">
                                 <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la lista de obras?"><i class="glyphicon glyphicon-trash"></i> Eliminar lista</a>
                               </li>
-                              <li class="divider"></li>
+                              <li class="divider" ng-show="authentication.user._id === booklist.user._id"></li>
                               <li ng-show="authentication.user._id === booklist.user._id">
                                 <a ng-click="createGroupFromBooklist()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta lista</a>
                               </li>
                             </ul>
+                        </span>
                      </li>
                  </ul>
              </div>
@@ -103,8 +97,8 @@
           <div class="pull-right">
             <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
             <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-            <a tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-            <a tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+            <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+            <a ng-if="authentication.user" tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
                 <i class="fa fa-star"></i> Valorar
             </a>
           </div>
@@ -194,7 +188,7 @@
       <hr>
      </div> <!-- last comments -->
      
-     <div ng-show="booklist.status === 'public'">
+     <div ng-show="booklist.status === 'public' && authentication.user">
         <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
          <div class="form-group">
            <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>

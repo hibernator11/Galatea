@@ -20,9 +20,9 @@ angular.module('booklists').config(['$stateProvider',
       .state('booklists.search', {
         url: '/search',
         templateUrl: 'modules/booklists/client/views/pagination-booklists.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('booklists.create', {
         url: '/create',
@@ -34,9 +34,9 @@ angular.module('booklists').config(['$stateProvider',
       .state('booklists.view', {
         url: '/:booklistId',
         templateUrl: 'modules/booklists/client/views/view-booklist.client.view.html',
-        data: {
+        /*data: {
           roles: ['user', 'admin']
-        }
+        }*/
       })
       .state('booklists.edit', {
         url: '/:booklistId/edit',
