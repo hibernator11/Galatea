@@ -16,15 +16,15 @@
                          <span class="profileNav-value" data-is-compact="false">{{group.comments.length}}</span>
                      </li>
                      <li class="profileNav-item">
-                         <span class="profileNav-label">Seguidores</span>
-                         <span class="profileNav-value" data-is-compact="false">{{group.followers.length}}</span>
+                         <span class="profileNav-label">Miembros</span>
+                         <span class="profileNav-value" data-is-compact="false">{{(group.members | filter:{status:'activo'}:true).length}}</span>
                      </li>
                      <li class="profileNav-item">
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{group.ratings.length}}</span>
                      </li>
                      <li class="profileNav-item pull-right" ng-show="authentication.user && authentication.user._id !== group.user._id && !showAddComments()">
-                        <a tooltip="Seguir" tooltip-placement="top" href="#" ng-click="addFollower()" class="btn btn-danger"><i class="fa fa-user-plus"></i> Seguir</a> 
+                        <a tooltip="Formar parte del grupo" tooltip-placement="top" href="#" ng-click="addMember()" class="btn btn-danger"><i class="fa fa-user-plus"></i> Formar parte del grupo</a> 
                      </li>
                      <li class="profileNav-item pull-right" >
                         <span class="dropdown" dropdown>
@@ -32,160 +32,177 @@
                                 <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" dropdown-menu>
-                              <li ng-show="authentication.user._id === group.user._id"> 
-                                <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
-                              </li>
-                              <li ng-show="authentication.user._id === group.user._id">
-                                <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
-                              </li>
-                              <li ng-show="authentication.user._id === group.user._id">
-                                <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
-                              </li>
-                              <li ng-show="authentication.user._id === group.user._id">
-                                <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
-                              </li>
-                              <li ng-show="authentication.user"> 
-                                <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
-                              </li>
-                              <li class="divider" ng-show="authentication.user._id === group.user._id"></li>
-                              <li>
-                                <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                              </li>
+                                <li ng-show="authentication.user._id === group.user._id"> 
+                                    <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
+                                </li>
+                                <li ng-show="authentication.user._id === group.user._id">
+                                    <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
+                                </li>
+                                <li ng-show="authentication.user._id === group.user._id">
+                                    <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                                </li>
+                                <li ng-show="authentication.user._id === group.user._id">
+                                    <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
+                                </li>
+                                <li ng-show="authentication.user"> 
+                                    <a ui-sref="groups.create"><i class="glyphicon glyphicon-plus"></i> Crear grupo</a>
+                                </li>
+                                <li class="divider" ng-show="authentication.user._id === group.user._id"></li>
+                                <li>
+                                    <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                                </li>
                             </ul>
                         </span>
                      </li>
                  </ul>
              </div>
-         </div> 
+        </div> 
     
-      <div class="alert alert-success col-xs-12" ng-show="messageok">
-       <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
-       <strong>Resultado:</strong> {{messageok}}
-      </div>
+        <div class="alert alert-success col-xs-12" ng-show="messageok">
+            <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Resultado:</strong> {{messageok}}
+        </div>
 
-      <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
-       <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
-       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
-      </div>
+        <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
+            <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
+            <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
+        </div>
 
-      <div class="alert alert-warning col-xs-12" ng-show="error">
-       <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
-       <strong>Aviso:</strong> {{error}}
-      </div>
+        <div class="alert alert-warning col-xs-12" ng-show="error">
+            <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+            <strong>Aviso:</strong> {{error}}
+        </div>
 
-    
-     <hr>
-     <div class="row">
-       <div class="col-md-9">
+       
+           <tabset>
+             <tab heading="Descripción">
+                <div class="row">
+                    <div class="col-md-9 col-xs-12">
+                        <h1 class="title">{{ group.name | htmlLimit: 200 }}</h1>
+                        <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
 
-         <h1 class="title">{{ group.name | htmlLimit: 200 }}</h1>
-         <h3 style="font-style:italic">Por <span ng-bind="group.user.displayName"></span> el <span ng-bind="group.created | date:'dd/MM/yyyy'"></span></h3>
-         
-             <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
-                 <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
-                 <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
-                 <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                 <a ng-if="authentication.user" tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
-                   <i class="fa fa-star"></i> Valorar
-                 </a>
-             </div>
-             
-             <div style="margin-bottom:10px" class="col-md-12 col-xs-12" ng-show="showRatingBar">
-                <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+                        <div class="col-md-12 col-xs-12 social-links" ng-show="group.status === 'public'">
+                            <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
+                            <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
+                            <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
+                            <a ng-if="authentication.user" tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                                <i class="fa fa-star"></i> Valorar
+                            </a>
+                        </div>
 
-                <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
-             </div>
-             
-           <p style="margin-top:30px;" ng-bind-html="group.content | html"></p>
-      </div> 
+                        <div style="margin-bottom:10px" class="col-md-12 col-xs-12" ng-show="showRatingBar">
+                          <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
+
+                          <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
+                        </div>
+
+                        <p style="margin-top:30px;" ng-bind-html="group.content | html"></p>
+                    </div>
+
+                    <div ng-if="group.type === 'obra' && group.uuid" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+                        <a ng-href="{{group.source | mountRecord }}" target="_blank">
+                            <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
+                        </a>
+                        <a style="margin-top:3px" class="btn btn-danger btn-sm full-width" ng-href="{{group.source | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+                        <a style="margin-top:3px" tooltip="Ver las reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: group.uuid})" class="btn btn-danger btn-sm full-width">
+                           <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver reseñas
+                        </a>
+                    </div>
+
+                    <div ng-if="group.type === 'lista' && group.books.length > 0" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
+                        <carousel interval="myInterval" no-wrap="noWrapSlides">
+                            <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                                <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;">
+                                <div class="carousel-caption">
+                                   <p>{{slide.title | htmlLimit: 80}}</p>
+                                </div>
+                            </slide>
+                        </carousel>
+                        <a style="margin-top: 5px" tooltip="Ver todas las obras de la lista" tooltip-placement="bottom" href="#" class="btn btn-danger" ui-sref="booklists.view({booklistId: group.source})" >Ver la lista completa <span class="glyphicon glyphicon-zoom-in"></span></a>
+                    </div>
+                </div>     
+                 
+                <hr>
      
-      <div ng-if="group.type === 'obra' && group.uuid" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-         <a ng-href="{{group.source | mountRecord }}" target="_blank">
-             <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="bottom" class="img-rounded img-responsive" />
-         </a>
-         <a style="margin-top:3px" class="btn btn-danger btn-sm full-width" ng-href="{{group.source | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
-         <a style="margin-top:3px" tooltip="Ver las reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: group.uuid})" class="btn btn-danger btn-sm full-width">
-            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver reseñas
-         </a>
-      </div>
-         
-      <div ng-if="group.type === 'lista' && group.books.length > 0" class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-          <carousel interval="myInterval" no-wrap="noWrapSlides">
-                <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
-                  <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;">
-                  <div class="carousel-caption">
-                    <p>{{slide.title | htmlLimit: 80}}</p>
-                  </div>
-                </slide>
-          </carousel>
-          <a style="margin-top: 5px" tooltip="Ver todas las obras de la lista" tooltip-placement="bottom" href="#" class="btn btn-danger" ui-sref="booklists.view({booklistId: group.source})" >Ver la lista completa <span class="glyphicon glyphicon-zoom-in"></span></a>
-      </div>
-         
-         
-      <div ng-show="authentication.user._id === group.user._id" class="well well-sm col-md-3 col-md-offset-9 col-xs-10 col-xs-offset-2 text-center">
-            <legend style="font-weight: bold;font-size: 15px;" class="text-center">Añadir miembros</legend>
-            <div class="input-group">
-                <input type="text" ng-model="memberName" 
-                         placeholder="Escribe el nombre del usuario" 
-                         typeahead-on-select="addMember($item)" 
-                         typeahead="item as item.displayName for item in getUsersLike($viewValue)" 
-                         typeahead-loading="loadingUsers"
-                         typeahead-template-url="/modules/users/client/views/usercustom.select.template.html"
-                         typeahead-min-length="3"
-                         typeahead-no-results="noResults" class="form-control" required>
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>
-            <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
-            <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
-                <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de usuario por favor.
-            </div>
-            <p><span class="profileNav-value" data-is-compact="false">{{group.members.length}}</span> Miembros</p>
-     </div>
-         
-   </div>
+                <div class="row" ng-show="group.comments.length > 0">
+                    <h4>Actividad reciente</h4>	
+
+                    <div ng-repeat="comment in group.comments" class="media">
+                        <div class="media-left">
+                            <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                        </div>
+                        <div class="media-body">
+                            <small>
+                            <em class="text-muted">
+                                Añadido el
+                                <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                                por
+                                <span ng-bind="comment.user.displayName"></span>
+                            </em>
+                            </small>
+                            <p ng-bind="comment.content"></p>
+                        </div>
+                    </div>
+                    <hr>
+                </div> <!-- last comments -->
+
+                <div class="row" ng-show="showAddComments()">
+                    <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+                      <div class="form-group">
+                        <label for="txtcomment" class="col-sm-2 control-label">Escribe un commentario</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">                    
+                            <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+                        </div>
+                      </div>            
+                    </form>
+                </div>
+            </tab>
+            <tab heading="Miembros" ng-if="authentication.user._id === group.user._id">
+                <div class="row">
+                    <div class="col-md-9 col-xs-12">
+                        <div ng-include src="'modules/groups/client/views/table.users.client.view.html'"></div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2"
+                         style="margin-top: 35px;">
+                       
+                        <div class="well well-sm">
+                            <legend style="font-weight: bold;font-size: 15px;" class="text-center">
+                                Añadir miembros 
+                                <a href="#" ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i></a>
+                            </legend>
+                            <div class="input-group">
+                                <input type="text" ng-model="memberName" 
+                                         placeholder="Introduce el nombre del usuario" 
+                                         typeahead-on-select="addAdminMember($item)" 
+                                         typeahead="item as item.displayName for item in getUsersLike($viewValue)" 
+                                         typeahead-loading="loadingUsers"
+                                         typeahead-template-url="/modules/users/client/views/usercustom.select.template.html"
+                                         typeahead-min-length="3"
+                                         typeahead-no-results="noResults" class="form-control" required>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </div>
+                            <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
+                            <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
+                                <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de usuario por favor.
+                            </div>
+                            <p class="text-center"><span class="profileNav-value" data-is-compact="false">{{(group.members | filter:{status:'activo'}:true).length}}</span> Miembros</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                </div>
+            </tab>
+           </tabset>
+        </div>
    
-   <hr>
-     
-   <div ng-show="group.comments.length > 0">
-      <h4>Actividad reciente</h4>	
-
-      <div ng-repeat="comment in group.comments" class="media">
-        <div class="media-left">
-          <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
-        </div>
-        <div class="media-body">
-            <small>
-            <em class="text-muted">
-            Añadido el
-            <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
-             por
-            <span ng-bind="comment.user.displayName"></span>
-            </em>
-            </small>
-            <p ng-bind="comment.content"></p>
-        </div>
-      </div>
-      <hr>
-     </div> <!-- last comments -->
-     
-     <div ng-show="showAddComments()">
-        <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
-         <div class="form-group">
-           <label for="txtcomment" class="col-sm-2 control-label">Escribe un commentario</label>
-           <div class="col-sm-10">
-              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
-           </div>
-         </div>
-         <div class="form-group">
-           <div class="col-sm-offset-2 col-sm-10">                    
-              <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
-           </div>
-         </div>            
-        </form>
-     </div>
-
-    </div> <!-- container -->     
+    </div> <!-- container -->
      
 </section>

@@ -1,11 +1,13 @@
 'use strict';
 
 // Groups controller
-angular.module('groups').controller('GroupsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists', 'Users',
-  function ($scope, $http, $modal, $stateParams, $location, Authentication, Groups, Booklists, Users) {
+angular.module('groups').controller('GroupsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Groups', 'Booklists', 
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Groups, Booklists) {
     $scope.authentication = Authentication;
 
     $scope.location = $location.absUrl();
+    
+    $scope.memberName = '';
 
     $scope.identifierWork = '';
     $scope.slug = '';
@@ -194,6 +196,17 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.error = errorResponse.data.message;
         });
     };
+    
+    $scope.removeMember = function (item){
+        var index = $scope.group.members.indexOf(item);
+        $scope.group.members.splice(index,1);
+
+        $scope.group.$update(function () {
+            $scope.messageok = 'El miembro se ha eliminado correctamente.';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
 
     $scope.showList = function(){
         $location.path('groups');
@@ -239,13 +252,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.authentication.user &&
             $scope.group.user &&
             $scope.authentication.user._id === $scope.group.user._id){
-            console.log("showAddComments true admin group");
             return true;
         }else if($scope.group.status === 'public' && $scope.authentication.user){
             for(var i = 0; i <  $scope.group.members.length; i++) {
                 if ( $scope.group.members[i].status === 'aceptado' && 
                      $scope.group.members[i].user._id === $scope.authentication.user._id) {
-                     console.log("showAddComments true user aceptado");
                     return true;
                 }
             }
@@ -357,18 +368,61 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
       }
     };
     
-    $scope.addMember = function(item) {
+    $scope.addMember = function() {
       
+        // if admin group user
+        if ($scope.authentication.user) {
+            var member = {
+                user: $scope.authentication.user._id,
+                status: 'pendiente'
+            };
+            
+            var found = false;
+            for(var i = 0; i <  $scope.group.members.length; i++) {
+                if ($scope.group.members[i].user._id === member.user) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                $scope.group.members.push(member);
+
+                $scope.group.$update(function () {
+                    $scope.messageok = 'Solicitud enviada. El administrador del grupo es el encargado de aceptar tu petición.';
+                    $scope.error = '';
+                    $scope.findOne(); // reload for members
+                }, function (errorResponse) {
+                    $scope.messageok = '';
+                    $scope.error = errorResponse.data.message;
+                });
+            }else{
+                $scope.messageok = '';
+                $scope.error = 'Ya formas parte del grupo. El administrador del grupo tiene pendiente tu aceptación.';
+            }
+        }
+    };
+    
+    $scope.addAdminMember = function(item) {
+      
+        // if admin group user
         if ($scope.authentication.user._id === $scope.group.user._id) {
+            /*var member = {
+                user: item.userId,
+                status: 'invitado'
+            };*/
             
             var member = {
-                user: item.userId,
+                user: {
+                    _id:item.userId,
+                    displayName: item.displayName
+                },
                 status: 'invitado'
             };
             
             var found = false;
             for(var i = 0; i <  $scope.group.members.length; i++) {
-                if ( $scope.group.members[i].user._id === member._id) {
+                if ($scope.group.members[i].user._id === member.user._id) {
                     found = true;
                     break;
                 }
@@ -380,6 +434,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                 $scope.group.$update(function () {
                     $scope.messageok = 'Invitación enviada.';
                     $scope.error = '';
+                    $scope.memberName = '';
+                    //$scope.findOne(); // reload for members
                 }, function (errorResponse) {
                     $scope.messageok = '';
                     $scope.error = errorResponse.data.message;
@@ -388,9 +444,40 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                 $scope.messageok = '';
                 $scope.error = 'El usuario ' + item.displayName + ' ya forma parte del grupo.';
             }
-        }else{
-            $scope.messageok = '';
-            $scope.error = 'Eres el creador de este grupo y por tanto ya formas parte del grupo.';
+        }
+    };
+    
+    $scope.activateMember = function(item) {
+      
+        // if admin group user
+        if ($scope.authentication.user._id === $scope.group.user._id) {
+            
+            var index = $scope.group.members.indexOf(item);
+        
+            $scope.group.members[index].status = 'activo';
+
+            $scope.group.$update(function () {
+                $scope.messageok = 'El miembro se ha activado correctamente.';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        }
+    };
+    
+    $scope.deactivateMember = function(item) {
+      
+        // if admin group user
+        if ($scope.authentication.user._id === $scope.group.user._id) {
+            
+            var index = $scope.group.members.indexOf(item);
+        
+            $scope.group.members[index].status = 'inactivo';
+
+            $scope.group.$update(function () {
+                $scope.messageok = 'El miembro se ha bloqueado correctamente.';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
         }
     };
     

@@ -1,0 +1,68 @@
+<section ng-controller="GroupsController" >
+
+<div class="table-responsive">
+<table class="table user-list">
+        <thead>
+            <tr>
+            <th>&nbsp;</th>
+            <th><span>Usuario</span></th>
+            <th class="text-center visible-ms hidden-xs"><span>Estado</span></th>
+            <th class="hidden-xs visible-ms"><span>Añadido</span></th>
+            <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="member in group.members">
+                <td style="width:10%">
+                    <img ng-src="{{member.user.profileImageURL}}" alt="{{member.user.displayName}}">
+                </td>
+                <td>
+                    <!--<a href="#" class="user-link">{{member.user.displayName}}</a>-->
+                    <h4>{{member.user.displayName}}</h4>
+                    <span class="user-subhead hidden-xs">Miembro</span>
+                    <span style="width:30%" class="hidden-ms visible-xs" ng-class="{'label label-default': member.status === 'invitado', 
+                                     'label label-success': member.status === 'activo', 
+                                     'label label-danger': member.status === 'inactivo',
+                                     'label label-inactivo': member.status === 'pendiente' }">{{member.status}}</span>
+                </td>
+                <td class="text-center visible-ms hidden-xs">
+                    <span ng-if="member.status === 'invitado'" class="label label-default" tooltip="Usuario invitado en espera de aceptación">{{member.status}}</span>
+                    <span ng-if="member.status === 'activo'" class="label label-success" tooltip="Usuario activo">{{member.status}}</span>
+                    <span ng-if="member.status === 'pendiente'" class="label label-warning" tooltip="Usuario que solicita su aceptación">{{member.status}}</span>
+                    <span ng-if="member.status === 'inactivo'" class="label label-danger" tooltip="Usuario inactivo">{{member.status}}</span>
+                </td>
+                <td class="hidden-xs visible-ms" style="width: 10%;">{{member.created | date:'dd/MM/yyyy'}}</td>
+                <td>
+                    <a href="#" confirm="Quiere eliminar este miembro?" 
+                       ng-click="removeMember(member)" 
+                       ng-if="member.status !== 'invitado'"
+                       class="table-link danger">
+                        <span class="fa-stack">
+                            <i class="fa fa-square fa-stack-2x"></i>
+                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    <a href="#" confirm="Quiere activar este miembro?" 
+                       ng-if="member.status !== 'invitado' && member.status !== 'activo'"
+                       ng-click="activateMember(member)" 
+                       class="table-link danger">
+                        <span class="fa-stack" tooltip="Activar miembro">
+                            <i class="fa fa-square fa-stack-2x"></i>
+                            <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    <a href="#" confirm="Quiere bloquear a este miembro?" 
+                       ng-if="member.status !== 'inactivo' && member.status !== 'invitado'"
+                       ng-click="deactivateMember(member)" 
+                       class="table-link danger">
+                        <span class="fa-stack" tooltip="Bloquear miembro">
+                            <i class="fa fa-square fa-stack-2x"></i>
+                            <i class="fa fa-ban fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</section>

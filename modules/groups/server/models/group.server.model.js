@@ -116,7 +116,7 @@ var GroupSchema = new Schema({
     },
     status: {
       type: String,
-      enum : ['invitado','pendiente','aceptado'],
+      enum : ['invitado','pendiente','activo','inactivo'],
       default: 'pendiente',
       required: 'El campo estado no puede ser nulo'
       },

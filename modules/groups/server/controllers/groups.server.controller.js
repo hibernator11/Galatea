@@ -38,7 +38,7 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var group = req.group;
-console.log('members:' + req.body.members);
+
   if(req.group.user.id === req.user.id){
       group.name = req.body.name;
       group.content = req.body.content;
@@ -185,7 +185,7 @@ exports.groupByID = function (req, res, next, id) {
 
   Group.findById(id).populate('user', 'displayName')
                     .populate('comments.user', 'displayName profileImageURL')
-                    .populate('members.user', '_id').exec(function (err, group) {
+                    .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
     if (err) {
       return next(err);
     } else if (!group) {
