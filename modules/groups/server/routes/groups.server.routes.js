@@ -7,16 +7,25 @@ var groupsPolicy = require('../policies/groups.server.policy'),
   groups = require('../controllers/groups.server.controller');
 
 module.exports = function (app) {
-  // Reviews collection routes
+  // Groups collection routes
   app.route('/api/groups').all(groupsPolicy.isAllowed)
     .get(groups.list)
     .post(groups.create);
 
-  // Reviews paginate
+  // Groups paginate
   app.route('/api/groups/page/:page')
      .get(groups.groupPaginate);
+     
+  
+  // Groups add comment
+  app.route('/api/groups/addComment')
+     .post(groups.addComment);
+     
+  // Groups add pending member
+  app.route('/api/groups/addPendingMember')
+     .post(groups.addPendingMember);     
 
-  // Reviews public
+  // Groups public
   app.route('/api/groups/public')
      .get(groups.listPublic);
 

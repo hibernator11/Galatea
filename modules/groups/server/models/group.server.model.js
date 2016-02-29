@@ -88,18 +88,13 @@ var GroupSchema = new Schema({
     created: {
       type: Date,
       default: Date.now
-    }
-  }],
-  ratings: [{
-    rate: Number,
-    user: {
-      type: Schema.ObjectId,
-      ref: 'User'
     },
-    created: {
-      type: Date,
-      default: Date.now
-    }
+    status: {
+        type: String,
+        enum : ['hidden','public','private'],
+        default: 'public',
+        required: 'El campo estado no puede ser nulo'
+    },
   }],
   user: {
     type: Schema.ObjectId,

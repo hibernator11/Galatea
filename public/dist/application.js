@@ -1366,6 +1366,13 @@ angular.module('groups').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('groups.accept', {
+        url: '/accept/:groupId',
+        templateUrl: 'modules/groups/client/views/accept-group.client.view.html',
+        data: {
+          roles: ['user']
+        }
+      })
       .state('groups.view', {
         url: '/:groupId',
         templateUrl: 'modules/groups/client/views/view-group.client.view.html',
@@ -1393,7 +1400,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.location = $location.absUrl();
     
     $scope.memberName = '';
-
+    
     $scope.identifierWork = '';
     $scope.slug = '';
     $scope.title = '';
@@ -1409,11 +1416,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.messageok = '';
     $scope.warningopen = true;
 
-    $scope.max = 5;
-    $scope.rate = 0;
-    $scope.isReadonly = false;
-    $scope.percent = 0;
-    
     $scope.type = '';
     
     $scope.showWorkPanel = false;
@@ -1631,7 +1633,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
       });
     };
     
-    $scope.showAddComments = function () {
+    $scope.userIsActiveMember = function () {
         
         if ($scope.group && 
             $scope.authentication.user &&
@@ -1640,7 +1642,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             return true;
         }else if($scope.group.status === 'public' && $scope.authentication.user){
             for(var i = 0; i <  $scope.group.members.length; i++) {
-                if ( $scope.group.members[i].status === 'aceptado' && 
+                if ( $scope.group.members[i].status === 'activo' && 
                      $scope.group.members[i].user._id === $scope.authentication.user._id) {
                     return true;
                 }
@@ -1671,132 +1673,67 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
       });
     };
     
-    $scope.checkRatingBar = function (){
-        $scope.showRatingBar = true;
-        if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
-            angular.forEach($scope.group.ratings, function(value, key){
-                if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
-                    $scope.showRatingBar = false;
-                    $scope.error = "No puedes votar dos veces el mismo grupo";
-                }
-            });
-        }
-    };
-
-    $scope.$watch('group.ratings', function(value) {
-        if (!angular.isUndefined($scope.group) && !angular.isUndefined($scope.group.ratings)){
-            angular.forEach($scope.group.ratings, function(value, key){
-                if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
-                }
-            });
-        }
-    });
-    
-    $scope.$watch('rate', function(value) {
-
-       if (!angular.isUndefined($scope.rate) && 
-           !angular.isUndefined($scope.group) &&
-           !angular.isUndefined($scope.group.ratings) && !$scope.isReadonly) {
-            
-          var rating = {
-                rate: value,
-                user: $scope.authentication.user
-          };
-
-          $scope.group.ratings.push(rating);
-
-          $scope.group.$update(function () {
-              $scope.messageok = 'El grupo se ha valorado correctamente.';
-              $scope.showRatingBar = false;
-          }, function (errorResponse) {
-              $scope.error = errorResponse.data.message;
-          });
-        }
-    });
-    
-    $scope.hoveringOver = function(value) {
-      $scope.overStar = value;
-      $scope.percent = 100 * (value / $scope.max);
-
-      if(value === 1)
-        $scope.overStar = 'Me gusta poco';
-      else if(value === 2)
-        $scope.overStar = 'Me gusta';
-      else if(value === 3)
-        $scope.overStar = 'Me gusta bastante';
-      else if(value === 4)
-        $scope.overStar = 'Me gusta mucho';
-      else if(value === 5)
-        $scope.overStar = 'Me encanta';
-    };
-
- 
     $scope.addComment = function() {
+      
       if ($scope.form.commentForm.$valid) {
-            
-        var comment = {
-                    content: $scope.txtcomment,
-                    user: $scope.authentication.user
-        };
-
-        $scope.group.comments.unshift(comment);
-
-        $scope.group.$update(function () {
+        
+        $http({
+            url: 'api/groups/addComment',
+            method: "POST",
+            data: { 'message' :  $scope.txtcomment,
+                    'groupId' :  $scope.group._id}
+        })
+        .then(function(response) {
+            // success
             $scope.txtcomment = '';
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
+            $scope.group = response.data;
+            $scope.messageok = "Comentario añadido correctamente";
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
         });
       }
     };
     
-    $scope.addMember = function() {
+    $scope.addPendingMember = function() {
       
-        // if admin group user
-        if ($scope.authentication.user) {
-            var member = {
-                user: $scope.authentication.user._id,
-                status: 'pendiente'
-            };
+        var found = false;
+        for(var i = 0; i <  $scope.group.members.length; i++) {
+            if ($scope.group.members[i].user._id === $scope.authentication.user._id) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found){
             
-            var found = false;
-            for(var i = 0; i <  $scope.group.members.length; i++) {
-                if ($scope.group.members[i].user._id === member.user) {
-                    found = true;
-                    break;
-                }
-            }
+            $http({
+                url: 'api/groups/addPendingMember',
+                method: "POST",
+                data: { 'groupId' :  $scope.group._id}
+            })
+            .then(function(response) {
+                // success
+                $scope.group = response.data;
+                $scope.messageok = "Solicitud enviada. El administrador del grupo es el encargado de aceptar tu petición.";
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
+            });
 
-            if(!found){
-                $scope.group.members.push(member);
-
-                $scope.group.$update(function () {
-                    $scope.messageok = 'Solicitud enviada. El administrador del grupo es el encargado de aceptar tu petición.';
-                    $scope.error = '';
-                    $scope.findOne(); // reload for members
-                }, function (errorResponse) {
-                    $scope.messageok = '';
-                    $scope.error = errorResponse.data.message;
-                });
-            }else{
-                $scope.messageok = '';
-                $scope.error = 'Ya formas parte del grupo. El administrador del grupo tiene pendiente tu aceptación.';
-            }
+        }else{
+            $scope.messageok = '';
+            $scope.error = 'El administrador del grupo tiene pendiente tu aceptación en el grupo.';
         }
     };
     
-    $scope.addAdminMember = function(item) {
+    $scope.addMemberByAdminGroup = function(item) {
       
         // if admin group user
         if ($scope.authentication.user._id === $scope.group.user._id) {
-            /*var member = {
-                user: item.userId,
-                status: 'invitado'
-            };*/
-            
+
             var member = {
                 user: {
                     _id:item.userId,
@@ -1829,6 +1766,30 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                 $scope.messageok = '';
                 $scope.error = 'El usuario ' + item.displayName + ' ya forma parte del grupo.';
             }
+        }
+    };
+    
+    $scope.acceptInvitationMember = function() {
+        var found = false;     
+        for(var i = 0; i <  $scope.group.members.length; i++) {
+            if ($scope.group.members[i].user._id === $scope.authentication.user._id && $scope.group.members[i].status === 'invitado') {
+                $scope.group.members[i].status = 'activo';
+                found = true;
+                
+                $scope.group.$update(function () {
+                    $scope.messageok = 'El miembro ha sido activado correctamente.';
+                }, function (errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+                
+                break;
+            }
+        }
+        
+        if(found){
+            $location.path('groups/' + $scope.group._id);
+        }else{
+            $scope.error = "El usuario no tiene permisos para ejecutar esta operación";
         }
     };
     
@@ -2007,7 +1968,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.selectedItem = selectedItem;
             $scope.messageok = selectedItem.message;
             
-        }, function () {
+        }, function () { // user cancel
             $scope.selectedItem = '';
         });
     };
@@ -2019,7 +1980,40 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             scope: $scope
        });
     };
+    
+    $scope.showAcceptInvitation = function () {
+        
+        console.log('scope.group title:' + $scope.group.title );
+        console.log('scope.group name:' + $scope.group );
+        // check if user is within the pending users
+        var found = false;
+        var index;
+        for(var i = 0; $scope.group && i <  $scope.group.members.length; i++) {
+            if ($scope.group.members[i].user._id === $scope.authentication.user._id && 
+                $scope.group.members[i].status === 'invitado') {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        console.log('found:' + found);
 
+        if(found){
+            
+            $scope.group.members[index].status = 'activo';
+
+            $scope.group.$update(function () {
+                $scope.messageok = 'El miembro ha sido activado correctamente.';
+                $location.path('groups/' + $stateParams.groupId);
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+            
+        }else{
+            $scope.error = "El usuario no se encuentra entre los invitados al grupo.";
+            //$location.path('groups/' + $stateParams.groupId);
+        }
+    };
   }
 ]);
 
@@ -3054,11 +3048,11 @@ angular.module('reviews').factory('Reviews', ['$resource',
 
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Users module
 angular.module('users.admin').run(['Menus',
   function (Menus) {
     Menus.addSubMenuItem('topbar', 'admin', {
-      title: 'Manage Users',
+      title: 'Usuarios',
       state: 'admin.users'
     });
   }

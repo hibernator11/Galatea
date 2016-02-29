@@ -38,12 +38,11 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var group = req.group;
-
+  
   if(req.group.user.id === req.user.id){
       group.name = req.body.name;
       group.content = req.body.content;
       group.status = req.body.status;
-      group.ratings = req.body.ratings;
       group.comments = req.body.comments;
       group.members = req.body.members;
   }else{
@@ -173,6 +172,85 @@ exports.groupPaginate = function(req, res){
 
 
 /**
+* add comment group
+**/
+exports.addComment = function(req, res){
+ 
+    var groupId = req.body.groupId;
+    
+    if(req.user && req.body.message){
+
+        var comment = {
+            content: req.body.message,
+            user: req.user
+        };
+
+        Group.update({ "_id": groupId },
+                     {$push: { "comments": comment }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                Group.findById(groupId).populate('user', 'displayName')
+                    .populate('comments.user', 'displayName profileImageURL')
+                    .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
+                    if (err) {
+                      return next(err);
+                    } else if (!group) {
+                      return res.status(404).send({
+                        message: 'No group with that identifier has been found'
+                      });
+                    }
+                    res.json(group);
+                });
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+exports.addPendingMember = function(req, res){
+ 
+    var groupId = req.body.groupId;
+    
+    if(req.user && req.body.groupId){
+        
+        var member = {
+                user: req.user._id,
+                status: 'pendiente'
+        }; 
+
+        Group.update({ "_id": groupId },
+                     {$push: { "members": member }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                Group.findById(groupId).populate('user', 'displayName')
+                    .populate('comments.user', 'displayName profileImageURL')
+                    .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
+                    if (err) {
+                      return next(err);
+                    } else if (!group) {
+                      return res.status(404).send({
+                        message: 'No group with that identifier has been found'
+                      });
+                    }
+                    res.json(group);
+                });
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+/**
  * Book middleware
  */
 exports.groupByID = function (req, res, next, id) {
@@ -190,7 +268,7 @@ exports.groupByID = function (req, res, next, id) {
       return next(err);
     } else if (!group) {
       return res.status(404).send({
-        message: 'No book with that identifier has been found'
+        message: 'No group with that identifier has been found'
       });
     }
     req.group = group;

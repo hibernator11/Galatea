@@ -52,7 +52,7 @@
                         </span>
                     </a>
                     <a href="#" confirm="Quiere bloquear a este miembro?" 
-                       ng-if="member.status !== 'inactivo' && member.status !== 'invitado'"
+                       ng-if="member.status === 'activo'"
                        ng-click="deactivateMember(member)" 
                        class="table-link danger">
                         <span class="fa-stack" tooltip="Bloquear miembro">

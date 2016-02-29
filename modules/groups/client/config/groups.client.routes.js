@@ -31,6 +31,13 @@ angular.module('groups').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('groups.accept', {
+        url: '/accept/:groupId',
+        templateUrl: 'modules/groups/client/views/accept-group.client.view.html',
+        data: {
+          roles: ['user']
+        }
+      })
       .state('groups.view', {
         url: '/:groupId',
         templateUrl: 'modules/groups/client/views/view-group.client.view.html',

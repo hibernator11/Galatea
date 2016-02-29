@@ -45,7 +45,7 @@ exports.update = function (req, res) {
       booklist.tags = req.body.tags;
       booklist.books = req.body.books;
       booklist.status = req.body.status;
-      booklist.ratings = req.body.ratings;
+      //booklist.ratings = req.body.ratings;
       booklist.comments = req.body.comments;
   }else{
       booklist.ratings = req.body.ratings;

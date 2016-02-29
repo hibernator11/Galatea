@@ -1,0 +1,19 @@
+<section ng-controller="GroupsController" ng-init="findOne();" >
+    
+    <div class="container">
+        <div class="alert alert-success col-xs-12" ng-show="messageok">
+            <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Resultado:</strong> {{messageok}}
+        </div>
+
+        <div class="alert alert-warning col-xs-12" ng-show="error" style="margin-top:20px">
+            <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+            <strong>Aviso:</strong> {{error}}
+        </div>
+
+        <div class="alert alert-warning col-xs-12" style="margin-top:20px">
+            <button ng-click="showAcceptInvitation();" href="#" class="btn btn-xs btn-warning pull-right" >Aceptar invitación</button>
+            El administrador del grupo te ha invitado para que participes en el grupo. ¿Aceptas la invitación?
+        </div>
+    </div>
+</section>
