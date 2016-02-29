@@ -72,7 +72,7 @@
           <strong ng-if="error === 'Email already exists'">La cuenta de correo ya existe. Introduzca otra cuenta por favor.</strong>
           <strong ng-if="error === 'Username already exists'">El usuario ya existe. Introduzca otro usuario por favor.</strong>
           <strong ng-if="error !== 'Email already exists' &&
-                         error === 'Username already exists'" ng-bind="error"></strong>
+                         error !== 'Username already exists'" ng-bind="error"></strong>
         </div>
       </fieldset>
     </form>

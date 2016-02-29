@@ -37,29 +37,29 @@ exports.read = function (req, res) {
  * Update a group
  */
 exports.update = function (req, res) {
-  var group = req.group;
+    var group = req.group;
   
-  if(req.group.user.id === req.user.id){
-      group.name = req.body.name;
-      group.content = req.body.content;
-      group.status = req.body.status;
-      group.comments = req.body.comments;
-      group.members = req.body.members;
-  }else{
-      group.ratings = req.body.ratings;
-      group.comments = req.body.comments;
-      group.members = req.body.members;
-  }
-
-  group.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(group);
+    if(req.group.user.id === req.user.id){
+        group.name = req.body.name;
+        group.content = req.body.content;
+        group.status = req.body.status;
+        group.comments = req.body.comments;
+        group.members = req.body.members;
+      
+        group.save(function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(group);
+          }
+        });
+    }else{
+        return res.status(400).send({
+            message: 'El grupo no se puede moficar.'
+        });
     }
-  });
 };
 
 /**
