@@ -1585,13 +1585,22 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     };
     
     $scope.removeMember = function (item){
-        var index = $scope.group.members.indexOf(item);
-        $scope.group.members.splice(index,1);
-
-        $scope.group.$update(function () {
-            $scope.messageok = 'El miembro se ha eliminado correctamente.';
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
+        console.log('item.userId:' + item.user._id);
+        $http({
+            url: 'api/groups/removeMember',
+            method: "POST",
+            data: { 'groupId' :  $scope.group._id,
+                    'userId'  :  item.user._id}
+        })
+        .then(function(response) {
+            // success
+            $scope.group = response.data;
+            $scope.messageok = "Usuario eliminado correctamente.";
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
         });
     };
 
@@ -1614,15 +1623,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.groups = response;
         }).error(function (response) {
             $scope.error = response.message;
-        });
-    };
-
-    // Set update group
-    $scope.updateGroup = function () {
-        $scope.group.$update(function () {
-            $scope.messageok = 'El grupo se ha modificado correctamente.';
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
         });
     };
 
@@ -1686,8 +1686,8 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         .then(function(response) {
             // success
             $scope.txtcomment = '';
-            $scope.group = response.data;
-            $scope.messageok = "Comentario añadido correctamente";
+            $scope.messageok = response.data.message;
+            $location.path('groups/' + $scope.group._id);
         }, 
         function(response) { // optional
             // failed
@@ -1715,8 +1715,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             })
             .then(function(response) {
                 // success
-                $scope.group = response.data;
-                $scope.messageok = "Solicitud enviada. El administrador del grupo es el encargado de aceptar tu petición.";
+                $scope.messageok = response.data.message;
             }, 
             function(response) { // optional
                 // failed
@@ -1734,34 +1733,34 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         // if admin group user
         if ($scope.authentication.user._id === $scope.group.user._id) {
 
-            var member = {
-                user: {
-                    _id:item.userId,
-                    displayName: item.displayName
-                },
-                status: 'invitado'
-            };
-            
             var found = false;
             for(var i = 0; i <  $scope.group.members.length; i++) {
-                if ($scope.group.members[i].user._id === member.user._id) {
+                if ($scope.group.members[i].user._id === item.userId) {
                     found = true;
                     break;
                 }
             }
 
             if(!found){
-                $scope.group.members.push(member);
-
-                $scope.group.$update(function () {
-                    $scope.messageok = 'Invitación enviada.';
-                    $scope.error = '';
+                
+                $http({
+                    url: 'api/groups/addGuestMember',
+                    method: "POST",
+                    data: { 'groupId':  $scope.group._id,
+                            'userId' :  item.userId}
+                })
+                .then(function(response) {
+                    // success
+                    $scope.group = response.data;
+                    $scope.messageok = "Solicitud enviada. El usuario debe aceptar tu invitación.";
                     $scope.memberName = '';
-                    //$scope.findOne(); // reload for members
-                }, function (errorResponse) {
+                }, 
+                function(response) { // optional
+                    // failed
                     $scope.messageok = '';
-                    $scope.error = errorResponse.data.message;
+                    $scope.error = response.data.message;
                 });
+                
             }else{
                 $scope.messageok = '';
                 $scope.error = 'El usuario ' + item.displayName + ' ya forma parte del grupo.';
@@ -1769,43 +1768,25 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         }
     };
     
-    $scope.acceptInvitationMember = function() {
-        var found = false;     
-        for(var i = 0; i <  $scope.group.members.length; i++) {
-            if ($scope.group.members[i].user._id === $scope.authentication.user._id && $scope.group.members[i].status === 'invitado') {
-                $scope.group.members[i].status = 'activo';
-                found = true;
-                
-                $scope.group.$update(function () {
-                    $scope.messageok = 'El miembro ha sido activado correctamente.';
-                }, function (errorResponse) {
-                    $scope.error = errorResponse.data.message;
-                });
-                
-                break;
-            }
-        }
-        
-        if(found){
-            $location.path('groups/' + $scope.group._id);
-        }else{
-            $scope.error = "El usuario no tiene permisos para ejecutar esta operación";
-        }
-    };
-    
     $scope.activateMember = function(item) {
       
         // if admin group user
         if ($scope.authentication.user._id === $scope.group.user._id) {
-            
-            var index = $scope.group.members.indexOf(item);
-        
-            $scope.group.members[index].status = 'activo';
-
-            $scope.group.$update(function () {
-                $scope.messageok = 'El miembro se ha activado correctamente.';
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            $http({
+                url: 'api/groups/setStatusMember',
+                method: "POST",
+                data: { 'groupId':  $scope.group._id,
+                        'userId' :  item.user._id,
+                        'status' :  'activo'}
+            })
+            .then(function(response) {
+                // success
+                $scope.messageok = "Usuario activado correctamente";
+                $scope.group = response.data;
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
             });
         }
     };
@@ -1815,14 +1796,21 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         // if admin group user
         if ($scope.authentication.user._id === $scope.group.user._id) {
             
-            var index = $scope.group.members.indexOf(item);
-        
-            $scope.group.members[index].status = 'inactivo';
-
-            $scope.group.$update(function () {
-                $scope.messageok = 'El miembro se ha bloqueado correctamente.';
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            $http({
+                url: 'api/groups/setStatusMember',
+                method: "POST",
+                data: { 'groupId':  $scope.group._id,
+                        'userId' :  item.user._id,
+                        'status' : 'inactivo'}
+            })
+            .then(function(response) {
+                // success
+                $scope.messageok = "Usuario bloqueado correctamente";
+                $scope.group = response.data;
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
             });
         }
     };
@@ -1983,35 +1971,37 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     
     $scope.showAcceptInvitation = function () {
         
-        console.log('scope.group title:' + $scope.group.title );
-        console.log('scope.group name:' + $scope.group );
-        // check if user is within the pending users
         var found = false;
-        var index;
-        for(var i = 0; $scope.group && i <  $scope.group.members.length; i++) {
-            if ($scope.group.members[i].user._id === $scope.authentication.user._id && 
-                $scope.group.members[i].status === 'invitado') {
+        for(var i = 0; i <  $scope.group.members.length; i++) {
+            if ($scope.group.members[i].user._id === $scope.authentication.user._id) {
                 found = true;
-                index = i;
+                if($scope.group.members[i].status === 'invitado'){
+                    
+                    $http({
+                        url: 'api/groups/activatePublicMember',
+                        method: "POST",
+                        data: { 'groupId' :  $scope.group._id,
+                                'userId': $scope.authentication.user}
+                    })
+                    .then(function(response) {
+                        // success
+                        $scope.messageok = response.data.message;
+                         $location.path('groups/' + $scope.group._id);
+                    }, 
+                    function(response) { // optional
+                        // failed
+                        $scope.error = response.data.message;
+                    });
+                }else if($scope.group.members[i].status === 'activo'){
+                    $scope.error = "El usuario ya se encuentra activo.";
+                }
+                
                 break;
             }
         }
-        console.log('found:' + found);
-
-        if(found){
-            
-            $scope.group.members[index].status = 'activo';
-
-            $scope.group.$update(function () {
-                $scope.messageok = 'El miembro ha sido activado correctamente.';
-                $location.path('groups/' + $stateParams.groupId);
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-            
-        }else{
+        
+        if(!found){
             $scope.error = "El usuario no se encuentra entre los invitados al grupo.";
-            //$location.path('groups/' + $stateParams.groupId);
         }
     };
   }

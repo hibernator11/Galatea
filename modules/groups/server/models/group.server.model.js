@@ -93,7 +93,7 @@ var GroupSchema = new Schema({
         type: String,
         enum : ['hidden','public','private'],
         default: 'public',
-        required: 'El campo estado no puede ser nulo'
+        required: 'El campo status no puede ser nulo'
     },
   }],
   user: {

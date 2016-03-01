@@ -16,14 +16,29 @@ module.exports = function (app) {
   app.route('/api/groups/page/:page')
      .get(groups.groupPaginate);
      
-  
   // Groups add comment
   app.route('/api/groups/addComment')
      .post(groups.addComment);
      
+  // Groups activate member
+  app.route('/api/groups/activatePublicMember')
+     .post(groups.activatePublicMember);     
+     
+  // Groups setStatus member
+  app.route('/api/groups/setStatusMember')
+     .post(groups.setStatusMember);          
+     
+  // Groups remove member
+  app.route('/api/groups/removeMember')
+     .post(groups.removeMember);             
+     
   // Groups add pending member
   app.route('/api/groups/addPendingMember')
-     .post(groups.addPendingMember);     
+     .post(groups.addPendingMember);
+     
+  // Groups add guest member
+  app.route('/api/groups/addGuestMember')
+     .post(groups.addGuestMember);
 
   // Groups public
   app.route('/api/groups/public')

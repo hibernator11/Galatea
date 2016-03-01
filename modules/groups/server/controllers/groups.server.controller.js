@@ -43,8 +43,6 @@ exports.update = function (req, res) {
         group.name = req.body.name;
         group.content = req.body.content;
         group.status = req.body.status;
-        group.comments = req.body.comments;
-        group.members = req.body.members;
       
         group.save(function (err) {
           if (err) {
@@ -57,7 +55,7 @@ exports.update = function (req, res) {
         });
     }else{
         return res.status(400).send({
-            message: 'El grupo no se puede moficar.'
+            message: 'El grupo no se puede modificar.'
         });
     }
 };
@@ -170,7 +168,6 @@ exports.groupPaginate = function(req, res){
     }
 };
 
-
 /**
 * add comment group
 **/
@@ -187,6 +184,63 @@ exports.addComment = function(req, res){
 
         Group.update({ "_id": groupId },
                      {$push: { "comments": comment }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+// user try to join a group
+exports.addPendingMember = function(req, res){
+ 
+    var groupId = req.body.groupId;
+    
+    if(req.user && req.body.groupId){
+        
+        var member = {
+                user: req.user._id,
+                status: 'pendiente'
+        }; 
+
+        Group.update({ "_id": groupId },
+                     {$push: { "members": member }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Solicitud enviada correctamente. El administrador debe aceptar la solicitud.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+// group admin add guest user
+exports.addGuestMember = function(req, res){
+ 
+    var groupId = req.body.groupId;
+    var userId = req.body.userId;
+    
+    if(req.user && req.body.groupId){
+        
+        var member = {
+                user: userId,
+                status: 'invitado'
+        }; 
+
+        Group.update({ "_id": groupId , "user":req.user},
+                     {$push: { "members": member }}).exec(function(err, numAffected) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
@@ -212,25 +266,93 @@ exports.addComment = function(req, res){
     }
 };
 
-exports.addPendingMember = function(req, res){
+exports.activatePublicMember = function(req, res){
  
-    var groupId = req.body.groupId;
-    
+    if(req.user && req.body.groupId && req.body.userId){
+        
+        console.log('req.body.userId:' + req.body.userId);
+        
+        Group.update(
+            {'_id': req.body.groupId, 'members.user': req.body.userId}, 
+            {'$set': {
+                'members.$.status': 'activo'
+            }},
+            function(err, numAffected) {
+                if (err) {
+                    return next(err);
+                } else {
+                     
+                    Group.findById(req.body.groupId).populate('user', 'displayName')
+                        .populate('comments.user', 'displayName profileImageURL')
+                        .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
+                        if (err) {
+                          return next(err);
+                        } else if (!group) {
+                          return res.status(404).send({
+                            message: 'No group with that identifier has been found'
+                          });
+                        }
+                        res.json(group);
+                    });
+                }
+            }
+        );
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+exports.setStatusMember = function(req, res){
+ 
+    if(req.user && req.body.groupId && req.body.userId && req.body.status){
+        
+        console.log('req.body.userId:' + req.body.userId);
+        
+        Group.update(
+            {'_id': req.body.groupId, 'members.user': req.body.userId, 'user':req.user}, 
+            {'$set': {
+                'members.$.status': req.body.status
+            }},
+            function(err, numAffected) {
+                if (err) {
+                    return next(err);
+                } else {
+                     
+                    Group.findById(req.body.groupId).populate('user', 'displayName')
+                        .populate('comments.user', 'displayName profileImageURL')
+                        .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
+                        if (err) {
+                          return next(err);
+                        } else if (!group) {
+                          return res.status(404).send({
+                            message: 'No group with that identifier has been found'
+                          });
+                        }
+                        res.json(group);
+                    });
+                }
+            }
+        );
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+// group admin add guest user
+exports.removeMember = function(req, res){
+ 
     if(req.user && req.body.groupId){
         
-        var member = {
-                user: req.user._id,
-                status: 'pendiente'
-        }; 
-
-        Group.update({ "_id": groupId },
-                     {$push: { "members": member }}).exec(function(err, numAffected) {
+        Group.update({ '_id': req.body.groupId , 'members.user': req.body.userId, 'user':req.user},
+                     {$pull: { 'members': {'user': req.body.userId}}}).exec(function(err, numAffected) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                Group.findById(groupId).populate('user', 'displayName')
+                Group.findById(req.body.groupId).populate('user', 'displayName')
                     .populate('comments.user', 'displayName profileImageURL')
                     .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
                     if (err) {
