@@ -43,8 +43,6 @@ exports.update = function (req, res) {
       review.title = req.body.title;
       review.content = req.body.content;
       review.status = req.body.status;
-      review.comments = req.body.comments;
-      //review.ratings = req.body.ratings;
   }
 
   review.save(function (err) {
@@ -194,6 +192,33 @@ exports.reviewPaginate = function(req, res){
     }
 };
 
+/**
+* add comment group
+**/
+exports.addComment = function(req, res){
+ 
+    if(req.user && req.body.message){
+
+        var comment = {
+            content: req.body.message,
+            user: req.user
+        };
+
+        Review.update({ "_id": req.body.reviewId },
+                     {$push: { "comments": comment }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
 
 /**
  * Book middleware

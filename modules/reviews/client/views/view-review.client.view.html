@@ -65,9 +65,9 @@
        <strong>Resultado:</strong> {{messageok}}
       </div>
 
-      <div class="alert alert-warning col-xs-12" ng-show="review.status === 'draft' && warningopen">
-       <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
-       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
+      <div class="alert alert-warning row" ng-show="review.status === 'draft' && warningopen">
+        <div class="col-xs-10"><strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.</div>
+        <div class="col-xs-2"><button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button></div>
       </div>
         
       <div class="alert alert-warning" ng-show="error">

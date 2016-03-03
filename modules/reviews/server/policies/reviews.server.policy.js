@@ -29,6 +29,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/reviews/:reviewId',
       permissions: ['get']
+    }, {
+      resources: '/api/reviews/addComment',
+      permissions: ['post']
     }]
   }, {
     roles: ['guest'],

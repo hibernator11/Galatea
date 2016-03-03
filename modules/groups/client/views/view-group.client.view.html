@@ -59,9 +59,9 @@
             <strong>Resultado:</strong> {{messageok}}
         </div>
 
-        <div class="alert alert-warning col-xs-12" ng-show="group.status === 'draft' && warningopen">
-            <strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
-            <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
+        <div class="alert alert-warning row" ng-show="group.status === 'draft' && warningopen">
+            <div class="col-xs-10"><strong>Aviso:</strong> El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.</div>
+            <div class="col-xs-2"><button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button></div>
         </div>
 
         <div class="alert alert-warning col-xs-12" ng-show="error">

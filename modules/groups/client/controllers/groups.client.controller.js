@@ -284,7 +284,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.addComment = function() {
       
       if ($scope.form.commentForm.$valid) {
-        
+       
         $http({
             url: 'api/groups/addComment',
             method: "POST",
@@ -295,7 +295,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             // success
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
-            $location.path('groups/' + $scope.group._id);
         }, 
         function(response) { // optional
             // failed
@@ -426,7 +425,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 30
@@ -482,7 +481,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     
     $scope.getAuthor = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 10,
@@ -509,7 +508,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     
     // Find existing Subjects in BVMC catalogue
     $scope.getSubject = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 10

@@ -75,9 +75,9 @@
        <strong>Aviso:</strong> {{error}}
       </div>
         
-      <div class="alert alert-warning col-xs-12" ng-show="booklist.status === 'draft' && warningopen">
-       <strong>Aviso:</strong> La lista de obras no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
-       <button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button>
+      <div class="alert alert-warning row" ng-show="booklist.status === 'draft' && warningopen">
+        <div class="col-xs-10"><strong>Aviso:</strong> La lista de obras no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.</div>
+        <div class="col-xs-2"><button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button></div>
       </div>
 
       <hr>
@@ -143,7 +143,7 @@
            </p>
            <p class="text-muted" ng-show="book.comments">{{book.comments}}</p>
          </div>
-         <div class="col-md-2 col-md-offset-0 col-xs-8 col-xs-offset-2">
+         <div class="col-md-2 col-md-offset-0 col-xs-12">
            <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
            </a>
@@ -189,7 +189,7 @@
      </div> <!-- last comments -->
      
      <div ng-show="booklist.status === 'public' && authentication.user">
-        <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+        <form class="form-horizontal" name="form.commentForm"> 
          <div class="form-group">
            <label for="txtcomment" class="col-sm-2 control-label">Escribe tu commentario</label>
            <div class="col-sm-10">
@@ -198,7 +198,7 @@
          </div>
          <div class="form-group">
            <div class="col-sm-offset-2 col-sm-10">                    
-              <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
+              <button class="btn btn-danger btn-circle" ng-click="addComment()"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
            </div>
          </div>            
         </form>

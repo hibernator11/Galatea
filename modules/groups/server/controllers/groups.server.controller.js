@@ -173,8 +173,6 @@ exports.groupPaginate = function(req, res){
 **/
 exports.addComment = function(req, res){
  
-    var groupId = req.body.groupId;
-    
     if(req.user && req.body.message){
 
         var comment = {
@@ -182,7 +180,7 @@ exports.addComment = function(req, res){
             user: req.user
         };
 
-        Group.update({ "_id": groupId },
+        Group.update({ "_id": req.body.groupId },
                      {$push: { "comments": comment }}).exec(function(err, numAffected) {
             if (err) {
                 return res.status(400).send({

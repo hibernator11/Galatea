@@ -11,13 +11,17 @@ module.exports = function (app) {
   app.route('/api/booklists').all(booklistsPolicy.isAllowed)
     .get(booklists.list)
     .post(booklists.create);
+    
+  // Booklists add comment
+  app.route('/api/booklists/addComment').all(booklistsPolicy.isAllowed)
+    .post(booklists.addComment);
 
   // Single booklist routes
   app.route('/api/booklists/:booklistId').all(booklistsPolicy.isAllowed)
     .get(booklists.read)
     .put(booklists.update)
     .delete(booklists.delete);
-
+    
   // Finish by binding the booklist middleware
   app.param('booklistId', booklists.booklistByID);
 };

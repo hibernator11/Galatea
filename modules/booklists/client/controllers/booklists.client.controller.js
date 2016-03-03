@@ -146,7 +146,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
 
     // Find existing Subjects in BVMC catalogue
     $scope.getSubject = function(val) {
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 10
@@ -185,19 +185,23 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     };
     
     $scope.addComment = function() {
+      
       if ($scope.form.commentForm.$valid) {
-            
-        var comment = {
-                    content: $scope.txtcomment,
-                    user: $scope.authentication.user
-        };
-
-        $scope.booklist.comments.unshift(comment);
-
-        $scope.booklist.$update(function () {
+         console.log('viene a llamar a addcomment');
+        $http({
+            url: 'api/booklists/addComment',
+            method: "POST",
+            data: { 'message' :  $scope.txtcomment,
+                    'booklistId' :  $scope.booklist._id}
+        })
+        .then(function(response) {
+            // success
             $scope.txtcomment = '';
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
+            $scope.messageok = response.data.message;
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
         });
       }
     };

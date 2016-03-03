@@ -29,6 +29,27 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/groups/:groupId',
       permissions: ['get']
+    }, {
+      resources: '/api/groups/addComment',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/activatePublicMember',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/setStatusMember',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/removeMember',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/addPendingMember',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/addGuestMember',
+      permissions: ['post']
+    }, {
+      resources: '/api/groups/public',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
@@ -37,6 +58,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/groups/:groupId',
+      permissions: ['get']
+    }, {
+      resources: '/api/groups/public',
       permissions: ['get']
     }]
   }]);

@@ -70,7 +70,13 @@ var BooklistSchema = new Schema({
     created: {
       type: Date,
       default: Date.now
-    }
+    },
+    status: {
+        type: String,
+        enum : ['hidden','public','private'],
+        default: 'public',
+        required: 'El campo status no puede ser nulo'
+    },
   }],
 });
 

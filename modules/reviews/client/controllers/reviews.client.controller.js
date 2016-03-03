@@ -267,21 +267,24 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         $scope.overStar = 'Me encanta';
     };
 
- 
     $scope.addComment = function() {
+      
       if ($scope.form.commentForm.$valid) {
-            
-        var comment = {
-                    content: $scope.txtcomment,
-                    user: $scope.authentication.user
-        };
-
-        $scope.review.comments.unshift(comment);
-
-        $scope.review.$update(function () {
+        
+        $http({
+            url: 'api/reviews/addComment',
+            method: "POST",
+            data: { 'message' :  $scope.txtcomment,
+                    'reviewId' :  $scope.review._id}
+        })
+        .then(function(response) {
+            // success
             $scope.txtcomment = '';
-        }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
+            $scope.messageok = response.data.message;
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
         });
       }
     };
@@ -289,7 +292,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/getJson?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/getJson?callback=JSON_CALLBACK', {
             params: {
                 uuid: $stateParams.uuid
             }
@@ -329,7 +332,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     // Find existing Books in BVMC catalogue
     $scope.getWorkLike = function(val) {
 
-        return $http.jsonp('//app.dev.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 30
