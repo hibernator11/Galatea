@@ -219,7 +219,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     
     $scope.checkRatingBar = function (){
         $scope.showRatingBar = true;
-        if ($scope.showRatingButton && !angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+        if ($scope.showRatingButton && 
+                !angular.isUndefined($scope.booklist) && 
+                !angular.isUndefined($scope.booklist.ratings)){
             angular.forEach($scope.booklist.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
                     $scope.showRatingBar = false;

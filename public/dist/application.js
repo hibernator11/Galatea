@@ -431,7 +431,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     
     $scope.checkRatingBar = function (){
         $scope.showRatingBar = true;
-        if ($scope.showRatingButton && !angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+        if ($scope.showRatingButton && 
+                !angular.isUndefined($scope.booklist) && 
+                !angular.isUndefined($scope.booklist.ratings)){
             angular.forEach($scope.booklist.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
                     $scope.showRatingBar = false;
@@ -2538,7 +2540,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     
     $scope.checkRatingBar = function (){
         $scope.showRatingBar = true;
-        if ($scope.showRatingButton && !angular.isUndefined($scope.booklist.ratings)){
+        if ($scope.showRatingButton && 
+                !angular.isUndefined($scope.review) && 
+                !angular.isUndefined($scope.review.ratings)){
             angular.forEach($scope.review.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
                     $scope.showRatingBar = false;
