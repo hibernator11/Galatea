@@ -19,6 +19,10 @@ module.exports = function (app) {
   // Reviews paginate
   app.route('/api/reviews/page/:page').all(reviewsPolicy.isAllowed)
      .get(reviews.reviewPaginate);
+     
+  // Reviews add comment
+  app.route('/api/reviews/addRating').all(reviewsPolicy.isAllowed)
+    .post(reviews.addRating);
 
   // Reviews public
   app.route('/api/reviews/public').all(reviewsPolicy.isAllowed)

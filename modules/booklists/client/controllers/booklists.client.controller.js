@@ -17,9 +17,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     
     $scope.max = 5;
     $scope.rate = 0;
-    $scope.isReadonly = false;
     $scope.percent = 0;
     $scope.showRatingBar = false;
+    $scope.showRatingButton = true;
 
     // Create new Booklist
     $scope.create = function (isValid) {
@@ -187,7 +187,7 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.addComment = function() {
       
       if ($scope.form.commentForm.$valid) {
-         console.log('viene a llamar a addcomment');
+        
         $http({
             url: 'api/booklists/addComment',
             method: "POST",
@@ -219,48 +219,36 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     
     $scope.checkRatingBar = function (){
         $scope.showRatingBar = true;
-        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
+        if ($scope.showRatingButton && !angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
             angular.forEach($scope.booklist.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
                     $scope.showRatingBar = false;
-                    $scope.error = "No puedes votar dos veces el mismo grupo";
+                    $scope.error = "No puedes votar dos veces la misma lista";
                 }
             });
         }
     };
 
-    $scope.$watch('booklist.ratings', function(value) {
-        if (!angular.isUndefined($scope.booklist) && !angular.isUndefined($scope.booklist.ratings)){
-            angular.forEach($scope.booklist.ratings, function(value, key){
-                if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
-                }
-            });
-        }
-    });
-    
     $scope.$watch('rate', function(value) {
-
-       if (!angular.isUndefined($scope.rate) && 
-           !angular.isUndefined($scope.booklist) &&
-           !angular.isUndefined($scope.booklist.ratings) && !$scope.isReadonly) {
-            
-          var rating = {
-                rate: value,
-                user: $scope.authentication.user
-          };
-
-          $scope.booklist.ratings.push(rating);
-
-          $scope.booklist.$update(function () {
-              $scope.messageok = 'La lista se ha valorado correctamente.';
-              $scope.showRatingBar = false;
-          }, function (errorResponse) {
-              $scope.error = errorResponse.data.message;
-          });
+        if(!angular.isUndefined($scope.booklist) && value > 0){
+            $http({
+                url: 'api/booklists/addRating',
+                method: "POST",
+                data: { 'rate' :  value,
+                        'booklistId' :  $scope.booklist._id}
+            })
+            .then(function(response) {
+                // success
+                $scope.rate = 0;
+                $scope.messageok = response.data.message;
+                $scope.showRatingBar = false;
+                $scope.showRatingButton = false;
+                $location.path('booklists/' + $scope.booklist._id);
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
+            });
         }
     });
     

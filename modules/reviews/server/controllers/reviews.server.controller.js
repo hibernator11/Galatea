@@ -220,6 +220,31 @@ exports.addComment = function(req, res){
     }
 };
 
+exports.addRating = function(req, res){
+ 
+    if(req.user && req.body.rate){
+
+        var rating = {
+            rate: req.body.rate,
+            user: req.user
+        };
+
+        Review.update({ "_id": req.body.reviewId },
+                     {$push: { "ratings": rating }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Valoración añadida correctamente.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
 /**
  * Book middleware
  */

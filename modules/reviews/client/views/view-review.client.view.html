@@ -88,7 +88,7 @@
                  <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                  <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                  <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
-                 <a ng-show="authentication.user._id !== review.user._id" tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" ng-hide="showRatingBar" class="btn btn-danger">
+                 <a ng-show="authentication.user._id !== review.user._id && showRatingButton" tooltip="Valorar la reseña" tooltip-placement="top" ng-click="checkRatingBar()" class="btn btn-danger">
                    <i class="fa fa-star"></i> Valorar
                  </a>
 

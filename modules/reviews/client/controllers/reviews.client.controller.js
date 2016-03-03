@@ -25,10 +25,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     // rating variables
     $scope.max = 5;
     $scope.rate = 0;
-    $scope.isReadonly = false;
     $scope.percent = 0;
-    
     $scope.showRatingBar = false;
+    $scope.showRatingButton = true;
     
     $scope.tinymceOptions = {
         language_url : 'modules/reviews/client/language-tinymce/es.js' 
@@ -207,11 +206,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     
     $scope.checkRatingBar = function (){
         $scope.showRatingBar = true;
-        if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
+        if ($scope.showRatingButton && !angular.isUndefined($scope.booklist.ratings)){
             angular.forEach($scope.review.ratings, function(value, key){
                 if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
                     $scope.showRatingBar = false;
                     $scope.error = "No puedes votar dos veces la misma reseña";
                 }
@@ -219,35 +216,26 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         }
     };
 
-    $scope.$watch('review.ratings', function(value) {
-        if (!angular.isUndefined($scope.review) && !angular.isUndefined($scope.review.ratings)){
-            angular.forEach($scope.review.ratings, function(value, key){
-                if($scope.authentication.user._id === value.user){
-                    $scope.isReadonly = true;
-                    $scope.rate = value.rate;
-                }
-            });
-        }
-    });
-    
     $scope.$watch('rate', function(value) {
-
-       if (!angular.isUndefined($scope.rate) && 
-           !angular.isUndefined($scope.review) &&
-           !angular.isUndefined($scope.review.ratings) && !$scope.isReadonly) {
-            
-          var rating = {
-                rate: value,
-                user: $scope.authentication.user
-          };
-
-          $scope.review.ratings.push(rating);
-
-          $scope.review.$update(function () {
-              $scope.messageok = 'La reseña se ha valorado correctamente.';
-          }, function (errorResponse) {
-              $scope.error = errorResponse.data.message;
-          });
+        if(!angular.isUndefined($scope.review) && value > 0){
+            $http({
+                url: 'api/reviews/addRating',
+                method: "POST",
+                data: { 'rate' :  value,
+                        'reviewId' :  $scope.review._id}
+            })
+            .then(function(response) {
+                // success
+                $scope.rate = 0;
+                $scope.messageok = response.data.message;
+                $scope.showRatingBar = false;
+                $scope.showRatingButton = false;
+                $location.path('reviews/' + $scope.review._id);
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
+            });
         }
     });
     

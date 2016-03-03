@@ -124,7 +124,7 @@ exports.addComment = function(req, res){
         var comment = {
             content: req.body.message,
             user: req.user
-        };console.log('llega a update');
+        };
 
         Booklist.update({ "_id": req.body.booklistId },
                      {$push: { "comments": comment }}).exec(function(err, numAffected) {
@@ -134,6 +134,31 @@ exports.addComment = function(req, res){
                 });
             } else {
                 res.json({message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+exports.addRating = function(req, res){
+ 
+    if(req.user && req.body.rate){
+
+        var rating = {
+            rate: req.body.rate,
+            user: req.user
+        };
+
+        Booklist.update({ "_id": req.body.booklistId },
+                     {$push: { "ratings": rating }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Valoración añadida correctamente.'});
             }
         });
     }else{
