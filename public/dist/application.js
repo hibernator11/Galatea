@@ -455,7 +455,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
                 $scope.messageok = response.data.message;
                 $scope.showRatingBar = false;
                 $scope.showRatingButton = false;
-                $location.path('booklists/' + $scope.booklist._id);
             }, 
             function(response) { // optional
                 // failed
@@ -2563,7 +2562,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 $scope.messageok = response.data.message;
                 $scope.showRatingBar = false;
                 $scope.showRatingButton = false;
-                $location.path('reviews/' + $scope.review._id);
             }, 
             function(response) { // optional
                 // failed

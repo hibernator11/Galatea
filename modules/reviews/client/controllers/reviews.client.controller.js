@@ -230,7 +230,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
                 $scope.messageok = response.data.message;
                 $scope.showRatingBar = false;
                 $scope.showRatingButton = false;
-                $location.path('reviews/' + $scope.review._id);
             }, 
             function(response) { // optional
                 // failed

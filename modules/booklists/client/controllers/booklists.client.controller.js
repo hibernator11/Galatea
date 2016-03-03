@@ -243,7 +243,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
                 $scope.messageok = response.data.message;
                 $scope.showRatingBar = false;
                 $scope.showRatingButton = false;
-                $location.path('booklists/' + $scope.booklist._id);
             }, 
             function(response) { // optional
                 // failed
