@@ -27,7 +27,7 @@
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
-                     <li class="profileNav-item pull-right" ng-show="booklist.status === 'draft'">
+                     <li class="profileNav-item pull-right" ng-show="authentication.user._id === booklist.user._id && booklist.status === 'draft'">
                         <a tooltip="Publicar lista" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                      </li>
                      <li class="profileNav-item pull-right" ng-show="authentication.user._id === booklist.user._id">
@@ -147,7 +147,7 @@
            <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> Ver obra
            </a>
-           <button tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
+           <button ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="bottom" style="margin-top:3px;" type="button" ng-click="removeBook(book)" class="btn btn-danger btn-sm full-width">
                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar obra
            </button>
            <a tooltip="Ver reseñas de esta obra" tooltip-placement="bottom" style="margin-top:3px;" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-danger btn-sm full-width">

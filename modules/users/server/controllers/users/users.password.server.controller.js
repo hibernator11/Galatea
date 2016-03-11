@@ -38,7 +38,7 @@ exports.forgot = function (req, res, next) {
             });
           } else if (user.provider !== 'local') {
             return res.status(400).send({
-              message: 'Parece que iniciaste la sesión con tu cuenta de' + user.provider
+              message: 'Parece que iniciaste la sesión con tu cuenta de ' + user.provider
             });
           } else {
             user.resetPasswordToken = token;
@@ -71,12 +71,14 @@ exports.forgot = function (req, res, next) {
     },
     // If valid email, send reset email using service
     function (emailHTML, user, done) {
+
       var mailOptions = {
         to: user.email,
         from: config.mailer.from,
-        subject: 'Password Reset',
+        subject: 'Restablecimiento de contraseña',
         html: emailHTML
       };
+
       smtpTransport.sendMail(mailOptions, function (err) {
         if (!err) {
           res.send({
@@ -162,7 +164,7 @@ exports.reset = function (req, res, next) {
             });
           } else {
             return res.status(400).send({
-              message: 'Passwords do not match'
+              message: 'Las contraseñas no coinciden'
             });
           }
         } else {
