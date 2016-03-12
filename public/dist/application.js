@@ -524,22 +524,23 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            controller: ModalBooklistEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                booklistId: function () {
+                    return $scope.booklist._id;
                 }
             }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
- 
-            $scope.messageok = selectedItem.message;
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
             
         }, function () {
-            $scope.selectedItem = '';
+            
         });
     };
 
@@ -655,24 +656,7 @@ ModalBookInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance"];
 
 'use strict';
 
-angular.module('booklists').controller('ModalConfirmCtrl', ["$scope", "$modalInstance", "text", function ($scope, $modalInstance, text) {
-
-  $scope.text = text;
-
-  $scope.ok = function () {
-    $modalInstance.close(true);
-  };
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('Cancelar');
-  };
-}]);
-
-
-
-'use strict';
-
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+var ModalBooklistEmailInstanceCtrl = function ($scope, $http, $modalInstance, booklistId) {
     $scope.result = 'hidden';
     $scope.resultMessage = '';
     $scope.formData = ''; //formData is an object holding the name, email, subject, and message
@@ -683,29 +667,21 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.submitted = true;
         $scope.submitButtonDisabled = true;
         if (contactform.$valid) {
-            console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
+            
+            var Indata = {'email': $scope.form.emailForm.inputEmail.$modelValue, 
+                          'subject': $scope.form.emailForm.inputSubject.$modelValue,
+                          'message': $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/booklists/' + booklistId};
+            
+            $http.post('api/auth/sendBooklistEmail', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
 
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
             $modalInstance.close($scope.result);
         } else {
             $scope.submitButtonDisabled = false;
@@ -718,6 +694,24 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $modalInstance.dismiss('cancel');
     };
 };
+ModalBooklistEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "booklistId"];
+
+
+
+'use strict';
+
+angular.module('booklists').controller('ModalConfirmCtrl', ["$scope", "$modalInstance", "text", function ($scope, $modalInstance, text) {
+
+  $scope.text = text;
+
+  $scope.ok = function () {
+    $modalInstance.close(true);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('Cancelar');
+  };
+}]);
 
 
 
@@ -1679,7 +1673,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         .then(function(response) {
             // success
             $scope.txtcomment = '';
-            $scope.messageok = response.data.message;
+            if($scope.authentication.user._id === $scope.group.user._id){
+                $scope.messageok = 'Comentario añadido correctamente.';
+            }else{
+                $scope.messageok = response.data.message;
+            }
         }, 
         function(response) { // optional
             // failed
@@ -1742,6 +1740,21 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                             'userId' :  item.userId}
                 })
                 .then(function(response) {
+                    
+                    var Indata = {'toUserId': item.userId, 
+                              'subject': 'Te han invitado a un grupo',
+                              'message': 'Te han invitado a un grupo. Haz click en el siguiente enlace para aceptar la invitación.',
+                              'url': '/groups/accept/' + $scope.group._id};
+
+                    $http.post('api/auth/sendEmail', Indata).success(function (response) {
+                        // Show user success message and clear form
+                        $scope.success = response.message;
+
+                    }).error(function (response) {
+                        // Show user error message and clear form
+                        $scope.error = response.message;
+                    });
+                    
                     // success
                     $scope.group = response.data;
                     $scope.messageok = "Solicitud enviada. El usuario debe aceptar tu invitación.";
@@ -1934,12 +1947,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
 
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            templateUrl: '/modules/groups/client/views/modal-email-form.html',
+            controller: ModalGroupEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                groupId: function () {
+                    return $scope.group._id;
                 }
             }
         });
@@ -2018,7 +2034,7 @@ angular.module('groups').filter('mountRecord', [function () {
 'use strict';
 
 // controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+var ModalGroupEmailInstanceCtrl = function ($scope, $http, $modalInstance, groupId) {
     $scope.result = 'hidden';
     $scope.resultMessage = '';
     $scope.formData = ''; //formData is an object holding the name, email, subject, and message
@@ -2030,28 +2046,19 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.submitButtonDisabled = true;
         if (contactform.$valid) {
             console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
+            var Indata = {'email': $scope.form.emailForm.inputEmail.$modelValue, 
+                          'subject': $scope.form.emailForm.inputSubject.$modelValue,
+                          'message': $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/groups/' + groupId};
+            
+            $http.post('api/auth/sendGroupEmail', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
 
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
             $modalInstance.close($scope.result);
         } else {
             $scope.submitButtonDisabled = false;
@@ -2064,6 +2071,7 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $modalInstance.dismiss('cancel');
     };
 };
+ModalGroupEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "groupId"];
 
 
 
@@ -2221,8 +2229,17 @@ angular.module('reviews').config(['$stateProvider',
 
 'use strict';
 
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalHelpInstanceCtrl.$inject = ["$scope", "$modalInstance"];
+'use strict';
+
 // controller for modal email window
-var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
+var ModalReviewEmailInstanceCtrl = function ($scope, $http, $modalInstance, reviewId) {
     $scope.result = 'hidden';
     $scope.resultMessage = '';
     $scope.formData = ''; //formData is an object holding the name, email, subject, and message
@@ -2234,28 +2251,21 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $scope.submitButtonDisabled = true;
         if (contactform.$valid) {
             console.log('contact form valid');
-            /*$http({
-                method  : 'POST',
-                url     : 'contact-form.php',
-                data    : $.param($scope.formData),  //param method from jQuery
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  //set the headers so angular passing info as form data (not request payload)
-            }).success(function(data){
-                console.log(data);
-                if (data.success) { //success comes from the return json object*/
-                    $scope.submitButtonDisabled = true;
-                    //$scope.resultMessage = data.message;
-                    //$scope.result='bg-success';
-                    $scope.result = {
-                        css: 'bg-success',
-                        message: 'Correo enviado correctamente'
-                    };
+            
+            var Indata = {'email': $scope.form.emailForm.inputEmail.$modelValue, 
+                          'subject': $scope.form.emailForm.inputSubject.$modelValue,
+                          'message': $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/reviews/' + reviewId};
+            
+            $http.post('api/auth/sendReviewEmail', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
 
-                /*} else {
-                    $scope.submitButtonDisabled = false;
-                    $scope.resultMessage = data.message;
-                    $scope.result='bg-danger';
-                }
-            });*/
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
             $modalInstance.close($scope.result);
         } else {
             $scope.submitButtonDisabled = false;
@@ -2268,19 +2278,10 @@ var ModalEmailInstanceCtrl = function ($scope, $http, $modalInstance) {
         $modalInstance.dismiss('cancel');
     };
 };
-ModalEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance"];
+ModalReviewEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "reviewId"];
 
 
 
-'use strict';
-
-// controller for modal help window
-var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
-ModalHelpInstanceCtrl.$inject = ["$scope", "$modalInstance"];
 'use strict';
 
 angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$filter', 'Reviews',
@@ -2711,21 +2712,21 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
             templateUrl: '/modules/reviews/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            controller: ModalReviewEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                reviewId: function () {
+                    return $scope.review._id;
                 }
             }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
-            $scope.messageok = selectedItem.message;
-            
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
         }, function () {
-            $scope.selectedItem = '';
         });
     };
 
