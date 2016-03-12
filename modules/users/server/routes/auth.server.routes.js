@@ -16,6 +16,12 @@ module.exports = function (app) {
   app.route('/api/auth/forgot').post(users.forgot);
   app.route('/api/auth/reset/:token').get(users.validateResetToken);
   app.route('/api/auth/reset/:token').post(users.reset);
+    
+  // Setting the send mail route
+  app.route('/api/auth/sendEmail').post(users.sendEmail);
+  app.route('/api/auth/sendReviewEmail').post(users.sendReviewEmail);
+  app.route('/api/auth/sendBooklistEmail').post(users.sendBooklistEmail);
+  app.route('/api/auth/sendGroupEmail').post(users.sendGroupEmail);
 
   // Setting up the users authentication api
   app.route('/api/auth/signup').post(users.signup);
@@ -57,4 +63,5 @@ module.exports = function (app) {
   // Setting the paypal oauth routes
   app.route('/api/auth/paypal').get(users.oauthCall('paypal'));
   app.route('/api/auth/paypal/callback').get(users.oauthCallback('paypal'));
+  
 };

@@ -377,21 +377,21 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
             templateUrl: '/modules/reviews/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            controller: ModalReviewEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                reviewId: function () {
+                    return $scope.review._id;
                 }
             }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
-            $scope.messageok = selectedItem.message;
-            
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
         }, function () {
-            $scope.selectedItem = '';
         });
     };
 

@@ -262,3 +262,268 @@ exports.changePassword = function (req, res, next) {
     });
   }
 };
+
+/**
+ * Send review mail (send review POST)
+ */
+exports.sendReviewEmail = function (req, res, next) {
+  async.waterfall([
+    // Get form data
+    function (done) {
+        if (req.user){
+            var email = req.body.email;
+            var subject = req.body.subject;
+            var message = req.body.message;
+            var url = req.body.url;
+            
+            var httpTransport = 'http://';
+            if (config.secure && config.secure.ssl === true) {
+              httpTransport = 'https://';
+            }
+            res.render(path.resolve('modules/users/server/templates/send-review-email'), {
+              name: req.user.displayName,
+              message: message,
+              appName: config.app.title,
+              url: httpTransport + req.headers.host + url
+            }, function (err, emailHTML) {
+              done(err, emailHTML, email, subject);
+            });   
+        } else {
+            return res.status(400).send({
+              message: 'Debes registrarte para poder enviar el correo.'
+            });
+        }
+    },
+    
+    // If valid email, send reset email using service
+    function (emailHTML, email, subject, done) {
+
+      var mailOptions = {
+        to: email,
+        from: config.mailer.from,
+        subject: subject,
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'Un email se ha enviado con las instrucciones a seguir.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Se ha producido un error al enviar el correo'
+          });
+        }
+
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};
+
+
+/**
+ * Send booklist mail (send review POST)
+ */
+exports.sendBooklistEmail = function (req, res, next) {
+  async.waterfall([
+    // Get form data
+    function (done) {
+        if (req.user){
+            var email = req.body.email;
+            var subject = req.body.subject;
+            var message = req.body.message;
+            var url = req.body.url;
+            
+            var httpTransport = 'http://';
+            if (config.secure && config.secure.ssl === true) {
+              httpTransport = 'https://';
+            }
+            res.render(path.resolve('modules/users/server/templates/send-booklist-email'), {
+              name: req.user.displayName,
+              message: message,
+              appName: config.app.title,
+              url: httpTransport + req.headers.host + url
+            }, function (err, emailHTML) {
+              done(err, emailHTML, email, subject);
+            });   
+        } else {
+            return res.status(400).send({
+              message: 'Debes registrarte para poder enviar el correo.'
+            });
+        }
+    },
+    
+    // If valid email, send reset email using service
+    function (emailHTML, email, subject, done) {
+
+      var mailOptions = {
+        to: email,
+        from: config.mailer.from,
+        subject: subject,
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'Un email se ha enviado con las instrucciones a seguir.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Se ha producido un error al enviar el correo'
+          });
+        }
+
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};
+
+
+/**
+ * Send group mail (send review POST)
+ */
+exports.sendGroupEmail = function (req, res, next) {
+  async.waterfall([
+    // Get form data
+    function (done) {
+        if (req.user){
+            var email = req.body.email;
+            var subject = req.body.subject;
+            var message = req.body.message;
+            var url = req.body.url;
+            
+            var httpTransport = 'http://';
+            if (config.secure && config.secure.ssl === true) {
+              httpTransport = 'https://';
+            }
+            res.render(path.resolve('modules/users/server/templates/send-group-email'), {
+              name: req.user.displayName,
+              message: message,
+              appName: config.app.title,
+              url: httpTransport + req.headers.host + url
+            }, function (err, emailHTML) {
+              done(err, emailHTML, email, subject);
+            });   
+        } else {
+            return res.status(400).send({
+              message: 'Debes registrarte para poder enviar el correo.'
+            });
+        }
+    },
+    
+    // If valid email, send reset email using service
+    function (emailHTML, email, subject, done) {
+
+      var mailOptions = {
+        to: email,
+        from: config.mailer.from,
+        subject: subject,
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'Un email se ha enviado con las instrucciones a seguir.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Se ha producido un error al enviar el correo'
+          });
+        }
+
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};
+
+/**
+ * Send generic mail (send review POST)
+ */
+exports.sendEmail = function (req, res, next) {
+  async.waterfall([
+    // Get form data
+    function (done) {
+        if (req.user){
+            
+            User.findOne({
+                _id: req.body.toUserId
+              }, function (err, toUser) {
+                if (!toUser) {
+                  return res.status(400).send({
+                    message: 'No se ha encontrado el usuario'
+                  });
+                } else {
+                    var email = toUser.email;
+                    var subject = req.body.subject;
+                    var message = req.body.message;
+                    var url = req.body.url;
+
+                    var httpTransport = 'http://';
+                    if (config.secure && config.secure.ssl === true) {
+                      httpTransport = 'https://';
+                    }
+                    res.render(path.resolve('modules/users/server/templates/send-email'), {
+                      toName: toUser.displayName,
+                      message: message,
+                      appName: config.app.title,
+                      url: httpTransport + req.headers.host + url
+                    }, function (err, emailHTML) {
+                      done(err, emailHTML, email, subject);
+                    });
+                }
+            });
+        } else {
+            return res.status(400).send({
+              message: 'Debes registrarte para poder enviar el correo.'
+            });
+        }
+    },
+    
+    // If valid email, send reset email using service
+    function (emailHTML, email, subject, done) {
+
+      var mailOptions = {
+        to: email,
+        from: config.mailer.from,
+        subject: subject,
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'Un email se ha enviado con las instrucciones a seguir.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Se ha producido un error al enviar el correo'
+          });
+        }
+
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};

@@ -294,7 +294,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         .then(function(response) {
             // success
             $scope.txtcomment = '';
-            $scope.messageok = response.data.message;
+            if($scope.authentication.user._id === $scope.group.user._id){
+                $scope.messageok = 'Comentario añadido correctamente.';
+            }else{
+                $scope.messageok = response.data.message;
+            }
         }, 
         function(response) { // optional
             // failed
@@ -357,6 +361,21 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                             'userId' :  item.userId}
                 })
                 .then(function(response) {
+                    
+                    var Indata = {'toUserId': item.userId, 
+                              'subject': 'Te han invitado a un grupo',
+                              'message': 'Te han invitado a un grupo. Haz click en el siguiente enlace para aceptar la invitación.',
+                              'url': '/groups/accept/' + $scope.group._id};
+
+                    $http.post('api/auth/sendEmail', Indata).success(function (response) {
+                        // Show user success message and clear form
+                        $scope.success = response.message;
+
+                    }).error(function (response) {
+                        // Show user error message and clear form
+                        $scope.error = response.message;
+                    });
+                    
                     // success
                     $scope.group = response.data;
                     $scope.messageok = "Solicitud enviada. El usuario debe aceptar tu invitación.";
@@ -549,12 +568,15 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
 
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
-            templateUrl: '/modules/booklists/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            templateUrl: '/modules/groups/client/views/modal-email-form.html',
+            controller: ModalGroupEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                groupId: function () {
+                    return $scope.group._id;
                 }
             }
         });

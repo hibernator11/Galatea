@@ -312,22 +312,23 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.showEmailForm = function () {
         var modalInstance = $modal.open({
             templateUrl: '/modules/booklists/client/views/modal-email-form.html',
-            controller: ModalEmailInstanceCtrl,
+            controller: ModalBooklistEmailInstanceCtrl,
             scope: $scope,
             resolve: {
                 emailForm: function () {
                     return $scope.emailForm;
+                },
+                booklistId: function () {
+                    return $scope.booklist._id;
                 }
             }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItem = selectedItem;
- 
-            $scope.messageok = selectedItem.message;
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
             
         }, function () {
-            $scope.selectedItem = '';
+            
         });
     };
 
