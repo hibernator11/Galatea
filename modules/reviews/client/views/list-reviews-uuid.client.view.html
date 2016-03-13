@@ -23,7 +23,7 @@
                                 <div>
                                     <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
                                     <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                                    <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
+                                    <!--<span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>-->
                                     <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
                                     <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
                                         <span ng-switch-when="audio">
