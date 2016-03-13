@@ -177,8 +177,47 @@ exports.booklistByID = function (req, res, next, id) {
       message: 'Booklist is invalid'
     });
   }
+  
+   /*var d = new Date();
+   d.setDate(d.getDate()-7);
+   
+   console.log('d:' + d);
+  
+   Booklist.aggregate([
+    { $match: {_id: mongoose.Types.ObjectId(id)}},
+    { $project: {
+        comments: {$filter: {
+            input: "$comments",
+            as: 'comment',
+            cond: {$lt: ['$$comment.created', new Date(new Date().setDate(new Date().getDate()-7))]}
+        }}
+    }}
+]).exec(function (err, result) {
+    if (err) {
+      return next(err);
+    } else if (!result) {
+      return res.status(404).send({
+        message: 'No book with that identifier has been found'
+      });
+    }
+    console.log('result:' + result[0]._id);*/
+    
+    Booklist.findById(id).populate('user', 'displayName')
+                       .populate('comments.user', 'displayName profileImageURL')
+                       .exec(function (err, booklist) {
+    if (err) {
+      return next(err);
+    } else if (!booklist) {
+      return res.status(404).send({
+        message: 'No book with that identifier has been found'
+      });
+    }
+    req.booklist = booklist;
 
-  Booklist.findById(id).populate('user', 'displayName')
+    next();
+   });
+
+  /*Booklist.findById(id).populate('user', 'displayName')
                        .populate('comments.user', 'displayName profileImageURL')
                        .exec(function (err, booklist) {
     if (err) {
@@ -190,5 +229,5 @@ exports.booklistByID = function (req, res, next, id) {
     }
     req.booklist = booklist;
     next();
-  });
+  });*/
 };

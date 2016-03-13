@@ -10,15 +10,15 @@
         <div class="row">
              <div class="col-md-12 col-xs-12">
                  <ul class="profileNav-list">
-                     <li class="profileNav-item pull-left">
+                     <!--<li class="profileNav-item pull-left">
                          <span class="profileNav-label">Comentarios</span>
                          <span class="profileNav-value" data-is-compact="false">{{review.comments.length}}</span>
-                     </li>
+                     </li>-->
                      <li class="profileNav-item">
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{review.ratings.length}}</span>
                      </li>
-                     <li class="profileNav-item">
+                     <li ng-show="authentication.user._id === review.user._id" class="profileNav-item">
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{review.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
@@ -113,11 +113,11 @@
       </div>
    </div>
    
-   <div ng-if="review.comments.length > 0">
+   <div ng-if="(review.comments | filterComments).length > 0">
       <hr> 
       <h4>Últimos comentarios</h4>	
 
-      <div ng-repeat="comment in review.comments" class="media">
+      <div ng-repeat="comment in review.comments | filterComments" class="media">
         <div class="media-left">
           <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
         </div>

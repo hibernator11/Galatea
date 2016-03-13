@@ -15,15 +15,15 @@
                          <span class="profileNav-label">Obras</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.books.length}}</span>
                      </li>
-                     <li class="profileNav-item pull-left">
+                     <!--<li class="profileNav-item pull-left">
                          <span class="profileNav-label">Comentarios</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.comments.length}}</span>
-                     </li>
+                     </li>-->
                      <li class="profileNav-item">
                          <span class="profileNav-label">Valoraciones</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.ratings.length}}</span>
                      </li>
-                     <li class="profileNav-item">
+                     <li ng-show="authentication.user._id === booklist.user._id" class="profileNav-item">
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{booklist.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
@@ -166,10 +166,10 @@
      </div> <!-- repeat books -->
      
 
-     <div ng-show="booklist.comments.length > 0">
+     <div ng-show="(booklist.comments | filterComments).length > 0">
       <h4>Últimos comentarios</h4>	
 
-      <div ng-repeat="comment in booklist.comments" class="media">
+      <div ng-repeat="comment in booklist.comments | filterComments" class="media">
         <div class="media-left">
           <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
         </div>
