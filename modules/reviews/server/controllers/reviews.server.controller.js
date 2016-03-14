@@ -85,14 +85,14 @@ exports.list = function (req, res) {
     else if(req.user){
         query = {user:req.user};
     }
-    console.log('req.query.page:' + req.query.page);
+    
     var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
     var per_page = 10;
     if(req.query.itemsPerPage && req.query.itemsPerPage<=50){
-        per_page = req.query.itemsPerPage;
+        per_page = parseInt(req.query.itemsPerPage);
     }
   
     Review.find(query).sort('-created').
@@ -103,7 +103,6 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-          
           Review.find(query)
             .distinct('_id')
             .count(function (err, count) {
@@ -141,7 +140,6 @@ exports.listPublic = function(req, res){
 * Uuid List review
 **/
 exports.listUuid = function(req, res){
- console.log('viene por uuid:' + req.params.uuid);
     var page = 1;
     if(req.params.page){
         page = req.params.page;

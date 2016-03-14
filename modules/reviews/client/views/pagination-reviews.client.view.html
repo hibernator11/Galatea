@@ -38,48 +38,6 @@
         </ul>
     </div>
         
-    
-    <!--<div class="row">  
-      <div class="list-group col-xs-12">
-      <a ng-repeat="review in pagedItems" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
-        <div class="media">
-        <div class="media-left">
-          <img style="width: 80px;height: 120px;" ng-src="{{review.uuid | mountCover }}" alt="{{review.title}}" class="media-object">
-        </div>
-        <div class="media-body">
-          <h5 class="media-heading" ng-bind-html="review.title | htmlLimit: 200"></h5>
-          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 100"></p>
-          <p><small class="list-group-item-text">
-            Creada en
-            <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
-             por
-            <span ng-bind="review.user.displayName"></span>
-            </small>
-          </p>
-          <p class="text-muted">
-            <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>
-            <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-            <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
-                <span ng-switch-when="audio">
-                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
-                </span>
-                <span ng-switch-when="video">
-                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
-                </span>
-                <span ng-switch-when="texto">
-                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
-                </span>
-                <span ng-switch-default>
-                    {{review.mediaType}}
-                </span>
-            </span>
-          </p>
-        </div>
-        </div> 
-      </a> 
-      </div> 
-    </div> -->
-    
     <div style="margin-top: 20px" class="row" scroll-container>
         <div ng-repeat="review in pagedItems" ng-class="{ '': $index <= 5, 'hideme': $index > 5 }" class="col-md-4"  ui-sref="reviews.view({reviewId: review._id})" flip ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
           <div>

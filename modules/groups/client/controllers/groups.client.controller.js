@@ -294,11 +294,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         .then(function(response) {
             // success
             $scope.txtcomment = '';
-            if($scope.authentication.user._id === $scope.group.user._id){
-                $scope.messageok = 'Comentario añadido correctamente.';
-            }else{
-                $scope.messageok = response.data.message;
-            }
+            $scope.messageok = response.data.message;
         }, 
         function(response) { // optional
             // failed
@@ -325,6 +321,22 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
                 data: { 'groupId' :  $scope.group._id}
             })
             .then(function(response) {
+                
+                var Indata = {'toUserId': $scope.group.user.userId, 
+                              'subject': 'Solicitud de admisión para tu grupo',
+                              'message': 'El usuario ' + $scope.authentication.user.displayName + ' ha solicitado la admisión a tu grupo. Haz click en el siguiente enlace para aceptar la solicitud desde el apartado miembros.',
+                              'url': '/groups/' + $scope.group._id};
+
+                $http.post('api/auth/sendEmail', Indata).success(function (response) {
+                    // Show user success message and clear form
+                    $scope.success = response.message;
+
+                }).error(function (response) {
+                    // Show user error message and clear form
+                    $scope.error = response.message;
+                });
+                
+                
                 // success
                 $scope.messageok = response.data.message;
             }, 

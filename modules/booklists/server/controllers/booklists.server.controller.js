@@ -40,11 +40,11 @@ exports.update = function (req, res) {
   var booklist = req.booklist;
   
   if(req.booklist.user.id === req.user.id){
-      booklist.title = req.body.title;
-      booklist.description = req.body.description;
-      booklist.tags = req.body.tags;
-      booklist.books = req.body.books;
-      booklist.status = req.body.status;
+    booklist.title = req.body.title;
+    booklist.description = req.body.description;
+    booklist.tags = req.body.tags;
+    booklist.books = req.body.books;
+    booklist.status = req.body.status;
   }
 
   booklist.save(function (err) {
@@ -80,78 +80,78 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-    var query = '';
-    if(req.query.status){
-        query = {status:'public'};
-    }
-    else if(req.user){
-        query = {user:req.user};
-    }
+  var query = '';
+  if(req.query.status){ 
+    query = { status:'public' };
+  }
+  else if(req.user){
+    query = { user:req.user };
+  }
     
-    var page = 1;
-    if(req.query.page){
-        page = req.query.page;
-    }
-    var per_page =10;
+  var page = 1;
+  if(req.query.page){
+    page = req.query.page;
+  }
+  var per_page =10;
   
-    Booklist.find(query).sort('-created').
+  Booklist.find(query).sort('-created').
             skip((page-1)*per_page).limit(per_page).
             populate('user', 'displayName').exec(function (err, booklists) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
           
-          Booklist.find(query)
-            .distinct('_id')
-            .count(function (err, count) {
-              var result = [{
-                 total : count,
-                 booklists: booklists
-              }];
+                Booklist.find(query)
+                .distinct('_id')
+                .count(function (err, count) {
+                  var result = [{
+                    total : count,
+                    booklists: booklists
+                  }];
 
-          res.json(result);
-        }); 
-      }
-    });
+                  res.json(result);
+                }); 
+              }
+            });
 };
 
 exports.addComment = function(req, res){
  
-    if(req.user && req.body.message){
+  if(req.user && req.body.message){
 
-        var comment = {
-            content: req.body.message,
-            user: req.user
-        };
+    var comment = {
+      content: req.body.message,
+      user: req.user
+    };
 
-        Booklist.update({ "_id": req.body.booklistId },
-                     {$push: { "comments": comment }}).exec(function(err, numAffected) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.json({message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.'});
-            }
-        });
-    }else{
-        // if user is not logged in empty result
-        res.json({});
-    }
+    Booklist.update({ '_id': req.body.booklistId },
+                     { $push: { 'comments': comment } }).exec(function(err, numAffected) {
+                       if (err) {
+                         return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                         });
+                       } else {
+                         res.json({ message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.' });
+                       }
+                     });
+  }else{
+    // if user is not logged in empty result
+    res.json({});
+  }
 };
 
 exports.addRating = function(req, res){
  
-    if(req.user && req.body.rate){
+  if(req.user && req.body.rate){
 
-        var rating = {
-            rate: req.body.rate,
-            user: req.user
-        };
+    var rating = {
+      rate: req.body.rate,
+      user: req.user
+    };
 
-        Booklist.update({ "_id": req.body.booklistId },
+    Booklist.update({ "_id": req.body.booklistId },
                      {$push: { "ratings": rating }}).exec(function(err, numAffected) {
             if (err) {
                 return res.status(400).send({
@@ -161,10 +161,10 @@ exports.addRating = function(req, res){
                 res.json({message: 'Valoración añadida correctamente.'});
             }
         });
-    }else{
-        // if user is not logged in empty result
-        res.json({});
-    }
+  }else{
+    // if user is not logged in empty result
+    res.json({});
+  }
 };
 
 /**
