@@ -322,7 +322,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             })
             .then(function(response) {
                 
-                var Indata = {'toUserId': $scope.group.user.userId, 
+                var Indata = {'toUserId': $scope.group.user._id, 
                               'subject': 'Solicitud de admisión para tu grupo',
                               'message': 'El usuario ' + $scope.authentication.user.displayName + ' ha solicitado la admisión a tu grupo. Haz click en el siguiente enlace para aceptar la solicitud desde el apartado miembros.',
                               'url': '/groups/' + $scope.group._id};

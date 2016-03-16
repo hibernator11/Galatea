@@ -259,11 +259,36 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             $scope.title = '';
             $scope.description = '';
             $scope.tags = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Duplicate new Booklist
+    $scope.duplicateBooklist = function () {
+       
+        // Create new Booklist object
+        var booklist = new Booklists({
+            title: $scope.booklist.title,
+            description: $scope.booklist.description,
+            tags: $scope.booklist.tags,
+            books: $scope.booklist.books
+        });
+
+        // Redirect after save
+        booklist.$save(function (response) {
+            $location.path('booklists/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.description = '';
+            $scope.tags = '';
             $scope.books = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
     };
+
     
     $scope.createGroupFromBooklist = function () {
         // Create new Group object
@@ -1720,7 +1745,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             })
             .then(function(response) {
                 
-                var Indata = {'toUserId': $scope.group.user.userId, 
+                var Indata = {'toUserId': $scope.group.user._id, 
                               'subject': 'Solicitud de admisión para tu grupo',
                               'message': 'El usuario ' + $scope.authentication.user.displayName + ' ha solicitado la admisión a tu grupo. Haz click en el siguiente enlace para aceptar la solicitud desde el apartado miembros.',
                               'url': '/groups/' + $scope.group._id};

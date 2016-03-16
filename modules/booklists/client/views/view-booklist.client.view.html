@@ -58,6 +58,9 @@
                               <li ng-show="authentication.user._id === booklist.user._id">
                                 <a ng-click="createGroupFromBooklist()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta lista</a>
                               </li>
+                              <li ng-show="booklist.books.length > 0"> 
+                                <a ng-click="duplicateBooklist()"><i class="glyphicon glyphicon-copy"></i> Duplicar lista</a>
+                              </li>
                             </ul>
                         </span>
                      </li>

@@ -47,11 +47,36 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             $scope.title = '';
             $scope.description = '';
             $scope.tags = '';
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Duplicate new Booklist
+    $scope.duplicateBooklist = function () {
+       
+        // Create new Booklist object
+        var booklist = new Booklists({
+            title: $scope.booklist.title,
+            description: $scope.booklist.description,
+            tags: $scope.booklist.tags,
+            books: $scope.booklist.books
+        });
+
+        // Redirect after save
+        booklist.$save(function (response) {
+            $location.path('booklists/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.description = '';
+            $scope.tags = '';
             $scope.books = '';
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
         });
     };
+
     
     $scope.createGroupFromBooklist = function () {
         // Create new Group object
