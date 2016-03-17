@@ -610,6 +610,32 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
        });
     };
     
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/groups/client/views/modal-report-form.html',
+            controller: ModalGroupReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                groupId: function () {
+                    return $scope.group._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
+    
     $scope.showAcceptInvitation = function () {
         
         var found = false;

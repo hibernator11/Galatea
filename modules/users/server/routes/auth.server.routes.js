@@ -22,6 +22,8 @@ module.exports = function (app) {
   app.route('/api/auth/sendReviewEmail').post(users.sendReviewEmail);
   app.route('/api/auth/sendBooklistEmail').post(users.sendBooklistEmail);
   app.route('/api/auth/sendGroupEmail').post(users.sendGroupEmail);
+  app.route('/api/auth/sendEmailReport').post(users.sendEmailReport);
+  
 
   // Setting up the users authentication api
   app.route('/api/auth/signup').post(users.signup);

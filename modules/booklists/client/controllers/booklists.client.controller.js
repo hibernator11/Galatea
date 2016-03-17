@@ -357,6 +357,32 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             
         });
     };
+    
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-report-form.html',
+            controller: ModalBooklistReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                booklistId: function () {
+                    return $scope.booklist._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
 
     $scope.showHelpInformation = function () {
        $modal.open({

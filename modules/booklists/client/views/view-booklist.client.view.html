@@ -61,6 +61,9 @@
                               <li ng-show="booklist.books.length > 0"> 
                                 <a ng-click="duplicateBooklist()"><i class="glyphicon glyphicon-copy"></i> Duplicar lista</a>
                               </li>
+                              <li ng-show="authentication.user._id"> 
+                                <a ng-click="showReportForm()"><i class="glyphicon glyphicon-warning-sign"></i> Denunciar spam o abuso</a>
+                              </li>
                             </ul>
                         </span>
                      </li>

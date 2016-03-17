@@ -53,6 +53,9 @@
                               <li ng-if="authentication.user._id === review.user._id">
                                 <a ng-click="createGroupFromReview()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta reseña</a>
                               </li>
+                              <li ng-show="authentication.user._id"> 
+                                <a ng-click="showReportForm()"><i class="glyphicon glyphicon-warning-sign"></i> Denunciar spam o abuso</a>
+                              </li>
                             </ul>
                         </span>
                      </li>

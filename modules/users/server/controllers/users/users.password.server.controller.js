@@ -415,7 +415,7 @@ exports.sendGroupEmail = function (req, res, next) {
               url: httpTransport + req.headers.host + url
             }, function (err, emailHTML) {
               done(err, emailHTML, email, subject);
-            });   
+            });
         } else {
             return res.status(400).send({
               message: 'Debes registrarte para poder enviar el correo.'
@@ -502,6 +502,72 @@ exports.sendEmail = function (req, res, next) {
 
       var mailOptions = {
         to: email,
+        from: config.mailer.from,
+        subject: subject,
+        html: emailHTML
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        if (!err) {
+          res.send({
+            message: 'Un email se ha enviado con las instrucciones a seguir.'
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Se ha producido un error al enviar el correo'
+          });
+        }
+
+        done(err);
+      });
+    }
+  ], function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+};
+
+
+/**
+ * Send generic mail report abuse or spam (send review POST)
+ */
+exports.sendEmailReport = function (req, res, next) {
+  async.waterfall([
+    // Get form data
+    function (done) {
+        if (req.user){
+            
+            var subject = req.body.subject;
+            var message = req.body.message;
+            var url = req.body.url;
+
+            var httpTransport = 'http://';
+            if (config.secure && config.secure.ssl === true) {
+              httpTransport = 'https://';
+            }
+            res.render(path.resolve('modules/users/server/templates/send-email'), {
+              toName: 'Administrador',
+              message: message,
+              appName: config.app.title,
+              url: httpTransport + req.headers.host + url
+            }, function (err, emailHTML) {
+              done(err, emailHTML, subject);
+            });
+            
+            
+        } else {
+            return res.status(400).send({
+              message: 'Debes registrarte para poder enviar el correo.'
+            });
+        }
+    },
+    
+    // If valid email, send reset email using service
+    function (emailHTML, subject, done) {
+
+      var mailOptions = {
+        to: config.mailer.from,
         from: config.mailer.from,
         subject: subject,
         html: emailHTML

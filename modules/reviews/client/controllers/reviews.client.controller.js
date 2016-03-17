@@ -394,6 +394,32 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         }, function () {
         });
     };
+    
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/reviews/client/views/modal-report-form.html',
+            controller: ModalReviewReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                reviewId: function () {
+                    return $scope.review._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
 
     $scope.showHelpInformation = function () {
        $modal.open({

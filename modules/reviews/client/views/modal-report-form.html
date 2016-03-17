@@ -1,0 +1,25 @@
+
+<div class="modal-header">
+    <h3 class="modal-title pull-left">Denunciar abuso o spam</h3>
+    <button ng-click="cancel()" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+</div>
+
+<form ng-submit="submit(form.emailForm)" name="form.emailForm" class="form-horizontal" role="form">
+    <div class="modal-body">
+        
+        <div class="form-group" ng-class="{ 'has-error': form.emailForm.inputMessage.$invalid && submitted }">
+            <label for="inputMessage" class="col-lg-2 control-label">Mensaje</label>
+            <div class="col-lg-10">
+                <textarea ng-model="formData.inputMessage" class="form-control" rows="4" id="inputMessage" name="inputMessage" placeholder="Mensaje..." required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-danger" ng-disabled="submitButtonDisabled">
+                    Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+

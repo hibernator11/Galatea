@@ -569,6 +569,32 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
             
         });
     };
+    
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/booklists/client/views/modal-report-form.html',
+            controller: ModalBooklistReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                booklistId: function () {
+                    return $scope.booklist._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
 
     $scope.showHelpInformation = function () {
        $modal.open({
@@ -739,6 +765,50 @@ var ModalBooklistEmailInstanceCtrl = function ($scope, $http, $modalInstance, bo
     };
 };
 ModalBooklistEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "booklistId"];
+
+
+
+'use strict';
+
+var ModalBooklistReportInstanceCtrl = function ($scope, $http, $modalInstance, booklistId, displayName) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            
+            var Indata = {'subject': 'Denuncia de spam o abuso',
+                          'message': 'El usuario ' + displayName + ' ha denunciado un uso incorrecto en Galatea. Ha dejado el siguiente mensaje:' + 
+                                  $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/booklists/' + booklistId};
+            
+            $http.post('api/auth/sendEmailReport', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
+
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error: por favor rellene todos los campos';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalBooklistReportInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "booklistId", "displayName"];
 
 
 
@@ -2033,6 +2103,32 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
        });
     };
     
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/groups/client/views/modal-report-form.html',
+            controller: ModalGroupReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                groupId: function () {
+                    return $scope.group._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
+    
     $scope.showAcceptInvitation = function () {
         
         var found = false;
@@ -2130,6 +2226,50 @@ var ModalGroupEmailInstanceCtrl = function ($scope, $http, $modalInstance, group
     };
 };
 ModalGroupEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "groupId"];
+
+
+
+'use strict';
+
+var ModalGroupReportInstanceCtrl = function ($scope, $http, $modalInstance, groupId, displayName) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            
+            var Indata = {'subject': 'Denuncia de spam o abuso',
+                          'message': 'El usuario ' + displayName + ' ha denunciado un uso incorrecto en Galatea. Ha dejado el siguiente mensaje:' + 
+                                  $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/groups/' + groupId};
+            
+            $http.post('api/auth/sendEmailReport', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
+
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error: por favor rellene todos los campos';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalGroupReportInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "groupId", "displayName"];
 
 
 
@@ -2337,6 +2477,50 @@ var ModalReviewEmailInstanceCtrl = function ($scope, $http, $modalInstance, revi
     };
 };
 ModalReviewEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "reviewId"];
+
+
+
+'use strict';
+
+var ModalReviewReportInstanceCtrl = function ($scope, $http, $modalInstance, reviewId, displayName) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            
+            var Indata = {'subject': 'Denuncia de spam o abuso',
+                          'message': 'El usuario ' + displayName + ' ha denunciado un uso incorrecto en Galatea. Ha dejado el siguiente mensaje:' + 
+                                  $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/reviews/' + reviewId};
+            
+            $http.post('api/auth/sendEmailReport', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
+
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error: por favor rellene todos los campos';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalReviewReportInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "reviewId", "displayName"];
 
 
 
@@ -2785,6 +2969,32 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         modalInstance.result.then(function (result) {
             $scope.messageok = result.message;
         }, function () {
+        });
+    };
+    
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/reviews/client/views/modal-report-form.html',
+            controller: ModalReviewReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                reviewId: function () {
+                    return $scope.review._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
         });
     };
 

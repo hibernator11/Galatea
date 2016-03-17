@@ -47,6 +47,9 @@
                                 <li>
                                     <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
                                 </li>
+                                <li ng-show="authentication.user._id"> 
+                                    <a ng-click="showReportForm()"><i class="glyphicon glyphicon-warning-sign"></i> Denunciar spam o abuso</a>
+                                </li>
                             </ul>
                         </span>
                      </li>
