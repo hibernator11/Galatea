@@ -222,6 +222,13 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         })
         .then(function(response) {
             // success
+            var comment = {
+              content: $scope.txtcomment,
+              user: $scope.authentication.user,
+              created: new Date()
+            };
+            $scope.booklist.comments.push(comment);
+            
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
         }, 

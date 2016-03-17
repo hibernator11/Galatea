@@ -187,7 +187,7 @@ exports.addComment = function(req, res){
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                res.json({message: 'Comentario añadido correctamente. El administrador revisará el comentario y en breve estará visible.'});
+                res.json({message: 'Comentario añadido correctamente.'});
             }
         });
     }else{

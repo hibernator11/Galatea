@@ -293,6 +293,13 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         })
         .then(function(response) {
             // success
+            var comment = {
+              content: $scope.txtcomment,
+              user: $scope.authentication.user,
+              created: new Date()
+            };
+            $scope.group.comments.push(comment);
+            
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
         }, 

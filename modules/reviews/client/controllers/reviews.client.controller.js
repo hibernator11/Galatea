@@ -268,6 +268,13 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         })
         .then(function(response) {
             // success
+            var comment = {
+              content: $scope.txtcomment,
+              user: $scope.authentication.user,
+              created: new Date()
+            };
+            $scope.review.comments.push(comment);
+            
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
         }, 
