@@ -11,29 +11,38 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label for="firstName">Nombre</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="user.firstName" placeholder="First Name" required />
+          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="user.firstName" placeholder="Nombre" required />
           <div ng-messages="userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">First name is required.</p>
+            <p class="help-block error-text" ng-message="required">El nombre es obligatorio.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
           <label for="lastName">Apellidos</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="user.lastName" placeholder="Last Name" required />
+          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="user.lastName" placeholder="Apellidos" required />
           <div ng-messages="userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Last name is required.</p>
+            <p class="help-block error-text" ng-message="required">Los apellidos son obligatorios.</p>
           </div>
         </div>
+        <div class="form-group" show-errors>
+          <label for="status">Estado</label>
+          <select ng-model="user.status">
+            <option ng-repeat="x in userStatus" value="{{x.value}}">{{x.text}}</option>
+          </select>  
+          <div ng-messages="userForm.status.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">El estado es obligatorio.</p>
+          </div>
+        </div>        
         <div class="form-group" show-errors>
           <label class="control-label" for="roles">Roles</label>
           <div class="controls">
             <input class="form-control" type="text" name="roles" ng-model="user.roles" id="roles" ng-list required />
             <div ng-messages="userForm.roles.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">At least one role is required.</p>
+              <p class="help-block error-text" ng-message="required">Al menos un estado es obligatorio.</p>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <input type="submit" value="Update" class="btn btn-default">
+          <input type="submit" value="Modificar" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>

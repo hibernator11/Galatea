@@ -91,6 +91,12 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  status: {
+    type: String,
+    enum : ['activo','inactivo'],
+    default: 'activo',
+    required: 'El campo status no puede ser nulo'
+  },
   /* For reset password */
   resetPasswordToken: {
     type: String
