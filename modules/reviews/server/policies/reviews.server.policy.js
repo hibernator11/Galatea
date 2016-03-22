@@ -33,6 +33,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews/addComment',
       permissions: ['post']
     }, {
+      resources: '/api/reviews/removeComment',
+      permissions: ['post']
+    }, {
       resources: '/api/reviews/addRating',
       permissions: ['post']
     }, {

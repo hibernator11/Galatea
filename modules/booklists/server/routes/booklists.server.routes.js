@@ -15,6 +15,8 @@ module.exports = function (app) {
   // Booklists add comment
   app.route('/api/booklists/addComment').all(booklistsPolicy.isAllowed)
     .post(booklists.addComment);
+  app.route('/api/booklists/removeComment').all(booklistsPolicy.isAllowed)
+     .post(booklists.removeComment);    
     
   // Booklists add rating
   app.route('/api/booklists/addRating').all(booklistsPolicy.isAllowed)

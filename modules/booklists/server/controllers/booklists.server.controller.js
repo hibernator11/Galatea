@@ -142,6 +142,26 @@ exports.addComment = function(req, res){
   }
 };
 
+exports.removeComment = function(req, res){
+ 
+    if(req.user && req.body.commentId){
+
+        Booklist.update({ "_id": req.body.booklistId, "user":req.user },
+                     {$pull: { "comments": {'_id': req.body.commentId} }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Comentario eliminado correctamente.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
 exports.addRating = function(req, res){
  
   if(req.user && req.body.rate){

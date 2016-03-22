@@ -28,9 +28,11 @@ module.exports = function (app) {
   app.route('/api/reviews/public').all(reviewsPolicy.isAllowed)
      .get(reviews.listPublic);
      
-       // Reviews add comment
+  // Reviews add comment
   app.route('/api/reviews/addComment').all(reviewsPolicy.isAllowed)
     .post(reviews.addComment);
+  app.route('/api/reviews/removeComment').all(reviewsPolicy.isAllowed)
+     .post(reviews.removeComment);
 
   // Single review routes
   app.route('/api/reviews/:reviewId').all(reviewsPolicy.isAllowed)

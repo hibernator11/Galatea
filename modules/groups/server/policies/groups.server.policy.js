@@ -33,6 +33,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/groups/addComment',
       permissions: ['post']
     }, {
+      resources: '/api/groups/removeComment',
+      permissions: ['post']
+    }, {
       resources: '/api/groups/activatePublicMember',
       permissions: ['post']
     }, {

@@ -196,6 +196,30 @@ exports.addComment = function(req, res){
     }
 };
 
+
+/**
+* remove comment group
+**/
+exports.removeComment = function(req, res){
+ 
+    if(req.user && req.body.commentId){
+
+        Group.update({ "_id": req.body.groupId, "user":req.user },
+                     {$pull: { "comments": {'_id': req.body.commentId} }}).exec(function(err, numAffected) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json({message: 'Comentario eliminado correctamente.'});
+            }
+        });
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
 // user try to join a group
 exports.addPendingMember = function(req, res){
  

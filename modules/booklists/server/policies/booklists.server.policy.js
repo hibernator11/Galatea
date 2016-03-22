@@ -33,6 +33,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/booklists/addComment',
       permissions: ['post']
     }, {
+      resources: '/api/booklists/removeComment',
+      permissions: ['post']
+    }, {
       resources: '/api/booklists/addRating',
       permissions: ['post']
     }]

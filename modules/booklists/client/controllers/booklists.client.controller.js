@@ -222,12 +222,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         })
         .then(function(response) {
             // success
-            var comment = {
-              content: $scope.txtcomment,
-              user: $scope.authentication.user,
-              created: new Date()
-            };
-            $scope.booklist.comments.push(comment);
+            $scope.booklist = Booklists.get({
+              booklistId: $stateParams.booklistId
+            });
             
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
@@ -238,6 +235,26 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         });
       }
     };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/booklists/removeComment',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'commentId'  : commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.booklist.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };    
     
     // update Tag event
     $scope.updateTag = function(val) {

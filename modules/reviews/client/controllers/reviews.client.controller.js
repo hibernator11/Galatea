@@ -268,12 +268,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         })
         .then(function(response) {
             // success
-            var comment = {
-              content: $scope.txtcomment,
-              user: $scope.authentication.user,
-              created: new Date()
-            };
-            $scope.review.comments.push(comment);
+            $scope.review = Reviews.get({
+              reviewId: $stateParams.reviewId
+            });
             
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
@@ -284,6 +281,26 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         });
       }
     };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/reviews/removeComment',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.review.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };    
 
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {

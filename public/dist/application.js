@@ -434,12 +434,9 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         })
         .then(function(response) {
             // success
-            var comment = {
-              content: $scope.txtcomment,
-              user: $scope.authentication.user,
-              created: new Date()
-            };
-            $scope.booklist.comments.push(comment);
+            $scope.booklist = Booklists.get({
+              booklistId: $stateParams.booklistId
+            });
             
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
@@ -450,6 +447,26 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
         });
       }
     };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/booklists/removeComment',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'commentId'  : commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.booklist.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };    
     
     // update Tag event
     $scope.updateTag = function(val) {
@@ -1693,7 +1710,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     };
     
     $scope.removeMember = function (item){
-        console.log('item.userId:' + item.user._id);
         $http({
             url: 'api/groups/removeMember',
             method: "POST",
@@ -1711,7 +1727,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.error = response.data.message;
         });
     };
-
+    
     $scope.showList = function(){
         $location.path('groups');
     };
@@ -1793,12 +1809,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         })
         .then(function(response) {
             // success
-            var comment = {
-              content: $scope.txtcomment,
-              user: $scope.authentication.user,
-              created: new Date()
-            };
-            $scope.group.comments.push(comment);
+            $scope.group = Groups.get({
+              groupId: $stateParams.groupId
+            });
             
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
@@ -1808,6 +1821,26 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.error = response.data.message;
         });
       }
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/groups/removeComment',
+            method: "POST",
+            data: { 'groupId' :  $scope.group._id,
+                    'commentId'  :  commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.group.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
     };
     
     $scope.addPendingMember = function() {
@@ -2859,12 +2892,9 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         })
         .then(function(response) {
             // success
-            var comment = {
-              content: $scope.txtcomment,
-              user: $scope.authentication.user,
-              created: new Date()
-            };
-            $scope.review.comments.push(comment);
+            $scope.review = Reviews.get({
+              reviewId: $stateParams.reviewId
+            });
             
             $scope.txtcomment = '';
             $scope.messageok = response.data.message;
@@ -2875,6 +2905,26 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
         });
       }
     };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/reviews/removeComment',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.review.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };    
 
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {

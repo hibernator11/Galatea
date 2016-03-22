@@ -19,6 +19,8 @@ module.exports = function (app) {
   // Groups add comment
   app.route('/api/groups/addComment').all(groupsPolicy.isAllowed)
      .post(groups.addComment);
+  app.route('/api/groups/removeComment').all(groupsPolicy.isAllowed)
+     .post(groups.removeComment);
      
   // Groups activate member
   app.route('/api/groups/activatePublicMember').all(groupsPolicy.isAllowed)

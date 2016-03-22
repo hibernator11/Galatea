@@ -20,9 +20,10 @@
                     <!--<a href="#" class="user-link">{{member.user.displayName}}</a>-->
                     <h4>{{member.user.displayName}}</h4>
                     <span class="user-subhead hidden-xs">Miembro</span>
-                    <span style="width:30%" class="hidden-ms visible-xs" ng-class="{'label label-default': member.status === 'invitado', 
-                                     'label label-success': member.status === 'activo', 
-                                     'label label-danger': member.status === 'inactivo',
+                    <span style="width:30%" class="hidden-ms visible-xs" 
+                          ng-class="{'label label-default' : member.status === 'invitado', 
+                                     'label label-success' : member.status === 'activo', 
+                                     'label label-danger'  : member.status === 'inactivo',
                                      'label label-inactivo': member.status === 'pendiente' }">{{member.status}}</span>
                 </td>
                 <td class="text-center visible-ms hidden-xs">
@@ -33,7 +34,8 @@
                 </td>
                 <td class="hidden-xs visible-ms" style="width: 10%;">{{member.created | date:'dd/MM/yyyy'}}</td>
                 <td>
-                    <a href="#" confirm="Quiere eliminar este miembro?" 
+                    <a href="#" confirm="Quiere eliminar este miembro?"
+                       tooltip="Eliminar usuario"
                        ng-click="removeMember(member)" 
                        ng-if="member.status !== 'invitado'"
                        class="table-link danger">

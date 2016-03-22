@@ -132,6 +132,9 @@
              por
             <span ng-bind="comment.user.displayName"></span>
             </em>
+            <a ng-show="authentication.user._id === review.user._id" href="#" tooltip="Eliminar comentario"
+               confirm="¿Estas seguro que deseas eliminar el comentario?"
+               ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
             </small>
             <p ng-bind="comment.content"></p>
         </div>
