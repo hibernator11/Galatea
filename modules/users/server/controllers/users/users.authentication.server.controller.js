@@ -77,6 +77,8 @@ exports.signin = function (req, res, next) {
       req.login(user, function (err) {
         if (err) {
           res.status(400).send(err);
+        } else if(user.status === 'inactivo') {
+          res.status(400).send('El usuario no se encuentra activo. Consulte al administrador por favor.');
         } else {
           res.json(user);
         }
