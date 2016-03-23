@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('booklists')
+angular.module('core')
   .directive('footerGeneric', footerGeneric);
 
 function footerGeneric () {
     return {
         restrict: 'EA',
-        templateUrl: '/modules/booklists/client/views/footerGeneric.template.html'
+        templateUrl: '/modules/core/client/views/footerGeneric.template.html'
     };
 }
 

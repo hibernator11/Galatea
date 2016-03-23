@@ -955,20 +955,6 @@ angular.module('booklists').directive('scrollContainer', ["$window", function($w
 
 'use strict';
 
-angular.module('booklists')
-  .directive('footerGeneric', footerGeneric);
-
-function footerGeneric () {
-    return {
-        restrict: 'EA',
-        templateUrl: '/modules/booklists/client/views/footerGeneric.template.html'
-    };
-}
-
-
-
-'use strict';
-
 //Booklists service used for communicating with the categories REST endpoints
 angular.module('booklists').factory('Booklists', ['$resource',
   function ($resource) {
@@ -1054,9 +1040,9 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
-    .state('inicio', {
-      url: '/inicio',
-      templateUrl: 'modules/core/client/views/inicio.client.view.html'
+    .state('condiciones', {
+      url: '/condiciones',
+      templateUrl: 'modules/core/client/views/condiciones.client.view.html'
     })
     .state('not-found', {
       url: '/not-found',
@@ -1108,13 +1094,27 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'Reviews',
-  function ($scope, Authentication, Reviews) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication',
+  function ($scope, Authentication) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
   }
 ]);
+
+'use strict';
+
+angular.module('core')
+  .directive('footerGeneric', footerGeneric);
+
+function footerGeneric () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/modules/core/client/views/footerGeneric.template.html'
+    };
+}
+
+
 
 'use strict';
 
@@ -3640,10 +3640,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
-        //if($state.previous.state.name === 'home')
-        //    $state.previous.state.name = 'inicio';
-        // And redirect to the previous or home page
-        //$state.go($state.previous.state.name || 'inicio', $state.previous.params);
         // And redirect to the previous or home page
         $state.go($state.previous.state.name, $state.previous.params);
       }).error(function (response) {
