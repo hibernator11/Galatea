@@ -130,8 +130,8 @@ exports.oauthCallback = function (strategy) {
         if (err) {
           return res.redirect('/authentication/signin');
         }
-
-        return res.redirect(redirectURL || sessionRedirectURL || '/');
+        //return res.redirect(redirectURL || sessionRedirectURL || '/');
+        return res.redirect(sessionRedirectURL || redirectURL || '/');
       });
     })(req, res, next);
   };
