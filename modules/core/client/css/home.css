@@ -259,6 +259,8 @@ span.rating {
     font: bold 16px sans-serif;
     padding: 55px 50px;
     margin-top: 80px;
+    z-index: 1000000000;
+    position: absolute;
 }
 
 .footer-distributed .footer-icons a {

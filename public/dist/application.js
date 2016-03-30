@@ -1001,6 +1001,13 @@ angular.module('core.admin').run(['Menus',
       type: 'dropdown',
       roles: ['admin']
     });
+    
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Dashboard',
+      state: 'dashboard',
+      type: 'dropdown',
+      roles: ['admin']
+    });
   }
 ]);
 
@@ -1040,6 +1047,13 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
+    .state('dashboard', {
+      url: '/dashboard',
+      templateUrl: 'modules/core/client/views/dashboard.client.view.html',
+      data: {
+          roles: ['admin']
+      }
+    })
     .state('condiciones', {
       url: '/condiciones',
       templateUrl: 'modules/core/client/views/condiciones.client.view.html'
@@ -1064,6 +1078,30 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       data: {
         ignoreState: true
       }
+    });
+  }
+]);
+
+'use strict';
+
+angular.module('core').controller('DashboardController', ['$scope', '$state', 'Authentication', 'Menus',
+  function ($scope, $state, Authentication, Menus) {
+    // Expose view variables
+    $scope.$state = $state;
+    $scope.authentication = Authentication;
+
+    // Get the topbar menu
+    $scope.menu = Menus.getMenu('topbar');
+
+    // Toggle the menu items
+    $scope.isCollapsed = false;
+    $scope.toggleCollapsibleMenu = function () {
+      $scope.isCollapsed = !$scope.isCollapsed;
+    };
+
+    // Collapsing the menu after navigation
+    $scope.$on('$stateChangeSuccess', function () {
+      $scope.isCollapsed = false;
     });
   }
 ]);
