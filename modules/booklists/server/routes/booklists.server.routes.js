@@ -12,6 +12,14 @@ module.exports = function (app) {
     .get(booklists.list)
     .post(booklists.create);
     
+  // Booklists comments paginate
+  app.route('/api/booklists/comments/').all(booklistsPolicy.isAllowed)
+     .get(booklists.getComments);
+     
+  // Booklists comments total
+  app.route('/api/booklists/comments/total').all(booklistsPolicy.isAllowed)
+     .get(booklists.countComments);  
+    
   // Booklists add comment
   app.route('/api/booklists/addComment').all(booklistsPolicy.isAllowed)
     .post(booklists.addComment);

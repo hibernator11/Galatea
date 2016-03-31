@@ -169,6 +169,80 @@ exports.groupPaginate = function(req, res){
 };
 
 /**
+* count comments Group
+**/
+exports.countComments = function(req, res){
+ 
+    if(req.user){
+        
+        var d = new Date();
+        d.setDate(d.getDate()-7);
+
+        Group.aggregate(
+          { $match: {'comments.created': {$gt: d}}},
+          { $unwind : "$comments" },
+          { $group : {
+              _id: null,
+              total : { $sum : 1 }
+          } })
+        .exec(function(err, totalComments) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json(totalComments);
+            }
+        });
+
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+/**
+* comments Group
+**/
+exports.getComments = function(req, res){
+ 
+    /*var page = 1;
+    if(req.params.page){
+        page = req.params.page;
+    }
+    var per_page =10;*/
+
+    if(req.user){
+        
+        var d = new Date();
+        d.setDate(d.getDate()-7);
+
+        Group.aggregate(
+          { $match: {'comments.created': {$gt: d}}},
+          { $project : { _id: 1, name : 1 , comments : 1 } },
+          { $unwind : "$comments" },
+          { $group : {
+              _id: { comment: "$comments", name: "$name", groupId: "$_id"}
+          } },
+          { $sort : { created : -1 } },
+          { $limit : 10 })
+        .exec(function(err, comments) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json(comments);
+            }
+        });
+
+    }else{
+        // if user is not logged in empty result
+        res.json({});
+    }
+};
+
+/**
 * add comment group
 **/
 exports.addComment = function(req, res){

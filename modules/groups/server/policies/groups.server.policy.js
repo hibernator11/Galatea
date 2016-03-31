@@ -20,6 +20,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/groups/:groupId',
       permissions: '*'
+    }, {
+      resources: '/api/groups/comments/',
+      permissions: ['get']
+    }, {
+      resources: '/api/groups/comments/total',
+      permissions: ['get']
     }]
   }, {
     roles: ['user'],

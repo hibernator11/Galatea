@@ -15,6 +15,15 @@ module.exports = function (app) {
   // Reviews by uuid
   app.route('/api/reviews/uuid/:uuid').all(reviewsPolicy.isAllowed)
      .get(reviews.listUuid);
+     
+     
+  // Reviews comments paginate
+  app.route('/api/reviews/comments/').all(reviewsPolicy.isAllowed)
+     .get(reviews.getComments);
+     
+  // Reviews comments total
+  app.route('/api/reviews/comments/total').all(reviewsPolicy.isAllowed)
+     .get(reviews.countComments);   
 
   // Reviews paginate
   app.route('/api/reviews/page/:page').all(reviewsPolicy.isAllowed)
