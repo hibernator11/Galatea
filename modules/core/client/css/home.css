@@ -9,6 +9,7 @@
 
 .label {
     margin: 2px;
+    font-size: 14px;
 }
 
 .social-links {
@@ -562,4 +563,9 @@ span.rating {
 
 .border-cover {
     box-shadow: 0 4px 10px rgba(0,0,0,.3);
+}
+
+/*modify text-muted type.css*/
+.text-muted {
+    font-size: 14px;
 }
