@@ -360,6 +360,12 @@ span.rating {
     background-color: #333;
     color: #fff;
     border-color: #333;
+} 
+
+/* modify btn-danger bootstrap-theme.css */
+
+.btn-danger {
+    font-size: 14px;
 }
 
 .title {
