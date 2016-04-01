@@ -17,13 +17,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/',
       templateUrl: 'modules/core/client/views/home.client.view.html'
     })
-    .state('dashboard', {
-      url: '/dashboard',
-      templateUrl: 'modules/core/client/views/dashboard.client.view.html',
-      data: {
-          roles: ['admin']
-      }
-    })
     .state('condiciones', {
       url: '/condiciones',
       templateUrl: 'modules/core/client/views/condiciones.client.view.html'

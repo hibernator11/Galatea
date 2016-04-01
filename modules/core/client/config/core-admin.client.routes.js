@@ -11,6 +11,20 @@ angular.module('core.admin.routes').config(['$stateProvider',
         data: {
           roles: ['admin']
         }
+      })
+      .state('admin.dashboard', {
+      url: '/dashboard',
+      templateUrl: 'modules/core/client/views/admin/dashboard.client.view.html',
+      data: {
+          roles: ['admin']
+        }
+      })
+      .state('admin.comments', {
+      url: '/comments',
+      templateUrl: 'modules/core/client/views/admin/dashboard.comments.client.view.html',
+      data: {
+          roles: ['admin']
+        }
       });
   }
 ]);

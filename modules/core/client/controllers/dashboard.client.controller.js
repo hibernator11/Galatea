@@ -25,41 +25,42 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.totalCommentsGroup = 0;
     $scope.totalCommentsBooklist = 0;
     
+    $scope.numResultsCommentsReview = 10;
+    $scope.numResultsCommentsGroup = 10;
+    $scope.numResultsCommentsBooklist = 10;
+    
     $scope.getReviewComments = function() {
-      
-      $http.get('api/reviews/comments/').success(function (response) {
-            console.log('comments Review:' + response);
+      $http.get('/api/comments/reviews/results/' + $scope.numResultsCommentsReview)
+      .success(function (response) {
             $scope.commentsReview = response;
-        }).error(function (response) {
+      }).error(function (response) {
             $scope.error = response.message;
       });
     };
     
     $scope.getGroupComments = function() {
       
-      $http.get('api/groups/comments/').success(function (response) {
-            console.log('comments Group:' + response);
+      $http.get('/api/comments/groups/results/' + $scope.numResultsCommentsGroup)
+      .success(function (response) {
             $scope.commentsGroup = response;
-        }).error(function (response) {
+      }).error(function (response) {
             $scope.error = response.message;
       });
     };
     
     $scope.getBooklistComments = function() {
-      
-      $http.get('api/booklists/comments/').success(function (response) {
-            console.log('comments Booklist:' + response);
+      $http.get('/api/comments/booklists/results/' + $scope.numResultsCommentsBooklist)
+      .success(function (response) {
             $scope.commentsBooklist = response;
-        }).error(function (response) {
+      }).error(function (response) {
             $scope.error = response.message;
       });
     };    
     
     $scope.getTotalCommentsReview = function() {
       
-      $http.get('/api/reviews/comments/total').success(function (response) {
+      $http.get('/api/comments/reviews/').success(function (response) {
           if(!angular.isUndefined(response[0])){
-            console.log('comments Review total:' + response[0].total);
             $scope.totalCommentsReview = response[0].total;
             $scope.newComments += $scope.totalCommentsReview;
           }
@@ -70,9 +71,8 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     
     $scope.getTotalCommentsGroup = function() {
       
-      $http.get('/api/groups/comments/total').success(function (response) {
+      $http.get('/api/comments/groups/').success(function (response) {
           if(!angular.isUndefined(response[0])){
-            console.log('comments Group total:' + response);
             $scope.totalCommentsGroup = response[0].total;
             $scope.newComments += $scope.totalCommentsGroup;
           }
@@ -83,9 +83,8 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     
     $scope.getTotalCommentsBooklist = function() {
       
-        $http.get('/api/booklists/comments/total').success(function (response) {
+        $http.get('/api/comments/booklists/').success(function (response) {
             if(!angular.isUndefined(response[0])){
-                console.log('comments Booklist total:' + response[0].total);
                 $scope.totalCommentsBooklist = response[0].total;
                 $scope.newComments += $scope.totalCommentsBooklist;
             }

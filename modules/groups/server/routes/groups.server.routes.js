@@ -17,11 +17,11 @@ module.exports = function (app) {
      .get(groups.groupPaginate);
      
   // Groups comments paginate
-  app.route('/api/groups/comments/').all(groupsPolicy.isAllowed)
+  app.route('/api/comments/groups/results/:results').all(groupsPolicy.isAllowed)
      .get(groups.getComments);
      
   // Groups comments total
-  app.route('/api/groups/comments/total').all(groupsPolicy.isAllowed)
+  app.route('/api/comments/groups').all(groupsPolicy.isAllowed)
      .get(groups.countComments);
      
   // Groups add comment

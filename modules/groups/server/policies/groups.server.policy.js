@@ -21,10 +21,10 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/groups/:groupId',
       permissions: '*'
     }, {
-      resources: '/api/groups/comments/',
+      resources: '/api/comments/groups',
       permissions: ['get']
     }, {
-      resources: '/api/groups/comments/total',
+      resources: '/api/comments/groups/results/:results',
       permissions: ['get']
     }]
   }, {

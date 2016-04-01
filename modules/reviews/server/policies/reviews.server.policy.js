@@ -21,10 +21,10 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews/:reviewId',
       permissions: '*'
     }, {
-      resources: '/api/reviews/comments/',
+      resources: '/api/comments/reviews',
       permissions: ['get']
     }, {
-      resources: '/api/reviews/comments/total',
+      resources: '/api/comments/reviews/results/:results',
       permissions: ['get']
     }]
   }, {

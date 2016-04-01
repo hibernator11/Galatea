@@ -1,0 +1,248 @@
+<section class="container-home" ng-controller="DashboardController" ng-init="getReviewComments();getBooklistComments();getGroupComments();">
+
+<div id="wrapper">
+
+    <div ng-include src="'modules/core/client/views/admin/templates/dashboard.navbar.client.view.html'"></div>   
+            
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Comentarios</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-comments"></i> Comentarios
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!--<div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-info alert-dismissable">
+                        <button type="button" class="close" ng-click="getReviewComments()" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                    </div>
+                </div>
+            </div> -->
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="newComments"></div>
+                                    <div>Comentarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="pull-left">En general</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalCommentsReview"></div>
+                                    <div>Comentarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="pull-left">Realizados en reseñas</span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>                
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalCommentsBooklist"></div>
+                                    <div>Comentarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="pull-left">Realizados en listas</span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalCommentsGroup"></div>
+                                    <div>Comentarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <span class="pull-left">Realizados en grupos</span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!--<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Area Chart</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="morris-area-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-4">
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="pull-left"><i class="fa fa-clock-o fa-fw"></i>Últimos comentarios en reseñas</span>
+                                <span class="pull-right">
+                                    <select class="form-control" style="padding: 6px 0px;" ng-model="numResultsCommentsReview" ng-change="getReviewComments()">
+                                        <option value="10">10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                </span>
+                                <div class="clearfix"></div>    
+                            </h3>
+
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                              <a ng-repeat="comment in commentsReview" ui-sref="reviews.view({reviewId: comment._id.reviewId})" class="list-group-item">
+                                <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
+                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <small>
+                                    Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
+                                </small>
+                              </a> 
+                            </div>
+
+                            <div class="text-right">
+                                <a href="#">Ver Reseñas <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="pull-left"><i class="fa fa-clock-o fa-fw"></i>Últimos comentarios en listas</span>
+                                <span class="pull-right">
+                                    <select class="form-control" style="padding: 6px 0px;" ng-model="numResultsCommentsBooklist" ng-change="getBooklistComments()">
+                                        <option value="10">10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                </span>
+                                <div class="clearfix"></div>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                              <a ng-repeat="comment in commentsBooklist" ui-sref="booklists.view({booklistId: comment._id.booklistId})" class="list-group-item">
+                                <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
+                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <small>
+                                    Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
+                                </small>
+                              </a> 
+                            </div>
+
+                            <div class="text-right">
+                                <a href="#">Ver Listas <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="pull-left"><i class="fa fa-clock-o fa-fw"></i>Últimos comentarios en grupos</span>
+                                <span class="pull-right">
+                                    <select class="form-control" style="padding: 6px 0px;" ng-model="numResultsCommentsGroup" ng-change="getGroupComments()">
+                                        <option value="10">10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                </span>
+                                <div class="clearfix"></div>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group">
+                              <a ng-repeat="comment in commentsGroup" ui-sref="groups.view({groupId: comment._id.groupId})" class="list-group-item">
+                                <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
+                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                 <small>
+                                    Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
+                                </small>
+                              </a> 
+                            </div>
+
+                            <div class="text-right">
+                                <a href="#">Ver Grupos <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div> <!-- wrapper -->         
+
+</section>

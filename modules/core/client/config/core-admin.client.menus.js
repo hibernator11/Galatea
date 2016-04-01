@@ -11,7 +11,7 @@ angular.module('core.admin').run(['Menus',
     
     Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Dashboard',
-      state: 'dashboard',
+      state: 'admin.dashboard',
       type: 'dropdown',
       roles: ['admin']
     });

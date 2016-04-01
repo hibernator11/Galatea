@@ -13,11 +13,11 @@ module.exports = function (app) {
     .post(booklists.create);
     
   // Booklists comments paginate
-  app.route('/api/booklists/comments/').all(booklistsPolicy.isAllowed)
+  app.route('/api/comments/booklists/results/:results').all(booklistsPolicy.isAllowed)
      .get(booklists.getComments);
      
   // Booklists comments total
-  app.route('/api/booklists/comments/total').all(booklistsPolicy.isAllowed)
+  app.route('/api/comments/booklists').all(booklistsPolicy.isAllowed)
      .get(booklists.countComments);  
     
   // Booklists add comment

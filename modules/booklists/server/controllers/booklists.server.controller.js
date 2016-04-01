@@ -130,6 +130,7 @@ exports.countComments = function(req, res){
         Booklist.aggregate(
           { $match: {'comments.created': {$gt: d}}},
           { $unwind : "$comments" },
+          { $match: {'comments.created': {$gt: d}}},
           { $group : {
               _id: null,
               total : { $sum : 1 }
@@ -155,12 +156,11 @@ exports.countComments = function(req, res){
 **/
 exports.getComments = function(req, res){
  
-    /*var page = 1;
-    if(req.params.page){
-        page = req.params.page;
+    var limit = 10;
+    
+    if(req.params.results){
+        limit = req.params.results;
     }
-    var per_page =10;*/
-
     if(req.user){
         
         var d = new Date();
@@ -170,11 +170,13 @@ exports.getComments = function(req, res){
           { $match: {'comments.created': {$gt: d}}},
           { $project : { _id: 1, title : 1 , comments : 1 } },
           { $unwind : "$comments" },
+          { $match: {'comments.created': {$gt: d}}},
           { $group : {
               _id: { comment: "$comments", title: "$title", booklistId: "$_id"}
           } },
+          { $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
           { $sort : { created : -1 } },
-          { $limit : 10 })
+          { $limit : limit*1 })
         .exec(function(err, comments) {
             if (err) {
                 return res.status(400).send({
@@ -197,7 +199,8 @@ exports.addComment = function(req, res){
 
     var comment = {
       content: req.body.message,
-      user: req.user
+      user: req.user,
+      created: new Date()
     };
 
     Booklist.update({ '_id': req.body.booklistId },
