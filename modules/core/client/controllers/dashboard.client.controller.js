@@ -149,6 +149,17 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
       });
     }
     
+    $scope.getTotalUsers = function() {
+      
+      $http.get('/api/users/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.totalUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
 
     //call methods
     $scope.getTotalComments();
@@ -156,6 +167,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.getNewsBooklists();
     $scope.getNewsGroups();
     $scope.getNewsUsers();
+    $scope.getTotalUsers();
     $scope.getReviewComments();
     $scope.getBooklistComments();
     $scope.getGroupComments();

@@ -12,7 +12,8 @@ angular.module('users.admin.routes').config(['$stateProvider',
       })
       .state('admin.user', {
         url: '/users/:userId',
-        templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/dashboard.view-user.client.view.html',
+        //templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {
@@ -24,7 +25,8 @@ angular.module('users.admin.routes').config(['$stateProvider',
       })
       .state('admin.user-edit', {
         url: '/users/:userId/edit',
-        templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
+        //templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/dashboard.edit-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {

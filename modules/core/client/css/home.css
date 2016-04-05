@@ -145,7 +145,11 @@
     color: #66757f;
 }
 
-.dropdown-menu {
+.user-header-dropdown-toggle{
+    margin-right: 10px;
+}
+
+/*.dropdown-menu {
     position: absolute;
     top: 100%;
     z-index: 900;
@@ -160,7 +164,7 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     background-clip: padding-box;
-}
+}*/
 
 div.tooltip-inner {
     text-align: center;

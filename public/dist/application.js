@@ -1240,6 +1240,17 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
       });
     }
     
+    $scope.getTotalUsers = function() {
+      
+      $http.get('/api/users/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.totalUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
 
     //call methods
     $scope.getTotalComments();
@@ -1247,6 +1258,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.getNewsBooklists();
     $scope.getNewsGroups();
     $scope.getNewsUsers();
+    $scope.getTotalUsers();
     $scope.getReviewComments();
     $scope.getBooklistComments();
     $scope.getGroupComments();
@@ -3570,7 +3582,8 @@ angular.module('users.admin.routes').config(['$stateProvider',
       })
       .state('admin.user', {
         url: '/users/:userId',
-        templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/dashboard.view-user.client.view.html',
+        //templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {
@@ -3582,7 +3595,8 @@ angular.module('users.admin.routes').config(['$stateProvider',
       })
       .state('admin.user-edit', {
         url: '/users/:userId/edit',
-        templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
+        //templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/dashboard.edit-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {
