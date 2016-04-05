@@ -169,6 +169,31 @@ exports.groupPaginate = function(req, res){
 };
 
 /**
+* count new booklists
+**/
+exports.countNewGroups = function(req, res){
+ 
+    var d = new Date();
+    d.setDate(d.getDate()-7);
+
+    Group.aggregate(
+      { $match: {'created': {$gt: d}, 'status': 'public'}},
+      { $group : {
+          _id: null,
+          total : { $sum : 1 }
+      } })
+    .exec(function(err, newGroups) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.json(newGroups);
+        }
+    });
+};
+
+/**
 * count comments Group
 **/
 exports.countComments = function(req, res){

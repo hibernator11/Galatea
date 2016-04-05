@@ -1,8 +1,89 @@
-<section class="container-home" ng-controller="DashboardController" ng-init="getReviewComments();getBooklistComments();getGroupComments();">
+<section class="container-home" ng-controller="DashboardController">
 
 <div id="wrapper">
 
-    <div ng-include src="'modules/core/client/views/admin/templates/dashboard.navbar.client.view.html'"></div>   
+        <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-click="toggleCollapsibleMenu()">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a ui-sref="home" class="navbar-brand">G<span>alatea Admin</span></a>
+        </div>
+        <div class="collapse navbar-collapse" collapse="!isCollapsed">
+            
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+              <li class="dropdown" dropdown>
+              <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+              </div>
+                <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
+                  <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
+                  <span ng-bind="authentication.user.displayName"></span> <span class="glyphicon glyphicon-menu-down"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.profile">Ver perfil</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.picture">Cambiar imagen de perfil</a>
+                  </li>
+                  <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
+                    <a ui-sref="settings.password">Cambiar contraseña</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li ui-sref-active="active">
+                    <a href="/booklists">Mis listas</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a href="/reviews">Mis reseñas</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a href="/groups">Mis grupos</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.accounts">Configuración</a>
+                  </li>
+                  <li>
+                    <a href="/api/auth/signout" target="_self">Cerrar sesión</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+              <li ui-sref-active="active">
+                <a class="global-nav" href="/reviews">Mis reseñas</a>
+              </li>
+              <li ui-sref-active="active">
+              <a class="global-nav" href="/booklists">Mis listas</a>
+              </li>
+              <li ui-sref-active="active">
+              <a class="global-nav" href="/groups">Mis grupos</a>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav side-nav">
+                <li>
+                    <a href="#" ui-sref="admin.dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                </li>
+                <li class="active">
+                    <a href="#" ui-sref="admin.comments"><i class="fa fa-fw fa-comments"></i> Comentarios</a>
+                </li>
+                <li>
+                    <a href="#" ui-sref="admin.users"><i class="fa fa-fw fa-users"></i> Usuarios</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- /.navbar-collapse -->  
+
             
     <div id="page-wrapper">
 
@@ -52,6 +133,7 @@
                         </div>
                         <div class="panel-footer">
                             <span class="pull-left">En general</span>
+                            <span class="pull-right"><i class="fa fa-comments"></i></span>
                             <div class="clearfix"></div>
                         </div>
                         
@@ -72,6 +154,7 @@
                         </div>
                         <div class="panel-footer">
                             <span class="pull-left">Realizados en reseñas</span>
+                            <span class="pull-right"><i class="fa fa-book"></i></span>
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -91,6 +174,7 @@
                         </div>
                         <div class="panel-footer">
                             <span class="pull-left">Realizados en listas</span>
+                            <span class="pull-right"><i class="fa fa-list"></i></span>
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -110,6 +194,7 @@
                         </div>
                         <div class="panel-footer">
                             <span class="pull-left">Realizados en grupos</span>
+                            <span class="pull-right"><i class="fa fa-users"></i></span>
                             <div class="clearfix"></div>
                         </div>
                     </div>

@@ -1120,6 +1120,12 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.numResultsCommentsGroup = 10;
     $scope.numResultsCommentsBooklist = 10;
     
+    $scope.newReviews = 0;
+    $scope.newBooklists = 0;
+    $scope.newGroups = 0;
+    $scope.newUsers = 0;
+    $scope.totalUsers = 0;
+    
     $scope.getReviewComments = function() {
       $http.get('/api/comments/reviews/results/' + $scope.numResultsCommentsReview)
       .success(function (response) {
@@ -1190,8 +1196,60 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
         $scope.getTotalCommentsGroup();
     }
     
-    //call method
+    $scope.getNewsReviews = function() {
+      
+        $http.get('/api/reviews/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newReviews = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsBooklists = function() {
+      
+        $http.get('/api/booklists/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newBooklists = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsGroups = function() {
+      
+        $http.get('/api/groups/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newGroups = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsUsers = function() {
+      
+        $http.get('/api/users/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+
+    //call methods
     $scope.getTotalComments();
+    $scope.getNewsReviews();
+    $scope.getNewsBooklists();
+    $scope.getNewsGroups();
+    $scope.getNewsUsers();
+    $scope.getReviewComments();
+    $scope.getBooklistComments();
+    $scope.getGroupComments();
   }
 ]);
 
@@ -2719,7 +2777,6 @@ angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$
     };
     
     $scope.pageChanged = function () {
-        console.log('$scope.currentPage:' + $scope.currentPage);
         $scope.find();
     };
     
@@ -3492,10 +3549,10 @@ angular.module('reviews').factory('Reviews', ['$resource',
 // Configuring the Users module
 angular.module('users.admin').run(['Menus',
   function (Menus) {
-    Menus.addSubMenuItem('topbar', 'admin', {
+    /*Menus.addSubMenuItem('topbar', 'admin', {
       title: 'Usuarios',
       state: 'admin.users'
-    });
+    });*/
   }
 ]);
 
@@ -3507,7 +3564,8 @@ angular.module('users.admin.routes').config(['$stateProvider',
     $stateProvider
       .state('admin.users', {
         url: '/users',
-        templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
+        //templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/dashboard.users.client.view.html',
         controller: 'UserListController'
       })
       .state('admin.user', {
@@ -3643,33 +3701,66 @@ angular.module('users').config(['$stateProvider',
 
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin',
-  function ($scope, $filter, Admin) {
-    Admin.query(function (data) {
-      $scope.users = data;
-      $scope.buildPager();
-    });
-
-    $scope.buildPager = function () {
-      $scope.pagedItems = [];
-      $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
-      $scope.figureOutItemsToDisplay();
-    };
-
+angular.module('users.admin').controller('UserListController', ['$scope', '$filter', '$http', 'Admin',
+  function ($scope, $filter, $http, Admin) {
+    
     $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = $filter('filter')($scope.users, {
+      
+      $scope.pagedItems = $filter('filter')($scope.users, {
         $: $scope.search
       });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
     };
+    
+    $scope.pageChanged = function (page) {
+        $scope.currentPage = page;
+        $scope.find();
+    };
+    
+    
+    $scope.find = function () {
+        
+        var query = {page:$scope.currentPage,
+                     itemsPerPage:$scope.itemsPerPage};
 
-    $scope.pageChanged = function () {
-      $scope.figureOutItemsToDisplay();
+        Admin.query(query, function (data) {
+            $scope.users = data;
+            
+            $scope.pagedItems = $filter('filter')($scope.users, {
+                $: $scope.search
+            });
+        });
     };
+    
+    $scope.getTotalUsers = function() {
+      
+      $http.get('/api/users/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.totalUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
+    $scope.getNewUsers = function() {
+      
+      $http.get('/api/users/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
+    $scope.init = function(){
+        $scope.getNewUsers();
+        $scope.getTotalUsers();
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = 10;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
   }
 ]);
 

@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/groups/:groupId',
       permissions: '*'
     }, {
+      resources: '/api/groups/news/count',
+      permissions: ['get']
+    }, {
       resources: '/api/comments/groups',
       permissions: ['get']
     }, {

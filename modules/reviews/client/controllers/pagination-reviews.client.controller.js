@@ -19,7 +19,6 @@ angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$
     };
     
     $scope.pageChanged = function () {
-        console.log('$scope.currentPage:' + $scope.currentPage);
         $scope.find();
     };
     

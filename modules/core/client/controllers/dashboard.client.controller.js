@@ -29,6 +29,12 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.numResultsCommentsGroup = 10;
     $scope.numResultsCommentsBooklist = 10;
     
+    $scope.newReviews = 0;
+    $scope.newBooklists = 0;
+    $scope.newGroups = 0;
+    $scope.newUsers = 0;
+    $scope.totalUsers = 0;
+    
     $scope.getReviewComments = function() {
       $http.get('/api/comments/reviews/results/' + $scope.numResultsCommentsReview)
       .success(function (response) {
@@ -99,7 +105,59 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
         $scope.getTotalCommentsGroup();
     }
     
-    //call method
+    $scope.getNewsReviews = function() {
+      
+        $http.get('/api/reviews/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newReviews = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsBooklists = function() {
+      
+        $http.get('/api/booklists/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newBooklists = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsGroups = function() {
+      
+        $http.get('/api/groups/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newGroups = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+    $scope.getNewsUsers = function() {
+      
+        $http.get('/api/users/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newUsers = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }
+    
+
+    //call methods
     $scope.getTotalComments();
+    $scope.getNewsReviews();
+    $scope.getNewsBooklists();
+    $scope.getNewsGroups();
+    $scope.getNewsUsers();
+    $scope.getReviewComments();
+    $scope.getBooklistComments();
+    $scope.getGroupComments();
   }
 ]);

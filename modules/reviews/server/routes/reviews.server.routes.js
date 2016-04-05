@@ -16,6 +16,10 @@ module.exports = function (app) {
   app.route('/api/reviews/uuid/:uuid').all(reviewsPolicy.isAllowed)
      .get(reviews.listUuid);
      
+  // Reviews news count
+  app.route('/api/reviews/news/count').all(reviewsPolicy.isAllowed)
+     .get(reviews.countNewReviews);
+     
   // Reviews comments paginate
   app.route('/api/comments/reviews/results/:results').all(reviewsPolicy.isAllowed)
      .get(reviews.getComments);

@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/booklists/:booklistId',
       permissions: '*'
     }, {
+      resources: '/api/booklists/news/count',
+      permissions: ['get']
+    }, {
       resources: '/api/comments/booklists',
       permissions: ['get']
     }, {

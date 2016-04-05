@@ -60,7 +60,22 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
+  
+    var query = '{}';
+  
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    var per_page = 10;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=50){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
+  
+    User.find(query, '-salt -password')
+        .skip((page-1)*per_page).limit(per_page)
+        .sort('-created')
+        .populate('user', 'displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -69,6 +84,55 @@ exports.list = function (req, res) {
 
     res.json(users);
   });
+};
+
+/**
+* count new users
+**/
+exports.countNewUsers = function(req, res){
+ 
+    var d = new Date();
+    d.setDate(d.getDate()-7);
+
+    User.aggregate(
+      { $match: {'created': {$gt: d}, 'status': 'activo'}},
+      { $group : {
+          _id: null,
+          total : { $sum : 1 }
+      } })
+    .exec(function(err, newUsers) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.json(newUsers);
+        }
+    });
+};
+
+/**
+* count users
+**/
+exports.countUsers = function(req, res){
+ 
+    var d = new Date();
+    d.setDate(d.getDate()-7);
+
+    User.aggregate(
+      { $group : {
+          _id: null,
+          total : { $sum : 1 }
+      } })
+    .exec(function(err, users) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.json(users);
+        }
+    });
 };
 
 /**

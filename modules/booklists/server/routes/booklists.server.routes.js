@@ -12,6 +12,10 @@ module.exports = function (app) {
     .get(booklists.list)
     .post(booklists.create);
     
+  // Booklists news count
+  app.route('/api/booklists/news/count').all(booklistsPolicy.isAllowed)
+     .get(booklists.countNewBooklists);
+    
   // Booklists comments paginate
   app.route('/api/comments/booklists/results/:results').all(booklistsPolicy.isAllowed)
      .get(booklists.getComments);

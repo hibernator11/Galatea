@@ -20,6 +20,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/users/:userId',
       permissions: '*'
+    }, {
+      resources: '/api/users/news/count',
+      permissions: ['get']
+    }, {
+      resources: '/api/users/count',
+      permissions: ['get']
     }]
   }]);
 };
