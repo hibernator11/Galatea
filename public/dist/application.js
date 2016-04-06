@@ -3758,7 +3758,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
                     };
 
         Admin.query(query, function (data) {
-            console.log('data:' + data);
             $scope.users = data[0].users;
             $scope.totalResults = data[0].total;
             

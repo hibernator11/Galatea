@@ -75,8 +75,6 @@ exports.list = function (req, res) {
         query = { 'status' : req.query.status };
     }
     
-    console.log('query:' + query);
-    
     var order = '-created';
     if(req.query.order && req.query.order === 'asc'){
         order = '+created';
