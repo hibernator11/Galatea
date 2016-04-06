@@ -114,6 +114,10 @@
   content: '';
 }
 
+.dropdown-menu {
+    left: -60px;
+}
+
 .dropdown-menu li>a {
     clear: both;
     color: #66757f;
@@ -148,23 +152,6 @@
 .user-header-dropdown-toggle{
     margin-right: 10px;
 }
-
-/*.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    z-index: 900;
-    display: none;
-    float: left;
-    padding: 10px 0;
-    margin: 9px -7px 0 0;
-    background: #fff;
-    background-color: rgba(255,255,255,0.98);
-    border: 1px solid #e1e8ed;
-    border: 0 solid rgba(0,0,0,0.25);
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    background-clip: padding-box;
-}*/
 
 div.tooltip-inner {
     text-align: center;
@@ -254,61 +241,26 @@ span.rating {
 /* end rating */
 
 /* begin footer */
+body {
+    margin: 0 0 100px;
+}
 
-.footer-distributed {
-    background-color: #292c2f;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
-    box-sizing: border-box;
-    width: 100%;
-    text-align: left;
-    font: bold 16px sans-serif;
-    padding: 55px 50px;
-    margin-top: 80px;
-    z-index: 1000000000;
+footer {
     position: absolute;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    width: 100%;
 }
 
-.footer-distributed .footer-icons a {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
+.footer-icons {
+    margin-top: 8px;
+    padding: 3px 0px 0px 5px;
+}
+
+.footer-icons a {
     cursor: pointer;
-    background-color: #33383b;
-    border-radius: 2px;
-    font-size: 20px;
     color: #ffffff;
-    text-align: center;
-    margin-top: 5px;
-}
-
-.footer-distributed .footer-links {
-    color: #ffffff;
-    margin: 20px 0 12px;
-    padding: 0;
-}
-
-.footer-distributed h3 {
-    color: #ffffff;
-    font: normal 36px 'Cookie', cursive;
-    margin: 0;
-}
-
-.footer-distributed h3 span {
-    color: #B43C2C;
-}
-
-.footer-distributed .footer-links a {
-    display: inline-block;
-    line-height: 1.8;
-    text-decoration: none;
-    color: inherit;
-}
-
-.footer-distributed .footer-company-name, .footer-distributed .footer-company-name a {
-    color: #8f9296;
-    font-size: 14px;
-    font-weight: normal;
-    margin: 0;
 }
 
 /* end footer */
@@ -426,7 +378,7 @@ span.rating {
 .bs-callout code {
     border-radius: 3px;
 }
-.bs-callout+.bs-callout {
+.bs-callout {
     margin-top: -5px;
 }
 .bs-callout-default {
@@ -573,3 +525,12 @@ span.rating {
 .text-muted {
     font-size: 14px;
 }
+
+/* begin advanced search */
+.filter-col{
+    padding-left:10px;
+    padding-right:10px;
+    margin-right:0;
+    margin-top: 10px;
+}
+/* end advanced search */

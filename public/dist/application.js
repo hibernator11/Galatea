@@ -3717,6 +3717,25 @@ angular.module('users').config(['$stateProvider',
 
 angular.module('users.admin').controller('UserListController', ['$scope', '$filter', '$http', 'Admin',
   function ($scope, $filter, $http, Admin) {
+      
+    $scope.searchIsCollapsed = true;
+    
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "50", value : "50"},
+        {text : "100", value : "100"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Activo", value : "activo"},
+        {text : "Inactivo", value : "inactivo"}
+    ];
     
     $scope.figureOutItemsToDisplay = function () {
       
@@ -3730,14 +3749,18 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.find();
     };
     
-    
     $scope.find = function () {
-        
         var query = {page:$scope.currentPage,
-                     itemsPerPage:$scope.itemsPerPage};
+                     itemsPerPage:$scope.itemsPerPage,
+                     order:$scope.order,
+                     status:$scope.status,
+                     text:$scope.text
+                    };
 
         Admin.query(query, function (data) {
-            $scope.users = data;
+            console.log('data:' + data);
+            $scope.users = data[0].users;
+            $scope.totalResults = data[0].total;
             
             $scope.pagedItems = $filter('filter')($scope.users, {
                 $: $scope.search
@@ -3772,7 +3795,12 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.getTotalUsers();
         $scope.pagedItems = [];
         $scope.itemsPerPage = 10;
+        $scope.order = 'desc';
+        $scope.status = '';
+        $scope.text = '';
         $scope.currentPage = 1;
+        $scope.searchIsCollapsed = true;
+        
         $scope.find();
     }
   }
@@ -3853,7 +3881,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name, $state.previous.params);
+        $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -3873,7 +3901,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name, $state.previous.params);
+        $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });

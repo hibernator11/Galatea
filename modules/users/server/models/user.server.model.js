@@ -31,12 +31,14 @@ var UserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
+    index: true,
     default: '',
     validate: [validateLocalStrategyProperty, 'Por favor introduzca el nombre']
   },
   lastName: {
     type: String,
     trim: true,
+    index: true,
     default: '',
     validate: [validateLocalStrategyProperty, 'Por favor introduzca los apellidos']
   },
@@ -57,7 +59,8 @@ var UserSchema = new Schema({
     unique: 'El usuario ya existe',
     required: 'Por favor introduzca el campo usuario',
     lowercase: true,
-    trim: true
+    trim: true,
+    index: true
   },
   password: {
     type: String,

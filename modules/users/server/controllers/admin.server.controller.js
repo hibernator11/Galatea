@@ -62,28 +62,57 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   
     var query = '{}';
+    
+    if(req.query.status && req.query.text){
+        query = { 'status' : req.query.status,
+                  $text : { $search : req.query.text }
+                };
+    }
+    else if(req.query.text){
+        query = { $text : { $search : req.query.text } };
+    }
+    else if(req.query.status){
+        query = { 'status' : req.query.status };
+    }
+    
+    console.log('query:' + query);
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
   
     var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
     var per_page = 10;
-    if(req.query.itemsPerPage && req.query.itemsPerPage<=50){
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
         per_page = parseInt(req.query.itemsPerPage);
     }
   
     User.find(query, '-salt -password')
         .skip((page-1)*per_page).limit(per_page)
-        .sort('-created')
+        .sort(order)
         .populate('user', 'displayName').exec(function (err, users) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+        else{
+            User.find(query)
+                .distinct('_id')
+                .count( function (err, count) {
+                            var result = [{
+                               total : count,
+                               users: users
+                            }];
 
-    res.json(users);
-  });
+                            res.json(result);
+                         });
+        }
+    });
 };
 
 /**
