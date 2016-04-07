@@ -863,22 +863,35 @@ var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
 };
 'use strict';
 
-angular.module('booklists').controller('BooklistPaginationController', ['$scope', '$filter', 'Booklists',
-  function ($scope, $filter, Booklists) {
-    
-    $scope.init = function(status){
-        $scope.status = status;
-        $scope.pagedItems = [];
-        $scope.itemsPerPage = 10;
-        $scope.currentPage = 1;
-        $scope.find();
-    }
-    
-    $scope.figureOutItemsToDisplay = function () {
+angular.module('booklists').controller('BooklistPaginationController', ['$scope', 'Booklists',
+  function ($scope, Booklists) {
       
-      $scope.pagedItems = $filter('filter')($scope.booklists, {
-        $: $scope.search
-      });
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "30", value : "30"},
+        {text : "50", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
+        $scope.find();
     };
     
     $scope.pageChanged = function () {
@@ -886,21 +899,73 @@ angular.module('booklists').controller('BooklistPaginationController', ['$scope'
     };
       
     $scope.find = function () {
-        var query = '';
-        if($scope.status === 'public'){
-            query = {status:'public', page:$scope.currentPage};
-        }else{
-            query = {page:$scope.currentPage};
-        }
-
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+        
         Booklists.query(query, function (data) {
-            $scope.booklists = data[0].booklists;
+            $scope.pagedItems = data[0].booklists;
             $scope.total = data[0].total;
-            
-            $scope.pagedItems = $filter('filter')($scope.booklists, {
-                $: $scope.search
-            });
         });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('booklists').controller('BooklistUserPaginationController', ['$scope', '$http', 'Booklists', 
+  function ($scope, $http, Booklists) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "15", value : "10"},
+        {text : "30", value : "30"},
+        {text : "45", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.status = '';
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        $http.get('api/booklists/user').success(function (data) {
+            $scope.pagedItems = data[0].booklists;
+            $scope.total = data[0].total;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });                    
     };
   }
 ]);
@@ -1938,15 +2003,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.groups = Groups.query();
     };
 
-    // Find a list of groups with public status
-    $scope.findStatusPublic = function () {
-        $http.get('api/groups/public').success(function (response) {
-            $scope.groups = response;
-        }).error(function (response) {
-            $scope.error = response.message;
-        });
-    };
-
     // Find existing Group
     $scope.findOne = function () {
       $scope.group = Groups.get({
@@ -2527,22 +2583,46 @@ var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
 };
 'use strict';
 
-angular.module('groups').controller('GroupPaginationController', ['$scope', '$filter', 'Groups',
-  function ($scope, $filter, Groups) {
+angular.module('groups').controller('GroupPaginationController', ['$scope', 'Groups',
+  function ($scope, Groups) {
       
-    $scope.init = function(status){
-        $scope.status = status;
-        $scope.pagedItems = [];
-        $scope.itemsPerPage = 10;
-        $scope.currentPage = 1;
-        $scope.find();
-    }
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "30", value : "30"},
+        {text : "50", value : "50"}
+    ];
     
-    $scope.figureOutItemsToDisplay = function () {
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
       
-      $scope.pagedItems = $filter('filter')($scope.groups, {
-        $: $scope.search
-      });
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
+        $scope.type = '';
+        $scope.find();
+    };
+    
+    $scope.initTypeObra = function(itemsPerPage){
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
+        $scope.type = 'obra';
+        $scope.find();
     };
     
     $scope.pageChanged = function () {
@@ -2550,21 +2630,73 @@ angular.module('groups').controller('GroupPaginationController', ['$scope', '$fi
     };
       
     $scope.find = function () {
-        var query = '';
-        if($scope.status === 'public'){
-            query = {status:'public', page:$scope.currentPage};
-        }else{
-            query = {page:$scope.currentPage};
-        }
-
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      type:$scope.type,
+                      text:$scope.text
+                    };
+        
         Groups.query(query, function (data) {
-            $scope.groups = data[0].groups;
+            $scope.pagedItems = data[0].groups;
             $scope.total = data[0].total;
-            
-            $scope.pagedItems = $filter('filter')($scope.groups, {
-                $: $scope.search
-            });
         });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('booklists').controller('GroupUserPaginationController', ['$scope', '$http', 'Groups', 
+  function ($scope, $http, Groups) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "15", value : "10"},
+        {text : "30", value : "30"},
+        {text : "45", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.status = '';
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        $http.get('api/groups/user').success(function (data) {
+            $scope.pagedItems = data[0].groups;
+            $scope.total = data[0].total;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });                    
     };
   }
 ]);
@@ -2770,22 +2902,35 @@ ModalReviewReportInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "r
 
 'use strict';
 
-angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$filter', 'Reviews',
-  function ($scope, $filter, Reviews) {
+angular.module('reviews').controller('ReviewPaginationController', ['$scope', 'Reviews',
+  function ($scope, Reviews) {
+    
+    $scope.searchIsCollapsed = true;
       
-    $scope.init = function(status, itemsPerPage){
-        $scope.status = status;
+    $scope.optionsItemsPage = [
+        {text : "15", value : "15"},
+        {text : "30", value : "30"},
+        {text : "45", value : "45"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
         $scope.pagedItems = [];
         $scope.itemsPerPage = itemsPerPage;
         $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
         $scope.find();
-    }
-    
-    $scope.figureOutItemsToDisplay = function () {
-      
-      $scope.pagedItems = $filter('filter')($scope.reviews, {
-        $: $scope.search
-      });
     };
     
     $scope.pageChanged = function () {
@@ -2793,27 +2938,73 @@ angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$
     };
     
     $scope.find = function () {
-        if($scope.itemsPerPage === 0 || $scope.itemsPerPage > 50)
-            $scope.itemsPerPage = 15;
         
-        var query = '';
-        if($scope.status === 'public'){
-            query = {status:'public', 
-                     page:$scope.currentPage, 
-                     itemsPerPage:$scope.itemsPerPage};
-        }else{
-            query = {page:$scope.currentPage,
-                     itemsPerPage:$scope.itemsPerPage};
-        }
-
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+        
         Reviews.query(query, function (data) {
-            $scope.reviews = data[0].reviews;
+            $scope.pagedItems = data[0].reviews;
             $scope.total = data[0].total;
-            
-            $scope.pagedItems = $filter('filter')($scope.reviews, {
-                $: $scope.search
-            });
         });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('reviews').controller('ReviewUserPaginationController', ['$scope', '$http', 'Reviews', 
+  function ($scope, $http, Reviews) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "15", value : "15"},
+        {text : "30", value : "30"},
+        {text : "45", value : "45"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.status = '';
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        $http.get('api/reviews/user').success(function (data) {
+            $scope.pagedItems = data[0].reviews;
+            $scope.total = data[0].total;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });                    
     };
   }
 ]);
@@ -2978,13 +3169,13 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     // Find a list of Reviews with public status
-    $scope.findStatusPublic = function () {
+    /*$scope.findStatusPublic = function () {
         $http.get('api/reviews/public').success(function (response) {
             $scope.reviews = response;
         }).error(function (response) {
             $scope.error = response.message;
         });
-    };
+    };*/
 
     // Set update review
     $scope.updateReview = function () {
