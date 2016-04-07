@@ -36,6 +36,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/groups',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/groups/user',
+      permissions: ['get']
+    }, {
       resources: '/api/groups/:groupId',
       permissions: ['get']
     }, {
@@ -70,9 +73,6 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/groups/:groupId',
-      permissions: ['get']
-    }, {
-      resources: '/api/groups/public',
       permissions: ['get']
     }]
   }]);

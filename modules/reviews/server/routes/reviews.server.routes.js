@@ -28,18 +28,14 @@ module.exports = function (app) {
   app.route('/api/comments/reviews').all(reviewsPolicy.isAllowed)
      .get(reviews.countComments);   
 
-  // Reviews paginate
-  app.route('/api/reviews/page/:page').all(reviewsPolicy.isAllowed)
-     .get(reviews.reviewPaginate);
+  // Reviews by user paginate
+  app.route('/api/reviews/user').all(reviewsPolicy.isAllowed)
+     .get(reviews.listByUser);
      
   // Reviews add comment
   app.route('/api/reviews/addRating').all(reviewsPolicy.isAllowed)
     .post(reviews.addRating);
 
-  // Reviews public
-  app.route('/api/reviews/public').all(reviewsPolicy.isAllowed)
-     .get(reviews.listPublic);
-     
   // Reviews add comment
   app.route('/api/reviews/addComment').all(reviewsPolicy.isAllowed)
     .post(reviews.addComment);

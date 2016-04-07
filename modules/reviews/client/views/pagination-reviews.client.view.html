@@ -1,11 +1,8 @@
- <section ng-controller="ReviewPaginationController" ng-init="init('public', 15)">
+ <section ng-controller="ReviewPaginationController" ng-init="init(15)">
   <div class="page-header">
     <div class="container">
       <div class="col-md-4">
         <h1>Reseñas</h1>
-      </div>
-      <div class="col-md-4" style="margin-top: 2em">
-        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Filtrar resultados..." ng-change="figureOutItemsToDisplay()" />
       </div>
     </div>
   </div>
@@ -37,6 +34,50 @@
             </li>
         </ul>
     </div>
+        
+        
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+            <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <label class="filter-col" for="pref-search">Texto:</label>
+                                <input type="text" class="form-control input-sm" id="pref-search" ng-model="text">
+                            </div><!-- form group [search] -->
+                            <div class="form-group">
+                                <label class="filter-col" for="pref-orderby">Orden:</label>
+                                <select id="pref-orderby" class="form-control" ng-model="order">
+                                    <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
+                                </select> 
+                            </div> <!-- form group [order by] --> 
+                            <!--<div class="form-group">
+                                <label class="filter-col" for="pref-status">Estado:</label>
+                                <select id="pref-status" class="form-control" ng-model="status">
+                                    <option ng-repeat="x in optionsStatus" value="{{x.value}}">{{x.text}}</option>
+                                </select> 
+                            </div> <!-- form group [status] --> 
+                            <div class="form-group">
+                                <label class="filter-col" for="pref-perpage">Elementos página:</label>
+                                <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
+                                    <option ng-repeat="x in optionsItemsPage" value="{{x.value}}">{{x.text}}</option>
+                                </select> 
+                            </div> <!-- form group [rows] -->
+                            <button ng-click="find()" class="btn btn-danger" style="margin-top: 4px;">
+                                <span class="glyphicon glyphicon-search"></span> Buscar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" style="margin-bottom:10px;" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+                <span class="glyphicon glyphicon-cog"></span> Búsqueda avanzada
+            </button>
+        </div>
+    </div>
+        
         
     <div style="margin-top: 20px" class="row" scroll-container>
         <div ng-repeat="review in pagedItems" ng-class="{ '': $index <= 5, 'hideme': $index > 5 }" class="col-md-4"  ui-sref="reviews.view({reviewId: review._id})" flip ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">

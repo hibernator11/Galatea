@@ -3,7 +3,23 @@
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Lista de obras</h1>
-        <h2>{{ booklist.title | htmlLimit: 200 }}</h2>
+        <h3>{{ booklist.title | htmlLimit: 300 }}</h3>
+        <div class="row visible-xs">
+            <div class="col-xs-12">
+                <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="booklist.user.displayName"></span>
+            </div>
+            <div class="col-xs-12" style="margin-top:10px;">
+                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
+        <div class="row visible-sm visible-md visible-lg">
+            <div class="col-xs-12">
+                <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="booklist.user.displayName"></span>
+                <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
     </div>
   </div>    
     

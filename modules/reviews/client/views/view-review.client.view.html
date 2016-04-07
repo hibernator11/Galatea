@@ -3,12 +3,29 @@
   <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
+        <div class="row visible-xs">
+            <div class="col-xs-12">
+                <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="review.user.displayName"></span>
+            </div>
+            <div class="col-xs-12" style="margin-top:10px;">
+                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
+        <div class="row visible-sm visible-md visible-lg">
+            <div class="col-xs-12">
+                <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="review.user.displayName"></span>
+                <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
     </div>
   </div>    
     
     <div class="container">    
         <div class="row">
-             <div class="col-md-12 col-xs-12">
+            
+             <div class="col-md-12">
                  <ul class="profileNav-list">
                      <li class="profileNav-item pull-left">
                          <span class="profileNav-label">Comentarios</span>
@@ -22,10 +39,10 @@
                          <span class="profileNav-label">Publicado</span>
                          <span class="profileNav-value" data-is-compact="false">{{review.status === 'public' ? 'Si' : 'No' }}</span>
                      </li>
-                     <li class="profileNav-item pull-right" ng-if="authentication.user._id === review.user._id">
+                     <li class="profileNav-item pull-right hidden-xs" ng-if="authentication.user._id === review.user._id">
                         <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="reviews.edit({reviewId: review._id})" class="btn btn-danger"><i class="fa fa-pencil"></i> Editar</a> 
                      </li>
-                     <li class="profileNav-item pull-right" ng-show="review.status === 'draft'">
+                     <li class="profileNav-item pull-right hidden-xs" ng-show="review.status === 'draft'">
                         <a tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                      </li>
                      <li class="profileNav-item pull-right" >
@@ -69,8 +86,10 @@
       </div>
 
       <div class="alert alert-warning row" ng-show="review.status === 'draft' && warningopen">
-        <div class="col-xs-10"><strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.</div>
-        <div class="col-xs-2"><button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button></div>
+        <button ng-click="warningopen = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
+        <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+        <!--<div class="col-xs-2"><button ng-click="setPublicStatus()" href="#" class="btn btn-xs btn-warning pull-right" >Publicar</button></div>-->
+        
       </div>
         
       <div class="alert alert-warning" ng-show="error">
@@ -81,10 +100,10 @@
      <hr>
      <div class="row">
        <div class="col-md-9">
-         <h1 class="title">{{ review.title | htmlLimit: 200 }}</h1>
-         <h4 style="color:#B43C2C" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
+         <h3 class="title">{{ review.title }}</h3>
+         <h4 class="authors" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
          <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-         <h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>
+         <!--<h3 style="font-style:italic">Por <span ng-bind="review.user.displayName"></span> el <span ng-bind="review.created | date:'dd/MM/yyyy'"></span></h3>-->
 
          <div class="row">
              <div class="col-md-12 col-xs-12 social-links" ng-show="review.status === 'public'">
@@ -105,10 +124,16 @@
            <p style="margin-top:30px;" ng-bind-html="review.content | html"></p>
       </div> <!-- row -->
      
-      <div class="well well-sm col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 text-center">
-         <a ng-href="{{review.slug | mountRecord }}" target="_blank">
+      <div class="well well-sm col-sm-6 col-sm-offset-0 col-md-3 col-md-offset-0 hidden-xs text-center">
+         <a class="" ng-href="{{review.slug | mountRecord }}" target="_blank">
              <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="img-rounded img-responsive" />
          </a><br>
+         <a tooltip="Ver obra en catálogo" tooltip-placement="top" class="btn btn-danger btn-sm full-width" ng-href="{{review.slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
+         <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="bottom" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
+            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver más reseñas
+         </a>
+      </div>
+      <div class="visible-xs">
          <a tooltip="Ver obra en catálogo" tooltip-placement="top" class="btn btn-danger btn-sm full-width" ng-href="{{review.slug | mountRecord }}" target="_blank"><span class="glyphicon glyphicon-new-window"></span> Ver obra en catálogo</a>
          <a style="margin-top:3px" tooltip="Ver más reseñas de esta obra" tooltip-placement="bottom" ui-sref="reviews.uuid({uuid: review.uuid})" class="btn btn-danger btn-sm full-width">
             <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Ver más reseñas

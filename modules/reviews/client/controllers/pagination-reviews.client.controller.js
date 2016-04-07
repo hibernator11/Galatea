@@ -1,21 +1,34 @@
 'use strict';
 
-angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$filter', 'Reviews',
-  function ($scope, $filter, Reviews) {
+angular.module('reviews').controller('ReviewPaginationController', ['$scope', 'Reviews',
+  function ($scope, Reviews) {
+    
+    $scope.searchIsCollapsed = true;
       
-    $scope.init = function(status, itemsPerPage){
-        $scope.status = status;
+    $scope.optionsItemsPage = [
+        {text : "15", value : "15"},
+        {text : "30", value : "30"},
+        {text : "45", value : "45"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
         $scope.pagedItems = [];
         $scope.itemsPerPage = itemsPerPage;
         $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
         $scope.find();
-    }
-    
-    $scope.figureOutItemsToDisplay = function () {
-      
-      $scope.pagedItems = $filter('filter')($scope.reviews, {
-        $: $scope.search
-      });
     };
     
     $scope.pageChanged = function () {
@@ -23,26 +36,17 @@ angular.module('reviews').controller('ReviewPaginationController', ['$scope', '$
     };
     
     $scope.find = function () {
-        if($scope.itemsPerPage === 0 || $scope.itemsPerPage > 50)
-            $scope.itemsPerPage = 15;
         
-        var query = '';
-        if($scope.status === 'public'){
-            query = {status:'public', 
-                     page:$scope.currentPage, 
-                     itemsPerPage:$scope.itemsPerPage};
-        }else{
-            query = {page:$scope.currentPage,
-                     itemsPerPage:$scope.itemsPerPage};
-        }
-
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+        
         Reviews.query(query, function (data) {
-            $scope.reviews = data[0].reviews;
+            $scope.pagedItems = data[0].reviews;
             $scope.total = data[0].total;
-            
-            $scope.pagedItems = $filter('filter')($scope.reviews, {
-                $: $scope.search
-            });
         });
     };
   }

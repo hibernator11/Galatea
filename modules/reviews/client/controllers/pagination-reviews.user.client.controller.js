@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('booklists').controller('BooklistPaginationController', ['$scope', 'Booklists',
-  function ($scope, Booklists) {
-      
+angular.module('reviews').controller('ReviewUserPaginationController', ['$scope', '$http', 'Reviews', 
+  function ($scope, $http, Reviews) {
+    
     $scope.searchIsCollapsed = true;
       
     $scope.optionsItemsPage = [
-        {text : "10", value : "10"},
+        {text : "15", value : "15"},
         {text : "30", value : "30"},
-        {text : "50", value : "50"}
+        {text : "45", value : "45"}
     ];
     
     $scope.optionsOrder = [
@@ -23,18 +23,17 @@ angular.module('booklists').controller('BooklistPaginationController', ['$scope'
     ];
       
     $scope.init = function(itemsPerPage){
+        $scope.status = '';
         $scope.pagedItems = [];
         $scope.itemsPerPage = itemsPerPage;
         $scope.currentPage = 1;
-        $scope.status = 'public';
-        $scope.order = 'desc';
         $scope.find();
-    };
+    }
     
     $scope.pageChanged = function () {
         $scope.find();
     };
-      
+    
     $scope.find = function () {
         
         var query = { page:$scope.currentPage,
@@ -43,11 +42,13 @@ angular.module('booklists').controller('BooklistPaginationController', ['$scope'
                       status:$scope.status,
                       text:$scope.text
                     };
-        
-        Booklists.query(query, function (data) {
-            $scope.pagedItems = data[0].booklists;
+                    
+        $http.get('api/reviews/user').success(function (data) {
+            $scope.pagedItems = data[0].reviews;
             $scope.total = data[0].total;
-        });
+        }).error(function (response) {
+            $scope.error = response.message;
+        });                    
     };
   }
 ]);

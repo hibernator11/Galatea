@@ -3,7 +3,23 @@
 <div class="page-header">
     <div class="container">
         <h1><i class="fa fa-users"></i> Grupo</h1>
-        <h2>{{ group.name | htmlLimit: 200 }}</h2>
+        <h3>{{ group.name | htmlLimit: 300 }}</h3>
+        <div class="row visible-xs">
+            <div class="col-xs-12">
+                <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="group.user.displayName"></span>
+            </div>
+            <div class="col-xs-12" style="margin-top:10px;">
+                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
+        <div class="row visible-sm visible-md visible-lg">
+            <div class="col-xs-12">
+                <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="group.user.displayName"></span>
+                <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+            </div>
+        </div>
     </div>
   </div>    
     

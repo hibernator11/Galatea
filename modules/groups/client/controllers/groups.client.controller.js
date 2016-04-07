@@ -224,15 +224,6 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
         $scope.groups = Groups.query();
     };
 
-    // Find a list of groups with public status
-    $scope.findStatusPublic = function () {
-        $http.get('api/groups/public').success(function (response) {
-            $scope.groups = response;
-        }).error(function (response) {
-            $scope.error = response.message;
-        });
-    };
-
     // Find existing Group
     $scope.findOne = function () {
       $scope.group = Groups.get({

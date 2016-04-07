@@ -158,13 +158,13 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     };
 
     // Find a list of Reviews with public status
-    $scope.findStatusPublic = function () {
+    /*$scope.findStatusPublic = function () {
         $http.get('api/reviews/public').success(function (response) {
             $scope.reviews = response;
         }).error(function (response) {
             $scope.error = response.message;
         });
-    };
+    };*/
 
     // Set update review
     $scope.updateReview = function () {

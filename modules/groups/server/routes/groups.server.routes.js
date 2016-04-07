@@ -12,11 +12,7 @@ module.exports = function (app) {
     .get(groups.list)
     .post(groups.create);
 
-  // Groups paginate
-  app.route('/api/groups/page/:page').all(groupsPolicy.isAllowed)
-     .get(groups.groupPaginate);
-     
-    // Reviews news count
+  // Groups news count
   app.route('/api/groups/news/count').all(groupsPolicy.isAllowed)
      .get(groups.countNewGroups);   
      
@@ -54,9 +50,9 @@ module.exports = function (app) {
   app.route('/api/groups/addGuestMember').all(groupsPolicy.isAllowed)
      .post(groups.addGuestMember);
 
-  // Groups public
-  app.route('/api/groups/public').all(groupsPolicy.isAllowed)
-     .get(groups.listPublic);
+  // Groups by user paginate
+  app.route('/api/groups/user').all(groupsPolicy.isAllowed)
+     .get(groups.listByUser);     
 
   // Single group routes
   app.route('/api/groups/:groupId').all(groupsPolicy.isAllowed)

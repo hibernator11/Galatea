@@ -82,21 +82,39 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-    var query = '';
-    if(req.query.status){
-        query = {status:'public'};
-    }
-    else if(req.user){
-        query = {user:req.user};
-    }
-    
     var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
-    var per_page =10;
-  
-    Group.find(query).sort('-created').
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
+    
+    var query = {$and: []};
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: 'public'} // public/draft
+        );
+    }
+    if(req.query.type){
+        query.$and.push({
+            type: req.query.type} 
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Group.find(query).sort(order).
             skip((page-1)*per_page).limit(per_page).
             populate('user', 'displayName').exec(function (err, groups) {
       if (err) {
@@ -104,7 +122,6 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-          
           Group.find(query)
             .distinct('_id')
             .count(function (err, count) {
@@ -113,59 +130,68 @@ exports.list = function (req, res) {
                  groups: groups
               }];
 
-          res.json(result);
+              res.json(result);
         }); 
       }
     });
 };
 
 /**
-* Paginate List group status public
+* Paginate List groups by user
 **/
-exports.listPublic = function(req, res){
- 
-    var query = {status:'public', type:'obra'};
-
-    Group.find(query).sort('-created').limit(6).populate('user', 'displayName').exec(function(err, groups) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.json(groups);
-        }
-    });
-};
-
-
-/**
-* Paginate List group
-**/
-exports.groupPaginate = function(req, res){
+exports.listByUser = function(req, res){
  
     var page = 1;
-    if(req.params.page){
-        page = req.params.page;
+    if(req.query.page){
+        page = req.query.page;
     }
-    var per_page =10;
-
-    var query = '';
-    if(req.user){
-        query = {user:req.user};
-
-        Group.find(query).sort('-created').skip((page-1)*per_page).limit(per_page).populate('user', 'displayName').exec(function(err, groups) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.json(groups);
-            }
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
+    
+    var query = {$and: []};
+    
+    query.$and.push({
+            user: req.user}
+        );
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: req.query.status} // public/draft
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Group.find(query).sort(order).
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, groups) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
         });
-    }else{
-        // if user is not logged in empty result
-        res.json({});
-    }
+      } else {
+          Group.find(query)
+            .distinct('_id')
+            .count(function (err, count) {
+              var result = [{
+                 total : count,
+                 groups: groups
+              }];
+
+              res.json(result);
+        }); 
+      }
+    });
 };
 
 /**
@@ -508,7 +534,7 @@ exports.groupByID = function (req, res, next, id) {
     });
   }
 
-  Group.findById(id).populate('user', 'displayName')
+  Group.findById(id).populate('user', 'displayName profileImageURL')
                     .populate('comments.user', 'displayName profileImageURL')
                     .populate('members.user', '_id displayName profileImageURL').exec(function (err, group) {
     if (err) {

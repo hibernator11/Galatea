@@ -18,7 +18,8 @@ var BooklistSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    required: 'El campo título no puede ser nulo'
+    required: 'El campo título no puede ser nulo',
+    index: true
   },
   description: {
     type: String,

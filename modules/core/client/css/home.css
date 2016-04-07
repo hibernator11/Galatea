@@ -115,7 +115,8 @@
 }
 
 .dropdown-menu {
-    left: -60px;
+    right: 0; 
+    left: auto;
 }
 
 .dropdown-menu li>a {
@@ -157,7 +158,8 @@ div.tooltip-inner {
     text-align: center;
     background-color: #505050;
     font-size: 13px;
-    padding:5px;
+    min-width: 100px;
+    max-width: 100%;
 }
 
 /* end dropdown */
@@ -534,3 +536,8 @@ footer {
     margin-top: 10px;
 }
 /* end advanced search */
+
+.authors {
+    color:#B43C2C;
+    font-weight: bold;
+}

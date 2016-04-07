@@ -36,6 +36,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/reviews',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/reviews/user',
+      permissions: ['get']
+    }, {
       resources: '/api/reviews/:reviewId',
       permissions: ['get']
     }, {

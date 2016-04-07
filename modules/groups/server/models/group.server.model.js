@@ -40,22 +40,26 @@ var GroupSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    required: 'El campo nombre no puede ser nulo'
+    required: 'El campo nombre no puede ser nulo',
+    index: true
   },
   themeName: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
+    index: true
   },
   authorName: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
+    index: true
   },
   title: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
+    index: true
   },
   reproduction: {
     type: String,

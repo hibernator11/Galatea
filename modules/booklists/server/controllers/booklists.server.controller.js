@@ -80,41 +80,111 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-  var query = '';
-  if(req.query.status){ 
-    query = { status:'public' };
-  }
-  else if(req.user){
-    query = { user:req.user };
-  }
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
     
-  var page = 1;
-  if(req.query.page){
-    page = req.query.page;
-  }
-  var per_page =10;
-  
-  Booklist.find(query).sort('-created').
-        skip((page-1)*per_page).limit(per_page).
-        populate('user', 'displayName').exec(function (err, booklists) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else {
-
-            Booklist.find(query)
+    var query = {$and: []};
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: 'public'} // public/draft
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Booklist.find(query).sort(order).
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, booklists) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+          Booklist.find(query)
             .distinct('_id')
             .count(function (err, count) {
               var result = [{
-                total : count,
-                booklists: booklists
+                 total : count,
+                 booklists: booklists
               }];
 
               res.json(result);
-            }); 
-          }
+        }); 
+      }
+    });
+};
+
+/**
+* Paginate List booklists by user
+**/
+exports.listByUser = function(req, res){
+ 
+var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
+    
+    var query = {$and: []};
+    
+    query.$and.push({
+            user: req.user}
+        );
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: req.query.status} // public/draft
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Booklist.find(query).sort(order).
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, booklists) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
         });
+      } else {
+          Booklist.find(query)
+            .distinct('_id')
+            .count(function (err, count) {
+              var result = [{
+                 total : count,
+                 booklists: booklists
+              }];
+
+              res.json(result);
+        }); 
+      }
+    });
 };
 
 /**
@@ -286,31 +356,7 @@ exports.booklistByID = function (req, res, next, id) {
     });
   }
   
-   /*var d = new Date();
-   d.setDate(d.getDate()-7);
-   
-   console.log('d:' + d);
-  
-   Booklist.aggregate([
-    { $match: {_id: mongoose.Types.ObjectId(id)}},
-    { $project: {
-        comments: {$filter: {
-            input: "$comments",
-            as: 'comment',
-            cond: {$lt: ['$$comment.created', new Date(new Date().setDate(new Date().getDate()-7))]}
-        }}
-    }}
-]).exec(function (err, result) {
-    if (err) {
-      return next(err);
-    } else if (!result) {
-      return res.status(404).send({
-        message: 'No book with that identifier has been found'
-      });
-    }
-    console.log('result:' + result[0]._id);*/
-    
-    Booklist.findById(id).populate('user', 'displayName')
+    Booklist.findById(id).populate('user', 'displayName profileImageURL')
                        .populate('comments.user', 'displayName profileImageURL')
                        .exec(function (err, booklist) {
     if (err) {
@@ -324,18 +370,4 @@ exports.booklistByID = function (req, res, next, id) {
 
     next();
    });
-
-  /*Booklist.findById(id).populate('user', 'displayName')
-                       .populate('comments.user', 'displayName profileImageURL')
-                       .exec(function (err, booklist) {
-    if (err) {
-      return next(err);
-    } else if (!booklist) {
-      return res.status(404).send({
-        message: 'No book with that identifier has been found'
-      });
-    }
-    req.booklist = booklist;
-    next();
-  });*/
 };

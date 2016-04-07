@@ -24,7 +24,8 @@ var ReviewSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    required: 'El campo título no puede ser nulo'
+    required: 'El campo título no puede ser nulo',
+    index: true
   },
   content: {
     type: String,
@@ -71,15 +72,18 @@ var ReviewSchema = new Schema({
   },
   reproduction:{
     type: String,
+    index: true
   },
   mediaType: {
     type: String,
+    index: true
   },
   language: {
     type: String,
   },
   authors: {
     type: String,
+    index: true
   },
   user: {
     type: Schema.ObjectId,

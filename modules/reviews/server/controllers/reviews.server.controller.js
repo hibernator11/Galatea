@@ -78,24 +78,34 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
 
-    var query = '';
-    if(req.query.status){
-        query = {status:'public'};
-    }
-    else if(req.user){
-        query = {user:req.user};
-    }
-    
     var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
-    var per_page = 10;
-    if(req.query.itemsPerPage && req.query.itemsPerPage<=50){
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
         per_page = parseInt(req.query.itemsPerPage);
     }
-  
-    Review.find(query).sort('-created').
+    
+    var query = {$and: []};
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: 'public'} // public/draft
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Review.find(query).sort(order).
             skip((page-1)*per_page).limit(per_page).
             populate('user', 'displayName').exec(function (err, reviews) {
       if (err) {
@@ -114,25 +124,6 @@ exports.list = function (req, res) {
               res.json(result);
         }); 
       }
-    });
-  
-};
-
-/**
-* Paginate List review status public
-**/
-exports.listPublic = function(req, res){
- 
-    var query = {status:'public'};
-
-    Review.find(query).sort('-created').limit(10).populate('user', 'displayName').exec(function(err, reviews) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.json(reviews);
-        }
     });
 };
 
@@ -161,33 +152,61 @@ exports.listUuid = function(req, res){
 };
 
 /**
-* Paginate List review
+* Paginate List reviews by user
 **/
-exports.reviewPaginate = function(req, res){
+exports.listByUser = function(req, res){
  
-    var page = 1;
-    if(req.params.page){
-        page = req.params.page;
+var page = 1;
+    if(req.query.page){
+        page = req.query.page;
     }
-    var per_page =10;
-
-    var query = '';
-    if(req.user){
-        query = {user:req.user};
-
-        Review.find(query).sort('-created').skip((page-1)*per_page).limit(per_page).populate('user', 'displayName').exec(function(err, reviews) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.json(reviews);
-            }
+    var per_page = 15;
+    if(req.query.itemsPerPage && req.query.itemsPerPage<=100){
+        per_page = parseInt(req.query.itemsPerPage);
+    }
+    
+    var query = {$and: []};
+    
+    query.$and.push({
+            user: req.user}
+        );
+    
+    if(req.query.text){
+        query.$and.push({
+            $text : { $search : req.query.text }} 
+        );
+    }
+    if(req.query.status){
+        query.$and.push({
+            status: req.query.status} // public/draft
+        );
+    }
+    
+    var order = '-created';
+    if(req.query.order && req.query.order === 'asc'){
+        order = '+created';
+    }
+    
+    Review.find(query).sort(order).
+            skip((page-1)*per_page).limit(per_page).
+            populate('user', 'displayName').exec(function (err, reviews) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
         });
-    }else{
-        // if user is not logged in empty result
-        res.json({});
-    }
+      } else {
+          Review.find(query)
+            .distinct('_id')
+            .count(function (err, count) {
+              var result = [{
+                 total : count,
+                 reviews: reviews
+              }];
+
+              res.json(result);
+        }); 
+      }
+    });
 };
 
 /**
@@ -362,7 +381,7 @@ exports.reviewByID = function (req, res, next, id) {
     });
   }
 
-  Review.findById(id).populate('user', 'displayName')
+  Review.findById(id).populate('user', 'displayName profileImageURL')
                      .populate('comments.user', 'displayName profileImageURL').exec(function (err, review) {
     if (err) {
       return next(err);
