@@ -263,7 +263,7 @@ exports.getComments = function(req, res){
       { $group : {
           _id: { comment: "$comments", title: "$title", booklistId: "$_id"}
       } },
-      { $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
+      //{ $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
       { $sort : { created : -1 } },
       { $limit : limit*1 })
     .exec(function(err, comments) {

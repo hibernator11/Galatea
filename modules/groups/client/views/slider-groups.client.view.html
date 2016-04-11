@@ -12,7 +12,14 @@
       </div>
       <div class="caption">
         <h4>{{ group.name | htmlLimit: 200 }}</h4>
-        <p style="font-style: italic">por {{ group.user.displayName }}</p>
+        <div>
+            <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="list-profile-image" />
+            <span class="profileNav-label" ng-bind="group.user.displayName"></span>
+        </div>
+
+        <div class="profileNav-label" style="padding:10px;" >
+            <i class="fa fa-calendar"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+        </div>
         <p><a href="#" ui-sref="groups.view({groupId: group._id})" class="label label-danger" tooltip="Consultar el grupo" tooltip-placement="bottom">Ver</a>
         <a href="#" ui-sref="groups.view({groupId: group._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
       </div>

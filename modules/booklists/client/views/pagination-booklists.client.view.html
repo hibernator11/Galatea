@@ -81,17 +81,14 @@
         <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
           <h4 class="list-group-item-heading" ng-bind="booklist.title"></h4>
 
-          <small class="list-group-item-text">
-            Creada en
-            <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
-             por
-            <span ng-bind="booklist.user.displayName"></span>
-          </small>
-          <div>
-          <!--<span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}}</span>-->
-          <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}}</span>
-          </div> 
-          <span class="label label-pill label-danger pull-right">{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}}</span>
+          <p>
+            <span ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
+            <span ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
+            <span><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
+            <span><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>
+            <span>{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}} |</span>
+            <span><i class="fa fa-calendar"></i> {{booklist.created | date:'dd/MM/yyyy'}}</span>
+          </p>
 
           <ul class="list-inline">
             <li ng-repeat="tag in booklist.tags"><span class="label label-danger"><i class="glyphicon glyphicon-tag"></i> {{tag.name}}</span></li>

@@ -120,7 +120,7 @@ exports.list = function (req, res) {
     
     Group.find(query).sort(order).
             skip((page-1)*per_page).limit(per_page).
-            populate('user', 'displayName').exec(function (err, groups) {
+            populate('user', 'displayName profileImageURL').exec(function (err, groups) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
@@ -280,7 +280,7 @@ exports.getComments = function(req, res){
           { $group : {
               _id: { comment: "$comments", name: "$name", groupId: "$_id"}
           } },
-          { $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
+          //{ $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
           { $sort : { created : -1 } },
           { $limit : limit*1 })
         .exec(function(err, comments) {

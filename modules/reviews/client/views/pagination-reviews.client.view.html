@@ -85,7 +85,14 @@
           </div>
           <div class="caption">
             <h4>{{ review.title | htmlLimit: 200 }}</h4>
-            <p style="font-style: italic">por {{ review.user.displayName }}</p>
+            <div>
+                <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="list-profile-image" />
+                <span class="profileNav-label" ng-bind="review.user.displayName"></span>
+            </div>
+            
+            <div class="profileNav-label" style="padding:10px;" >
+                <i class="fa fa-calendar"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+            </div>
             <p><a href="#" ui-sref="reviews.view({reviewId: review._id})" class="label label-danger" tooltip="Leer la reseña" tooltip-placement="bottom">Leer</a>
             <a href="#" ui-sref="reviews.view({reviewId: review._id})" class="label label-warning" tooltip="Añadir comentario" tooltip-placement="bottom">Comentar</a></p>
           </div>
