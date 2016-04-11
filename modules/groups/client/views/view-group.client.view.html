@@ -102,10 +102,10 @@
                      </a>-->
                  </div>
                   
-                 <div ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
+                 <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
                      <carousel interval="myInterval" no-wrap="noWrapSlides">
                          <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
-                             <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;">
+                             <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
                              <!--<div class="carousel-caption"> 
                                 <p>{{slide.title | htmlLimit: 80}}</p>
                              </div>-->
