@@ -87,7 +87,11 @@ exports.list = function (req, res) {
         per_page = parseInt(req.query.itemsPerPage);
     }
     
-    var query = {$and: []};
+    var query = {};
+    
+    if(req.query.text || req.query.status){
+        query = {$and: []};
+    }
     
     if(req.query.text){
         query.$and.push({

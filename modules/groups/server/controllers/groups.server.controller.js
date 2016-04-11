@@ -91,7 +91,11 @@ exports.list = function (req, res) {
         per_page = parseInt(req.query.itemsPerPage);
     }
     
-    var query = {$and: []};
+    var query = {};
+    
+    if(req.query.text || req.query.status || req.query.type){
+        query = {$and: []};
+    }
     
     if(req.query.text){
         query.$and.push({
@@ -151,7 +155,6 @@ exports.listByUser = function(req, res){
     }
     
     var query = {$and: []};
-    
     query.$and.push({
             user: req.user}
         );
