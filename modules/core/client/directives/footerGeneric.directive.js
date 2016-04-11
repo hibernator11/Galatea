@@ -6,7 +6,7 @@ angular.module('core')
 function footerGeneric () {
     return {
         restrict: 'EA',
-        templateUrl: '/modules/core/client/views/footerGeneric.template.html'
+        templateUrl: '/modules/core/client/views/footer.template.html'
     };
 }
 

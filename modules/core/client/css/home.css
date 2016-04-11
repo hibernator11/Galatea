@@ -13,7 +13,7 @@
 }
 
 .social-links {
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .booklist-description {
@@ -472,12 +472,12 @@ footer {
     color:grey;
 }
 
-.profileNav-list {
+/*.profileNav-list {
     margin: 0;
     list-style: none;
     padding: 0;
     margin-bottom: 10px;
-}
+}*/
 
 .profileNav-item {
     display: inline-block;
@@ -541,3 +541,4 @@ footer {
     color:#B43C2C;
     font-weight: bold;
 }
+

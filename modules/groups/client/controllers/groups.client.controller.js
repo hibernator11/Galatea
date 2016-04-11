@@ -470,7 +470,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     // Find existing Books in BVMC catalogue
     $scope.getWork = function(val) {
 
-        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/entidaddocumental/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 30
@@ -526,7 +526,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     
     $scope.getAuthor = function(val) {
 
-        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/autoridad/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 10,
@@ -553,7 +553,7 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     
     // Find existing Subjects in BVMC catalogue
     $scope.getSubject = function(val) {
-        return $http.jsonp('//app.pre.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
             params: {
                 q: val,
                 maxRows: 10
