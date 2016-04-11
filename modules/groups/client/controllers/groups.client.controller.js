@@ -69,10 +69,9 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
             $scope.showThemePanel = false;
                         
             // load booklists
-            $http.get('/api/booklists')
+            $http.get('/api/booklists/user')
                 .success(function(data) {
                     $scope.booklists = data[0].booklists;
-                    console.log(data);
                 })
                 .error(function(data) {
                     console.log('Error: ' + data);

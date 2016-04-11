@@ -240,9 +240,9 @@
                               <a ng-repeat="comment in commentsReview" ui-sref="reviews.view({reviewId: comment._id.reviewId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
-                                <small>
+                                <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
-                                </small>
+                                </small>-->
                               </a> 
                             </div>
 
@@ -274,9 +274,9 @@
                               <a ng-repeat="comment in commentsBooklist" ui-sref="booklists.view({booklistId: comment._id.booklistId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
-                                <small>
+                                <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
-                                </small>
+                                </small>-->
                               </a> 
                             </div>
 
@@ -307,9 +307,9 @@
                               <a ng-repeat="comment in commentsGroup" ui-sref="groups.view({groupId: comment._id.groupId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
-                                 <small>
+                                <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
-                                </small>
+                                </small>-->
                               </a> 
                             </div>
 

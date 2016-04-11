@@ -288,7 +288,7 @@ exports.getComments = function(req, res){
       } },
       { $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
       { $sort : { created : -1 } },
-      { $limit : limit*1 })//.populate('user', 'displayName')
+      { $limit : limit*1 })
     .exec(function(err, comments) {
         if (err) {
             return res.status(400).send({
