@@ -567,7 +567,7 @@ exports.sendEmailReport = function (req, res, next) {
     function (emailHTML, subject, done) {
 
       var mailOptions = {
-        to: config.mailer.from,
+        to: config.mailer.from.report,
         from: config.mailer.from,
         subject: subject,
         html: emailHTML
