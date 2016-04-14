@@ -1,0 +1,46 @@
+<div style="width:600mm;" id="printSection">
+    
+    <img src="http://www.cervantesvirtual.com/images/cabecera2.jpg" alt="" class="print"/>
+    
+    <h1>Lista de libros</h1>
+    <h2>{{ booklist.title | htmlLimit: 200 }}</h2>
+    <h4 ng-show="booklist.description" style="font-weight:bold;">Descripción</h4>
+    <p ng-show="booklist.description">{{booklist.description}}</p>
+    <p>
+       <ul class="list-inline" ng-if="booklist.tags">
+         <li style="margin-top:10mm" ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+       </ul>
+    </p>
+    <hr>
+    
+    <div ng-repeat="book in booklist.books">
+        <dl>
+            <dt>Título:</dt>
+            <dd>{{book.title}}</dd>
+            <dt ng-show="book.authors">Autor:</dt>
+            <dd ng-show="book.authors" ng-bind="book.authors" ></dd>
+            <dt ng-show="book.reproduction">Reproducción:</dt>
+            <dd ng-show="book.reproduction" ng-bind="book.reproduction" ></dd>
+            <dt ng-show="book.language">Idioma:</dt>
+            <dd ng-show="book.language" ng-bind="book.language" ></dd>
+            <dt ng-show="book.mediaType">Tipo:</dt>
+            <dd ng-show="book.mediaType" ng-switch on="book.mediaType">
+               <span ng-switch-when="audio">
+                 <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
+               </span>
+               <span ng-switch-when="video">
+                 <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
+               </span>
+               <span ng-switch-when="texto">
+                 <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
+               </span>
+               <span ng-switch-default>
+                 {{book.mediaType}}
+               </span>
+            </dd>
+            <dt ng-show="book.comments">Comentarios</dt>
+            <dd ng-show="book.comments" ng-bind="book.comments" ></dd>
+        </dl>
+        <hr>
+     </div> <!-- repeat books -->
+</div>

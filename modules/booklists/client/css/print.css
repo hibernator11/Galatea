@@ -1,0 +1,63 @@
+@media screen {
+    #printSection {
+        display: none;
+    }
+}
+
+@media print {
+    body * {
+        visibility:hidden;
+        padding: 0 0 30pt 0;
+    }
+   
+    #printSection, #printSection * {
+        visibility:visible;
+    }
+    #printSection {
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+    }
+    
+    #printSection h1 {
+        font-size:100px;
+    }
+    
+    #printSection h2 {
+        font-size:50px;
+    }
+    #printSection h3 {
+        font-size:40px;
+    }
+    #printSection h4 {
+        font-size:35px;
+    }
+    #printSection p {
+        font-size:35px;
+    }
+    #printSection span {
+        font-size:40px;
+    }
+    header nav, footer {
+        display: none;
+    }
+    
+    dt {
+        font-size: 45px;
+        font-weigth: bold;
+    }
+    
+    dd {
+        font-size: 45px;
+    }
+    
+    @page {
+        margin: 2cm;
+    }
+    
+    .print-language{
+        font-size: 30px !important;
+    }
+}
+

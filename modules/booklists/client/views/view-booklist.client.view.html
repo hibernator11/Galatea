@@ -50,6 +50,9 @@
                          <li>
                            <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
                          </li>
+                         <!--<li>
+                           <a ng-print print-element-id="printSection"><i class="glyphicon glyphicon-print"></i> Imprimir</a>
+                         </li>-->
                          <li ng-show="authentication.user._id === booklist.user._id"> 
                            <a ui-sref="booklists.edit({booklistId: booklist._id})"><i class="glyphicon glyphicon-edit"></i> Editar lista</a>
                          </li>
@@ -100,7 +103,9 @@
       </div>
 
       <hr>
-
+      
+      <!--<div ng-include src="'modules/booklists/client/views/templates/booklists.print.template.html'"></div> -->
+      
       <div class="booklist-description row">
         <div class="col-sm-4 col-md-4 col-xs-12 pull-right">
             <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
@@ -120,9 +125,9 @@
             <h3>{{ booklist.title | htmlLimit: 200 }}</h3>
             <h5 ng-show="booklist.description">Descripción</h5>
             <p ng-show="booklist.description"><small><em class="text-muted">{{booklist.description}}</em></small></p>
-            <div>
+            <div style="margin-top:10px">
               <ul class="list-inline" ng-if="booklist.tags">
-                <li ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+                <li style="margin-top:10px" ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
               </ul>
             </div>
         </div>
@@ -137,23 +142,24 @@
            </a>
          </div>
          <div class="col-sm-7 col-xs-9 col-md-8">
-           <h3 class="title">{{ book.title | htmlLimit: 200 }}</h3>
+           <h3 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h3>
+           <h4 ng-if="book.title.length > 200" class="title">{{ book.title }}</h4>
            <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
            <p class="text-muted" ng-show="book.reproduction">{{book.reproduction | htmlLimit: 200}}</p>
            <p class="text-muted">
              <span ng-show="book.language" class="label label-danger">{{book.language}}</span>
-             <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
+             <span class="label label-danger" ng-show="book.mediaType" ng-switch on="book.mediaType">
                 <span ng-switch-when="audio">
-                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
+                    <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
                 </span>
                 <span ng-switch-when="video">
-                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                    <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
                 </span>
                 <span ng-switch-when="texto">
-                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                    <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
                 </span>
                 <span ng-switch-default>
-                    {{review.mediaType}}
+                    {{book.mediaType}}
                 </span>
             </span>
            </p>
