@@ -281,7 +281,7 @@ exports.getComments = function(req, res){
               _id: { comment: "$comments", name: "$name", groupId: "$_id"}
           } },
           //{ $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
-          { $sort : { created : -1 } },
+          { $sort : { 'comments.created' : -1 } },
           { $limit : limit*1 })
         .exec(function(err, comments) {
             if (err) {
