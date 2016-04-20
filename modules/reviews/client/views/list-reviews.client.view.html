@@ -46,6 +46,7 @@
           <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
           <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 100"></p>
           <p class="text-muted">
+            <span><i class="glyphicon glyphicon-user"></i> {{review.user.displayName}} |</span> 
             <span ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
             <span ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
             <span><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
@@ -72,7 +73,7 @@
       </div> <!-- repeat -->
     </div>
     
-    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>    
+    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
 
     <div class="alert alert-warning text-center" ng-if="pagedItems" ng-show="pagedItems.length === 0">
         No ha creado ninguna reseña todavía, ¿<a ui-sref="reviews.create">desea crear una</a>?

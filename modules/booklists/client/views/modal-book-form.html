@@ -46,19 +46,18 @@
               <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
               <div class="row rating-desc">
                 <div class="col-md-12">
-                  <!--<span class="label label-danger" ng-show="language">{{language}}</span> -->
-                  <span class="label label-danger" ng-show="review.mediaType" ng-switch on="review.mediaType">
+                  <span class="label label-danger" ng-show="mediaType" ng-switch on="mediaType">
                     <span ng-switch-when="audio">
-                      <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}}
+                      <i class="glyphicon glyphicon-headphones"></i> {{mediaType}}
                     </span>
                     <span ng-switch-when="video">
-                      <i class="glyphicon glyphicon-film"></i> {{review.mediaType}}
+                      <i class="glyphicon glyphicon-film"></i> {{mediaType}}
                     </span>
                     <span ng-switch-when="texto">
-                      <i class="glyphicon glyphicon-book"></i> {{review.mediaType}}
+                      <i class="glyphicon glyphicon-book"></i> {{mediaType}}
                     </span>
                     <span ng-switch-default>
-                      {{review.mediaType}}
+                      {{mediaType}}
                     </span>
                   </span>
                 </div>

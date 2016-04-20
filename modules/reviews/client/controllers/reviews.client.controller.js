@@ -291,7 +291,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.messageok = '';
             $scope.error = response.data.message;
         });
-    };    
+    };
 
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {

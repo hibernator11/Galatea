@@ -1,0 +1,64 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Reseña</h3>
+    </div>
+    <div class="panel-body">
+        
+      <div class="row">
+        <div class="col-xs-12" style="margin-bottom: 20px;">
+            <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
+            <span ng-bind="review.user.displayName"></span>
+            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+            <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="admin.review-edit({reviewId: review._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+            <a ng-show="review.status !== 'blocked'" tooltip="Bloquear reseña" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+            <a ng-show="review.status === 'blocked'" tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+        </div>
+      </div>  
+      
+      <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-3">
+                <a ng-href="{{review.slug | mountRecord }}" target="_blank">
+                    <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
+                </a>
+            </div>  
+            <div class="col-sm-9 col-md-9 col-xs-9">
+                <h3 class="title">{{ review.title }}</h3>
+                <h4 class="authors" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
+                <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+                <p ng-bind-html="review.content | html"></p>
+            </div>
+        </div>
+        <hr>
+   
+        <div style="margin-top:20px;" ng-if="review.comments.length > 0">
+            <h4>Actividad reciente</h4>	
+
+            <div ng-repeat="comment in review.comments" class="media">
+                <div class="media-left">
+                  <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                </div>
+                <div class="media-body">
+                    <small>
+                    <em class="text-muted">
+                    Añadido el
+                    <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                     por
+                    <span ng-bind="comment.user.displayName"></span>
+                    </em>
+                    <a href="#" tooltip="Eliminar comentario"
+                       confirm="¿Estas seguro que deseas eliminar el comentario?"
+                       ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
+                    </small>
+                    <p>
+                        <a href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
+                            <pre>{{ comment.content || 'comentario vacío' }}</pre>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <hr>
+        </div> <!-- last comments -->
+        
+        
+    </div>
+</div>

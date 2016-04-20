@@ -39,7 +39,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var booklist = req.booklist;
   
-  if(req.booklist.user.id === req.user.id){
+  if(req.booklist.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
     booklist.title = req.body.title;
     booklist.description = req.body.description;
     booklist.tags = req.body.tags;
@@ -64,15 +64,21 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   var booklist = req.booklist;
 
-  booklist.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+  if(booklist.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
+    booklist.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(booklist);
+      }
+    });
+  }else{
+      return res.status(403).send({
+          message: 'No tiene permisos para borra la lista'
       });
-    } else {
-      res.json(booklist);
-    }
-  });
+  }
 };
 
 /**
@@ -89,11 +95,11 @@ exports.list = function (req, res) {
         per_page = parseInt(req.query.itemsPerPage);
     }
     
-    var query = {};
+    var query =  {$and: []};
     
-    if(req.query.text || req.query.status){
-        query = {$and: []};
-    }
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     
     if(req.query.text){
         query.$and.push({
@@ -149,8 +155,12 @@ var page = 1;
     
     var query = {$and: []};
     query.$and.push({
-            user: req.user}
-        );
+        user: req.user}
+    );
+    
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     
     if(req.query.text){
         query.$and.push({
@@ -355,9 +365,11 @@ exports.booklistByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Booklist is invalid'
+      message: 'La lista de obras no es correcta'
     });
   }
+  
+  console.log('viene  a booklistbyId controller server');
   
     Booklist.findById(id).populate('user', 'displayName profileImageURL')
                        .populate('comments.user', 'displayName profileImageURL')
@@ -366,7 +378,12 @@ exports.booklistByID = function (req, res, next, id) {
       return next(err);
     } else if (!booklist) {
       return res.status(404).send({
-        message: 'No book with that identifier has been found'
+        message: 'No se ha encontrado ninguna lsita de obras con el identificador recibido'
+      });
+    } else if (booklist.status === 'blocked' && (req.user === undefined || req.user === null || req.user.roles.indexOf("admin") <= 0)) {
+        
+      return res.status(403).send({
+        message: 'La lista de obras se encuentra bloqueada por el administrador'
       });
     }
     req.booklist = booklist;

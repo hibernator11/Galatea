@@ -107,6 +107,8 @@ angular.element(document).ready(function () {
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('booklists', ['ngTagsInput']);
+ApplicationConfiguration.registerModule('booklists.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('booklists.admin.routes', ['core.admin.routes']);
 
 'use strict';
 
@@ -119,11 +121,16 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('groups', ['ui.tinymce']);
+ApplicationConfiguration.registerModule('groups.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('groups.admin.routes', ['core.admin.routes']);
 
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('reviews', ['ui.tinymce']);
+ApplicationConfiguration.registerModule('reviews', ['ui.tinymce', "xeditable"]);
+ApplicationConfiguration.registerModule('reviews.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('reviews.admin.routes', ['core.admin.routes']);
+
 
 'use strict';
 
@@ -131,6 +138,44 @@ ApplicationConfiguration.registerModule('reviews', ['ui.tinymce']);
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
+
+'use strict';
+
+// Setting up route
+angular.module('booklists.admin.routes').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('admin.booklists', {
+        url: '/booklists',
+        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.booklists.client.view.html',
+        controller: 'BooklistListController'
+      })
+      .state('admin.booklist', {
+        url: '/booklists/:booklistId',
+        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.view-booklist.client.view.html',
+        controller: 'BooklistAdminController',
+        resolve: {
+          booklistResolve: ['$stateParams', 'Booklists', function ($stateParams, Booklists) {
+            return Booklists.get({
+              booklistId: $stateParams.booklistId
+            });
+          }]
+        }
+      })
+      .state('admin.booklist-edit', {
+        url: '/booklists/:booklistId/edit',
+        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.edit-booklist.client.view.html',
+        controller: 'BooklistAdminController',
+        resolve: {
+          booklistResolve: ['$stateParams', 'Booklists', function ($stateParams, Booklists) {
+            return Booklists.get({
+              booklistId: $stateParams.booklistId
+            });
+          }]
+        }
+      });
+  }
+]);
 
 'use strict';
 
@@ -207,6 +252,219 @@ angular.module('booklists').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
+  }
+]);
+
+'use strict';
+
+angular.module('booklists.admin').controller('BooklistAdminController', ['$scope', '$state', '$http', 'Authentication', 'booklistResolve',
+  function ($scope, $state, $http, Authentication, booklistResolve) {
+    $scope.authentication = Authentication;
+    $scope.booklist = booklistResolve;
+    
+    $scope.remove = function (booklist) {
+      if (confirm('¿Estás seguro que desea eliminar la lista?')) {
+        if (booklist) {
+          booklist.$remove();
+
+          $scope.booklists.splice($scope.booklists.indexOf(booklist), 1);
+        } else {
+          $scope.booklist.$remove(function () {
+            $state.go('admin.booklists');
+          });
+        }
+      }
+    };
+
+    $scope.update = function (isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'booklistForm');
+
+        return false;
+      }
+
+      var booklist = $scope.booklist;
+      
+      booklist.$update(function () {
+        $state.go('admin.booklist', {
+          booklistId: booklist._id
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/admin/booklists/removeComment',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.booklist.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.message = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.updateComment = function (commentId, data){
+        
+        $http({
+            url: 'api/admin/booklists/updateComment',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'commentId': commentId,
+                    'data' : data
+                  }
+        })
+        .then(function(response) {
+            // success
+            $scope.message = response.data.message;
+        },
+        function(response) { // optional
+            // failed
+            $scope.message = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setBlocked = function (){
+        
+        $http({
+            url: 'api/admin/booklists/setStatus',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'status' : 'blocked'}
+        })
+        .then(function(response) {
+            // success
+            $scope.message = response.data.message;
+            $scope.booklist.status = 'blocked';
+        },
+        function(response) { // optional
+            // failed
+            $scope.message = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setPublic = function (){
+        
+        $http({
+            url: 'api/admin/booklists/setStatus',
+            method: "POST",
+            data: { 'booklistId' : $scope.booklist._id,
+                    'status' : 'public'}
+        })
+        .then(function(response) {
+            // success
+            $scope.message = response.data.message;
+            $scope.booklist.status = 'public';
+        },
+        function(response) { // optional
+            // failed
+            $scope.message = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    // Find existing Subjects in BVMC catalogue
+    $scope.getSubject = function(val) {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+            params: {
+                q: val,
+                maxRows: 10
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+                var result = {
+                        name:item.nombre, 
+                        identifierSubject: item.id
+                    };
+                return result;
+            });
+        });
+    };
+    
+    // update Tag event
+    $scope.updateTag = function(val) {
+        
+        var booklist = $scope.booklist;
+
+        booklist.$update(function () {
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('booklists.admin').controller('BooklistListController', ['$scope', '$http', 'Booklists',
+  function ($scope, $http, Booklists) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "20", value : "20"},
+        {text : "50", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"},
+        {text : "Bloqueado", value : "blocked"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = '';
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = '';
+        $scope.order = 'desc';
+        $scope.find();
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        var config = {
+            params: query,
+            headers : {'Accept' : 'application/json'}
+        };            
+        
+        $http.get('api/admin/booklists', config).then(function(response) {
+            // process response here..
+            $scope.pagedItems = response.data.booklists;
+            $scope.total = response.data.total;
+          }, function(response) {
+            $scope.error = response.data.message;
+        });
+    };
   }
 ]);
 
@@ -630,27 +888,6 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
   }
 ]);
 
-angular.module('booklists').filter('filterComments', function() {
-    return function(items) {
-        var retn = [];
-        
-        var date = new Date();
-        date.setDate(date.getDate() - 7);
-        
-        angular.forEach(items, function(item){
-            
-            var dateComment =  new Date(item.created);
-            
-            if(dateComment < date && item.status === 'public'){
-              retn.push(item); 
-            }
-        });
-
-        return retn;
-    };
-});
-
-
 'use strict';
 
 // controller for modal book window
@@ -1056,10 +1293,23 @@ angular.module('booklists').directive('scrollContainer', ["$window", function($w
 }(window.angular));
 'use strict';
 
-//Booklists service used for communicating with the categories REST endpoints
+//Booklists service used for communicating with the booklists REST endpoints
 angular.module('booklists').factory('Booklists', ['$resource',
   function ($resource) {
     return $resource('api/booklists/:booklistId', {
+      booklistId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+//TODO this should be Booklists service
+angular.module('booklists.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/booklists/:booklistId', {
       booklistId: '@_id'
     }, {
       update: {
@@ -1226,6 +1476,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.newGroups = 0;
     $scope.newUsers = 0;
     $scope.totalUsers = 0;
+    $scope.totalReviews = 0;
     
     $scope.getReviewComments = function() {
       $http.get('/api/comments/reviews/results/' + $scope.numResultsCommentsReview)
@@ -1352,14 +1603,30 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
       });
     };
     
+    $scope.getTotalReviews = function() {
+      
+      $http.get('/api/reviews/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.totalReviews = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
 
     //call methods
-    $scope.getTotalComments();
+    
     $scope.getNewsReviews();
+    $scope.getTotalReviews();
+    
     $scope.getNewsBooklists();
     $scope.getNewsGroups();
+    
     $scope.getNewsUsers();
     $scope.getTotalUsers();
+    
+    $scope.getTotalComments();
     $scope.getReviewComments();
     $scope.getBooklistComments();
     $scope.getGroupComments();
@@ -1408,7 +1675,7 @@ angular.module('core')
 function footerGeneric () {
     return {
         restrict: 'EA',
-        templateUrl: '/modules/core/client/views/footer.template.html'
+        templateUrl: '/modules/core/client/views/footer.client.view.html'
     };
 }
 
@@ -1730,6 +1997,44 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 
 'use strict';
 
+// Setting up route
+angular.module('groups.admin.routes').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('admin.groups', {
+        url: '/groups',
+        templateUrl: 'modules/core/client/views/admin/groups/dashboard.groups.client.view.html',
+        controller: 'GroupListController'
+      })
+      .state('admin.group', {
+        url: '/groups/:groupId',
+        templateUrl: 'modules/core/client/views/admin/groups/dashboard.view-group.client.view.html',
+        controller: 'GroupAdminController',
+        resolve: {
+          groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {
+            return Groups.get({
+              groupId: $stateParams.groupId
+            });
+          }]
+        }
+      })
+      .state('admin.group-edit', {
+        url: '/groups/:groupId/edit',
+        templateUrl: 'modules/core/client/views/admin/groups/dashboard.edit-group.client.view.html',
+        controller: 'GroupAdminController',
+        resolve: {
+          groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {
+            return Groups.get({
+              groupId: $stateParams.groupId
+            });
+          }]
+        }
+      });
+  }
+]);
+
+'use strict';
+
 // Configuring the reviews module
 angular.module('groups').run(['Menus',
   function (Menus) {
@@ -1810,6 +2115,315 @@ angular.module('groups').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
+  }
+]);
+
+'use strict';
+
+angular.module('groups.admin').controller('GroupAdminController', ['$scope', '$state', '$http', 'Authentication', 'groupResolve',
+  function ($scope, $state, $http, Authentication, groupResolve) {
+    $scope.authentication = Authentication;
+    $scope.group = groupResolve;
+    
+    $scope.remove = function (group) {
+      if (confirm('¿Estás seguro que desea eliminar el grupo?')) {
+        if (group) {
+          group.$remove();
+
+          $scope.groups.splice($scope.groups.indexOf(group), 1);
+        } else {
+          $scope.group.$remove(function () {
+            $state.go('admin.groups');
+          });
+        }
+      }
+    };
+
+    $scope.update = function (isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'groupForm');
+
+        return false;
+      }
+
+      var group = $scope.group;
+      
+      group.$update(function () {
+        $state.go('admin.group', {
+          groupId: group._id
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/admin/groups/removeComment',
+            method: "POST",
+            data: { 'groupId' : $scope.group._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.group.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.updateComment = function (commentId, data){
+        
+        $http({
+            url: 'api/admin/groups/updateComment',
+            method: "POST",
+            data: { 'groupId' : $scope.group._id,
+                    'commentId': commentId,
+                    'data' : data
+                  }
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setBlocked = function (){
+        
+        $http({
+            url: 'api/admin/groups/setStatus',
+            method: "POST",
+            data: { 'groupId' : $scope.group._id,
+                    'status' : 'blocked'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.group.status = 'blocked';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setPublic = function (){
+        
+        $http({
+            url: 'api/admin/groups/setStatus',
+            method: "POST",
+            data: { 'groupId' : $scope.group._id,
+                    'status' : 'public'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.group.status = 'public';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.activateMember = function(item) {
+        $http({
+            url: 'api/admin/groups/setStatusMember',
+            method: "POST",
+            data: { 'groupId':  $scope.group._id,
+                    'userId' :  item.user._id,
+                    'status' :  'activo'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = "Usuario activado correctamente";
+            $scope.group = response.data;
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.deactivateMember = function(item) {
+        $http({
+            url: 'api/admin/groups/setStatusMember',
+            method: "POST",
+            data: { 'groupId':  $scope.group._id,
+                    'userId' :  item.user._id,
+                    'status' : 'inactivo'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = "Usuario bloqueado correctamente";
+            $scope.group = response.data;
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.getUsersLike = function(val) {
+        // load users like
+        return $http.get('/api/userslike/' + val)
+        .then(function(response){
+            return response.data.map(function(item){
+                var result = {
+                        displayName:item.displayName, 
+                        userId: item._id,
+                        profileImageURL: item.profileImageURL
+                    };
+                return result;
+            });
+        });
+               
+    };
+    
+    $scope.addMemberByAdminGroup = function(item) {
+      
+        var found = false;
+        for(var i = 0; i <  $scope.group.members.length; i++) {
+            if ($scope.group.members[i].user._id === item.userId) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found){
+
+            $http({
+                url: 'api/admin/groups/addGuestMember',
+                method: "POST",
+                data: { 'groupId':  $scope.group._id,
+                        'userId' :  item.userId}
+            })
+            .then(function(response) {
+
+                var Indata = {'toUserId': item.userId, 
+                          'subject': 'Te han invitado a un grupo',
+                          'message': 'Te han invitado a un grupo. Haz click en el siguiente enlace para aceptar la invitación.',
+                          'url': '/groups/accept/' + $scope.group._id};
+
+                $http.post('api/auth/sendEmail', Indata).success(function (response) {
+                    // Show user success message and clear form
+                    $scope.success = response.message;
+
+                }).error(function (response) {
+                    // Show user error message and clear form
+                    $scope.error = response.message;
+                });
+
+                // success
+                $scope.group = response.data;
+                $scope.messageok = "Solicitud enviada. El usuario debe aceptar tu invitación.";
+                $scope.memberName = '';
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.messageok = '';
+                $scope.error = response.data.message;
+            });
+
+        }else{
+            $scope.messageok = '';
+            $scope.error = 'El usuario ' + item.displayName + ' ya forma parte del grupo.';
+        }
+    };
+    
+    $scope.removeMember = function (item){
+        $http({
+            url: 'api/admin/groups/removeMember',
+            method: "POST",
+            data: { 'groupId' :  $scope.group._id,
+                    'userId'  :  item.user._id}
+        })
+        .then(function(response) {
+            // success
+            $scope.group = response.data;
+            $scope.messageok = "Usuario eliminado correctamente.";
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('groups.admin').controller('GroupListController', ['$scope', '$http', 'Groups',
+  function ($scope, $http, Groups) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "20", value : "20"},
+        {text : "50", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"},
+        {text : "Bloqueado", value : "blocked"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = '';
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = '';
+        $scope.order = 'desc';
+        $scope.find();
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        var config = {
+            params: query,
+            headers : {'Accept' : 'application/json'}
+        };            
+        
+        $http.get('api/admin/groups', config).then(function(response) {
+            // process response here..
+            $scope.pagedItems = response.data.groups;
+            $scope.total = response.data.total;
+          }, function(response) {
+            $scope.error = response.data.message;
+        });
+    };
   }
 ]);
 
@@ -2751,6 +3365,57 @@ angular.module('groups').factory('Groups', ['$resource',
   }
 ]);
 
+//TODO this should be Groups service
+angular.module('groups.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/groups/:groupId', {
+      groupId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('reviews.admin.routes').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('admin.reviews', {
+        url: '/reviews',
+        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.reviews.client.view.html',
+        controller: 'ReviewListController'
+      })
+      .state('admin.review', {
+        url: '/reviews/:reviewId',
+        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.view-review.client.view.html',
+        controller: 'ReviewAdminController',
+        resolve: {
+          reviewResolve: ['$stateParams', 'Reviews', function ($stateParams, Reviews) {
+            return Reviews.get({
+              reviewId: $stateParams.reviewId
+            });
+          }]
+        }
+      })
+      .state('admin.review-edit', {
+        url: '/reviews/:reviewId/edit',
+        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.edit-review.client.view.html',
+        controller: 'ReviewAdminController',
+        resolve: {
+          reviewResolve: ['$stateParams', 'Reviews', function ($stateParams, Reviews) {
+            return Reviews.get({
+              reviewId: $stateParams.reviewId
+            });
+          }]
+        }
+      });
+  }
+]);
+
 'use strict';
 
 // Configuring the reviews module
@@ -2833,6 +3498,192 @@ angular.module('reviews').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
+  }
+]);
+
+'use strict';
+
+angular.module('reviews.admin').controller('ReviewListController', ['$scope', '$http', 'Reviews',
+  function ($scope, $http, Reviews) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "20", value : "20"},
+        {text : "50", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"},
+        {text : "Bloqueado", value : "blocked"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = '';
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
+        $scope.find();
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        var config = {
+            params: query,
+            headers : {'Accept' : 'application/json'}
+        };            
+        
+        $http.get('api/admin/reviews', config).then(function(response) {
+            // process response here..
+            $scope.pagedItems = response.data.reviews;
+            $scope.total = response.data.total;
+          }, function(response) {
+            $scope.error = response.data.message;
+        });
+    };
+  }
+]);
+
+'use strict';
+angular.module('reviews.admin').run(["editableOptions", function (editableOptions) {editableOptions.theme = 'bs3'; }]);
+
+angular.module('reviews.admin').controller('ReviewAdminController', ['$scope', '$state', '$http', 'Authentication', 'reviewResolve',
+  function ($scope, $state, $http, Authentication, reviewResolve) {
+    $scope.authentication = Authentication;
+    $scope.review = reviewResolve;
+    
+    $scope.remove = function (review) {
+      if (confirm('¿Estás seguro que desea eliminar la reseña?')) {
+        if (review) {
+          review.$remove();
+
+          $scope.reviews.splice($scope.groups.indexOf(review), 1);
+        } else {
+          $scope.review.$remove(function () {
+            $state.go('admin.reviews');
+          });
+        }
+      }
+    };
+
+    $scope.update = function (isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'reviewForm');
+
+        return false;
+      }
+
+      var review = $scope.review;
+      
+      review.$update(function () {
+        $state.go('admin.review', {
+          reviewId: review._id
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/admin/reviews/removeComment',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.review.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.updateComment = function (commentId, data){
+        
+        $http({
+            url: 'api/admin/reviews/updateComment',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'commentId': commentId,
+                    'data' : data
+                  }
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setBlocked = function (){
+        
+        $http({
+            url: 'api/admin/reviews/setStatus',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'status' : 'blocked'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.review.status = 'blocked';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setPublic = function (){
+        
+        $http({
+            url: 'api/admin/reviews/setStatus',
+            method: "POST",
+            data: { 'reviewId' : $scope.review._id,
+                    'status' : 'public'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.review.status = 'public';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
   }
 ]);
 
@@ -3337,7 +4188,7 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.messageok = '';
             $scope.error = response.data.message;
         });
-    };    
+    };
 
      // Find existing Book by uuid in BVMC catalogue 
     $scope.getWorkJson = function() {
@@ -3773,6 +4624,19 @@ angular.module('reviews').factory('Reviews', ['$resource',
   }
 ]);
 
+//TODO this should be Reviews service
+angular.module('reviews.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/reviews/:reviewId', {
+      reviewId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
 'use strict';
 
 // Configuring the Users module
@@ -3794,12 +4658,12 @@ angular.module('users.admin.routes').config(['$stateProvider',
       .state('admin.users', {
         url: '/users',
         //templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
-        templateUrl: 'modules/core/client/views/admin/dashboard.users.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/users/dashboard.users.client.view.html',
         controller: 'UserListController'
       })
       .state('admin.user', {
         url: '/users/:userId',
-        templateUrl: 'modules/core/client/views/admin/dashboard.view-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/users/dashboard.view-user.client.view.html',
         //templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
         controller: 'UserController',
         resolve: {
@@ -3813,7 +4677,7 @@ angular.module('users.admin.routes').config(['$stateProvider',
       .state('admin.user-edit', {
         url: '/users/:userId/edit',
         //templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
-        templateUrl: 'modules/core/client/views/admin/dashboard.edit-user.client.view.html',
+        templateUrl: 'modules/core/client/views/admin/users/dashboard.edit-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {

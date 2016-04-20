@@ -12,3 +12,16 @@ angular.module('groups').factory('Groups', ['$resource',
     });
   }
 ]);
+
+//TODO this should be Groups service
+angular.module('groups.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/groups/:groupId', {
+      groupId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);

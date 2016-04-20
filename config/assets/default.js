@@ -7,7 +7,8 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/ng-tags-input/ng-tags-input.min.css',
-        'public/lib/font-awesome/css/font-awesome.min.css'
+        'public/lib/font-awesome/css/font-awesome.min.css',
+        'public/lib/angular-xeditable/dist/css/xeditable.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -22,7 +23,8 @@ module.exports = {
         'public/lib/ng-tags-input/ng-tags-input.min.js',
         'public/lib/tinymce-dist/tinymce.js',
         'public/lib/angular-ui-tinymce/src/tinymce.js',
-        'public/lib/jquery/dist/jquery.min.js'
+        'public/lib/jquery/dist/jquery.min.js',
+        'public/lib/angular-xeditable/dist/js/xeditable.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

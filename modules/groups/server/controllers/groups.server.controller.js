@@ -39,7 +39,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
     var group = req.group;
   
-    if(req.group.user.id === req.user.id){
+    if(req.group.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
         group.name = req.body.name;
         group.content = req.body.content;
         group.status = req.body.status;
@@ -66,15 +66,17 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   var group = req.group;
 
-  group.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(group);
-    }
-  });
+  if(group.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
+    group.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(group);
+      }
+    });
+  }
 };
 
 /**
@@ -91,11 +93,11 @@ exports.list = function (req, res) {
         per_page = parseInt(req.query.itemsPerPage);
     }
     
-    var query = {};
+    var query = {$and: []};
     
-    if(req.query.text || req.query.status || req.query.type){
-        query = {$and: []};
-    }
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     
     if(req.query.text){
         query.$and.push({
@@ -155,6 +157,10 @@ exports.listByUser = function(req, res){
     }
     
     var query = {$and: []};
+    
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     query.$and.push({
             user: req.user}
         );
@@ -461,8 +467,6 @@ exports.setStatusMember = function(req, res){
  
     if(req.user && req.body.groupId && req.body.userId && req.body.status){
         
-        console.log('req.body.userId:' + req.body.userId);
-        
         Group.update(
             {'_id': req.body.groupId, 'members.user': req.body.userId, 'user':req.user}, 
             {'$set': {
@@ -545,6 +549,11 @@ exports.groupByID = function (req, res, next, id) {
     } else if (!group) {
       return res.status(404).send({
         message: 'No group with that identifier has been found'
+      });
+    } else if (group.status === 'blocked' && (req.user === undefined || req.user === null || req.user.roles.indexOf("admin") <= 0)) {
+        
+      return res.status(403).send({
+        message: 'El grupo se encuentra bloqueado por el administrador'
       });
     }
     req.group = group;

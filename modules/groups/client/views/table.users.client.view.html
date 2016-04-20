@@ -34,7 +34,7 @@
                 </td>
                 <td class="hidden-xs visible-ms" style="width: 10%;">{{member.created | date:'dd/MM/yyyy'}}</td>
                 <td>
-                    <a href="#" confirm="Quiere eliminar este miembro?"
+                    <a href="#" confirm="¿Desea eliminar el miembro?"
                        tooltip="Eliminar usuario"
                        ng-click="removeMember(member)" 
                        ng-if="member.status !== 'invitado'"
@@ -44,7 +44,7 @@
                             <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                         </span>
                     </a>
-                    <a href="#" confirm="Quiere activar este miembro?" 
+                    <a href="#" confirm="¿Desea activar el miembro?" 
                        ng-if="member.status !== 'invitado' && member.status !== 'activo'"
                        ng-click="activateMember(member)" 
                        class="table-link danger">
@@ -53,7 +53,7 @@
                             <i class="fa fa-check fa-stack-1x fa-inverse"></i>
                         </span>
                     </a>
-                    <a href="#" confirm="Quiere bloquear a este miembro?" 
+                    <a href="#" confirm="¿Desea bloquear el miembro?" 
                        ng-if="member.status === 'activo'"
                        ng-click="deactivateMember(member)" 
                        class="table-link danger">

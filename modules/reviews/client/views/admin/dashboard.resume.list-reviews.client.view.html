@@ -1,10 +1,10 @@
-<div class="panel panel-default" ng-controller="ReviewPaginationController" ng-init="init()">
+<div class="panel panel-default" ng-controller="ReviewListController" ng-init="init()">
     <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i>Últimas reseñas</h3>
     </div>
     <div class="panel-body">
         <div class="list-group">
-          <a ng-repeat="review in pagedItems" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
+          <a ng-repeat="review in pagedItems" ui-sref="admin.review({reviewId: review._id})" class="list-group-item">
             <span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>         
             <div><span ng-bind="review.title | htmlLimit: 50"></span></div>
             <small>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="text-right">
-            <a href="#" ui-sref="reviews.search">Ver Reseñas <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" ui-sref="admin.reviews">Ver Reseñas <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

@@ -40,7 +40,7 @@ module.exports = function (app) {
      
   // Groups remove member
   app.route('/api/groups/removeMember').all(groupsPolicy.isAllowed)
-     .post(groups.removeMember);             
+     .post(groups.removeMember);
      
   // Groups add pending member
   app.route('/api/groups/addPendingMember').all(groupsPolicy.isAllowed)

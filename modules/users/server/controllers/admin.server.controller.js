@@ -143,9 +143,6 @@ exports.countNewUsers = function(req, res){
 **/
 exports.countUsers = function(req, res){
  
-    var d = new Date();
-    d.setDate(d.getDate()-7);
-
     User.aggregate(
       { $group : {
           _id: null,

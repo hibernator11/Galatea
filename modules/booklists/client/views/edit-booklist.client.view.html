@@ -10,10 +10,6 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
-      <div class="top-icons">
-          <a tooltip="Volver" tooltip-placement="top" ng-href="booklists/{{booklist._id}}"><i class="fa fa-arrow-left fa-2x"></i></a>
-      </div>
-
     <form name="booklistForm" class="form-horizontal" ng-submit="update(booklistForm.$valid)" ng-show="authentication.user._id === booklist.user._id" >
       <fieldset>
         <div class="well">

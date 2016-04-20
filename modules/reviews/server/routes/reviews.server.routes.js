@@ -20,6 +20,10 @@ module.exports = function (app) {
   app.route('/api/reviews/news/count').all(reviewsPolicy.isAllowed)
      .get(reviews.countNewReviews);
      
+  // Reviews count
+  app.route('/api/reviews/count')
+    .get(reviewsPolicy.isAllowed, reviews.countReviews);   
+     
   // Reviews comments paginate
   app.route('/api/comments/reviews/results/:results').all(reviewsPolicy.isAllowed)
      .get(reviews.getComments);

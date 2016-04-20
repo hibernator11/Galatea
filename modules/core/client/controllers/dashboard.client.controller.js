@@ -34,6 +34,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.newGroups = 0;
     $scope.newUsers = 0;
     $scope.totalUsers = 0;
+    $scope.totalReviews = 0;
     
     $scope.getReviewComments = function() {
       $http.get('/api/comments/reviews/results/' + $scope.numResultsCommentsReview)
@@ -160,14 +161,30 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
       });
     };
     
+    $scope.getTotalReviews = function() {
+      
+      $http.get('/api/reviews/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.totalReviews = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
+    
 
     //call methods
-    $scope.getTotalComments();
+    
     $scope.getNewsReviews();
+    $scope.getTotalReviews();
+    
     $scope.getNewsBooklists();
     $scope.getNewsGroups();
+    
     $scope.getNewsUsers();
     $scope.getTotalUsers();
+    
+    $scope.getTotalComments();
     $scope.getReviewComments();
     $scope.getBooklistComments();
     $scope.getGroupComments();

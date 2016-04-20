@@ -10,11 +10,11 @@ module.exports = function (app) {
   // User route registration first. Ref: #713
   require('./users.server.routes.js')(app);
   
-    // Users news count
+  // Users news count
   app.route('/api/users/news/count')
     .get(adminPolicy.isAllowed, admin.countNewUsers);
 
-    // Users news count
+  // Users count
   app.route('/api/users/count')
     .get(adminPolicy.isAllowed, admin.countUsers);
 

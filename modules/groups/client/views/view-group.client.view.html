@@ -128,8 +128,11 @@
          <div tab ng-show="authentication.user._id === group.user._id">
              <span tab-heading>Miembros</span>
              <div tab-content class="row">
-                 <div class="col-md-9 col-xs-12">
+                 <div class="col-md-9 col-xs-12" ng-if="group.members.length > 0">
                      <div ng-include src="'modules/groups/client/views/table.users.client.view.html'"></div>
+                 </div>
+                 <div class="col-md-9 col-xs-12" ng-if="group.members.length === 0">
+                     <p style="margin-top:10px;">El grupo no tiene miembros asociados</p>
                  </div>
                  <div class="col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2"
                       style="margin-top: 35px;">

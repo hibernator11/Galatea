@@ -127,7 +127,7 @@
             <p ng-show="booklist.description"><small><em class="text-muted">{{booklist.description}}</em></small></p>
             <div style="margin-top:10px">
               <ul class="list-inline" ng-if="booklist.tags">
-                <li style="margin-top:10px" ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-danger"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
+                <li style="margin-top:10px" ng-repeat="tag in booklist.tags track by $id(tag)"><span class="label label-default"><span class="glyphicon glyphicon-tag"></span> {{tag.name}}</span></li>
               </ul>
             </div>
         </div>
@@ -147,8 +147,8 @@
            <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
            <p class="text-muted" ng-show="book.reproduction">{{book.reproduction | htmlLimit: 200}}</p>
            <p class="text-muted">
-             <span ng-show="book.language" class="label label-danger">{{book.language}}</span>
-             <span class="label label-danger" ng-show="book.mediaType" ng-switch on="book.mediaType">
+             <span ng-show="book.language" class="label label-default">{{book.language}}</span>
+             <span class="label label-default" ng-show="book.mediaType" ng-switch on="book.mediaType">
                 <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
                 </span>
@@ -189,7 +189,7 @@
      
 
      <div ng-show="(booklist.comments).length > 0">
-      <h4>Últimos comentarios</h4>	
+      <h4>Actividad reciente</h4>	
 
       <div ng-repeat="comment in booklist.comments" class="media">
         <div class="media-left">

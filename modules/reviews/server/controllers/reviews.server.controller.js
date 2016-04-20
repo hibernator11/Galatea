@@ -39,7 +39,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var review = req.review;
 
-  if(req.review.user.id === req.user.id){
+  if(req.review.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
       review.title = req.body.title;
       review.content = req.body.content;
       review.status = req.body.status;
@@ -62,15 +62,21 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   var review = req.review;
 
-  review.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+  if(review.user.id === req.user.id || (req.user !== undefined && req.user !== null && req.user.roles.indexOf("admin") > 0)){
+    review.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(review);
+      }
+    });
+  }else{
+      return res.status(403).send({
+          message: 'No tiene permisos para borra la reseña'
       });
-    } else {
-      res.json(review);
-    }
-  });
+  }
 };
 
 /**
@@ -87,11 +93,11 @@ exports.list = function (req, res) {
         per_page = parseInt(req.query.itemsPerPage);
     }
     
-    var query = {};
+    var query = {$and: []};
     
-    if(req.query.text || req.query.status){
-        query = {$and: []};
-    }
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     
     if(req.query.text){
         query.$and.push({
@@ -172,8 +178,12 @@ var page = 1;
     var query = {$and: []};
     
     query.$and.push({
-            user: req.user}
-        );
+        user: req.user}
+    );
+
+    query.$and.push({
+        status: { $ne: "blocked" }}
+    );
     
     if(req.query.text){
         query.$and.push({
@@ -234,6 +244,27 @@ exports.countNewReviews = function(req, res){
             });
         } else {
             res.json(newReviews);
+        }
+    });
+};
+
+/**
+* count reviews
+**/
+exports.countReviews = function(req, res){
+ 
+    Review.aggregate(
+      { $group : {
+          _id: null,
+          total : { $sum : 1 }
+      } })
+    .exec(function(err, reviews) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            res.json(reviews);
         }
     });
 };
@@ -375,13 +406,13 @@ exports.addRating = function(req, res){
 };
 
 /**
- * Book middleware
+ * Review middleware
  */
 exports.reviewByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Review is invalid'
+      message: 'La reseña no es correcta'
     });
   }
 
@@ -391,7 +422,11 @@ exports.reviewByID = function (req, res, next, id) {
       return next(err);
     } else if (!review) {
       return res.status(404).send({
-        message: 'No book with that identifier has been found'
+        message: 'No se ha encontrado ninguna reseña con el identificador recibido'
+      });
+    } else if (review.status === "blocked" && (req.user === undefined || req.user === null || req.user.roles.indexOf("admin") <= 0)) {
+      return res.status(403).send({
+        message: 'La reseña se encuentra bloqueada por el administrador'
       });
     }
     req.review = review;

@@ -16,7 +16,7 @@ var ReviewSchema = new Schema({
   },
   status: {
     type: String,
-    enum : ['draft','public'],
+    enum : ['draft','public','blocked'],
     default: 'draft',
     required: 'El campo estado no puede ser nulo'
   },  

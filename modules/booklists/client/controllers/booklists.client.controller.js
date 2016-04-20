@@ -417,24 +417,3 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     };
   }
 ]);
-
-angular.module('booklists').filter('filterComments', function() {
-    return function(items) {
-        var retn = [];
-        
-        var date = new Date();
-        date.setDate(date.getDate() - 7);
-        
-        angular.forEach(items, function(item){
-            
-            var dateComment =  new Date(item.created);
-            
-            if(dateComment < date && item.status === 'public'){
-              retn.push(item); 
-            }
-        });
-
-        return retn;
-    };
-});
-

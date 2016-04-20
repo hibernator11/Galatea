@@ -12,3 +12,16 @@ angular.module('reviews').factory('Reviews', ['$resource',
     });
   }
 ]);
+
+//TODO this should be Reviews service
+angular.module('reviews.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/reviews/:reviewId', {
+      reviewId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);

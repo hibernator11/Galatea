@@ -1,0 +1,131 @@
+<section class="container-home" ng-controller="HeaderController">
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-click="toggleCollapsibleMenu()">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a ui-sref="admin.dashboard" class="navbar-brand">G<span>alatea Admin</span></a>
+        </div>
+        <div class="collapse navbar-collapse" collapse="!isCollapsed">
+            
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+              <li class="dropdown" dropdown>
+              <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+              </div>
+                <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
+                  <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
+                  <span ng-bind="authentication.user.displayName"></span> <span class="glyphicon glyphicon-menu-down"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.profile">Ver perfil</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.picture">Cambiar imagen de perfil</a>
+                  </li>
+                  <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
+                    <a ui-sref="settings.password">Cambiar contraseña</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li ui-sref-active="active">
+                    <a href="/booklists">Mis listas</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a href="/reviews">Mis reseñas</a>
+                  </li>
+                  <li ui-sref-active="active">
+                    <a href="/groups">Mis grupos</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li ui-sref-active="active">
+                    <a ui-sref="settings.accounts">Configuración</a>
+                  </li>
+                  <li>
+                    <a href="/api/auth/signout" target="_self">Cerrar sesión</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+              <li ui-sref-active="active">
+                <a class="global-nav" href="/reviews">Mis reseñas</a>
+              </li>
+              <li ui-sref-active="active">
+              <a class="global-nav" href="/booklists">Mis listas</a>
+              </li>
+              <li ui-sref-active="active">
+              <a class="global-nav" href="/groups">Mis grupos</a>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav side-nav">
+                <li>
+                    <a href="#" ui-sref="admin.dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#" ui-sref="admin.comments"><i class="fa fa-fw fa-comments"></i> Comentarios</a>
+                </li>
+                <li>
+                    <a href="#" ui-sref="admin.users"><i class="fa fa-fw fa-users"></i> Usuarios</a>
+                </li>
+                <li class="active">
+                    <a href="#" ui-sref="admin.reviews"><i class="fa fa-fw fa-book"></i> Reseñas</a>
+                </li>
+                <li>
+                    <a href="#" ui-sref="admin.booklists"><i class="fa fa-fw fa-list"></i> Listas</a>
+                </li>
+                <li>
+                    <a href="#" ui-sref="admin.groups"><i class="fa fa-fw fa-users"></i> Grupos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- /.navbar-collapse -->  
+
+            
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Reseñas</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-list"></i> <a href="#" ui-sref="admin.reviews">Reseñas</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-book"></i> Visor
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div ng-include="'modules/reviews/client/views/admin/dashboard.view-review.client.view.html'"></div>
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div> <!-- wrapper -->
+
+</section>

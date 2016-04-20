@@ -1,10 +1,10 @@
-<div class="panel panel-default" ng-controller="GroupPaginationController" ng-init="init()">
+<div class="panel panel-default" ng-controller="GroupListController" ng-init="init()">
     <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i>Últimos grupos</h3>
     </div>
     <div class="panel-body">
         <div class="list-group">
-          <a ng-repeat="group in pagedItems" ui-sref="groups.view({groupId: group._id})" class="list-group-item">
+          <a ng-repeat="group in pagedItems" ui-sref="admin.group({groupId: group._id})" class="list-group-item">
             <span class="badge" ng-bind="group.created | date:'dd/MM/yyyy'"></span>         
             <div><span ng-bind="group.name | htmlLimit: 50"></span></div>
             <small>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="text-right">
-            <a href="#" ui-sref="groups.search">Ver Grupos <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" ui-sref="admin.groups">Ver Grupos <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
