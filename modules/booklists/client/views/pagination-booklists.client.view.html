@@ -10,7 +10,7 @@
     <div class="container">
     
     <div class="row" ng-controller="BooklistsController">
-        <ul class="profileNav-list">
+        <ul class="profileNav-list hidden-xs">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Total listas</span>
                 <span class="profileNav-value" data-is-compact="false">{{total}}</span>
@@ -35,9 +35,19 @@
         </ul>
     </div>
         
+    <div class="row visible-xs">
+        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+            <button type="button" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</button> 
+            <!--<a tooltip="Mis listas" tooltip-placement="top" href="#" ui-sref="booklists.list" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis listas</a> -->
+            <button type="button" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+                <span class="glyphicon glyphicon-search"></span> Búsqueda
+            </button>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-            <button type="button" style="margin-bottom:10px;" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+            <button type="button" style="margin-bottom:10px;" class="btn btn-danger hidden-xs" ng-click="searchIsCollapsed = !searchIsCollapsed">
                 <span class="glyphicon glyphicon-search"></span> Búsqueda avanzada
             </button>
             <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
@@ -54,12 +64,6 @@
                                     <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
                                 </select> 
                             </div> <!-- form group [order by] --> 
-                            <!--<div class="form-group">
-                                <label class="filter-col" for="pref-status">Estado:</label>
-                                <select id="pref-status" class="form-control" ng-model="status">
-                                    <option ng-repeat="x in optionsStatus" value="{{x.value}}">{{x.text}}</option>
-                                </select> 
-                            </div> <!-- form group [status] --> 
                             <div class="form-group">
                                 <label class="filter-col" for="pref-perpage">Elementos página:</label>
                                 <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
@@ -79,20 +83,16 @@
     <div class="row">
       <div class="list-group col-xs-12">
         <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
-          <h4 class="list-group-item-heading" ng-bind="booklist.title"></h4>
-
+          <h4 class="list-group-item-heading" ng-bind="booklist.title | htmlLimit:200"></h4>
           <p>
+            <span><i class="glyphicon glyphicon-user"></i> {{review.user.displayName}} |</span>     
             <span ng-show="booklist.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
             <span ng-show="booklist.status === 'draft'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
             <span><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
-            <span><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>
+            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
             <span>{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}} |</span>
             <span><i class="fa fa-calendar"></i> {{booklist.created | date:'dd/MM/yyyy'}}</span>
           </p>
-
-          <ul class="list-inline">
-            <li style="margin-top:10px" ng-repeat="tag in booklist.tags"><span class="label label-default"><i class="glyphicon glyphicon-tag"></i> {{tag.name}}</span></li>
-          </ul>
         </a>
       </div>
     </div>

@@ -4,11 +4,11 @@
         <div class="container">
             <h1><i class="fa fa-pencil-square-o"></i> Reseña</h1>
             <div class="row visible-xs">
-                <div class="col-xs-12">
+                <div class="col-xs-12" style="text-align: center;">
                     <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
                     <span ng-bind="review.user.displayName"></span>
                 </div>
-                <div class="col-xs-12" style="margin-top:10px;">
+                <div class="col-xs-12" style="margin-top:10px;text-align: center;">
                     <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
                 </div>
             </div>
@@ -29,10 +29,10 @@
                     <span class="profileNav-label">Comentarios</span>
                     <span class="profileNav-value" data-is-compact="false">{{review.comments.length}}</span>
                 </li>
-                <li class="profileNav-item hidden-xs">
+                <!--<li class="profileNav-item hidden-xs">
                     <span class="profileNav-label">Valoraciones</span>
                     <span class="profileNav-value" data-is-compact="false">{{review.ratings.length}}</span>
-                </li>
+                </li>-->
                 <li ng-show="authentication.user._id === review.user._id" class="profileNav-item hidden-xs">
                     <span class="profileNav-label">Publicado</span>
                     <span class="profileNav-value" data-is-compact="false">{{review.status === 'public' ? 'Si' : 'No' }}</span>
@@ -45,7 +45,7 @@
                 </li>
                 <li class="profileNav-item pull-right" >
                    <span class="dropdown" dropdown>
-                       <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
+                       <a tooltip="Más acciones de usuario" tooltip-placement="left" href="" class="dropdown-toggle" dropdown-toggle>
                            <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
                        </a>
                        <ul class="dropdown-menu" dropdown-menu>
@@ -62,7 +62,7 @@
                            <a ng-show="review.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
                          </li>
                          <li ng-if="authentication.user._id === review.user._id">
-                           <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar la reseña?"><i class="glyphicon glyphicon-trash"></i> Eliminar reseña</a>
+                           <a ng-click="remove()" confirm="¿Estás seguro que deseas borrar la reseña?"><i class="glyphicon glyphicon-trash"></i> Eliminar reseña</a>
                          </li>
                          <li ng-if="authentication.user._id === review.user._id" class="divider"></li>
                          <li ng-if="authentication.user._id === review.user._id">
@@ -77,12 +77,12 @@
             </ul>
         </div>
 
-        <div class="alert alert-success col-xs-12" ng-show="messageok">
+        <div class="alert alert-success" ng-show="messageok">
             <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
             <strong>Resultado:</strong> {{messageok}}
         </div>
 
-        <div class="alert alert-warning row" ng-show="review.status === 'draft' && warningopen">
+        <div class="alert alert-warning" ng-show="review.status === 'draft' && warningopen">
             <button ng-click="warningopen = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
             <strong>Aviso:</strong> La reseña no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
         </div>
@@ -93,14 +93,59 @@
         </div>
 
         <hr>
-        <div class="row">
+        
+        <div class="hero-widget well well-sm visible-xs">
+            <div class="icon">
+                <img width="100px" ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+            </div>
+            <div class="text">
+                  <label class="text-muted">{{ review.title }}</label>
+                  <label class="text-muted authors">{{ review.authors }}</label>
+            </div>
+            <div class="options">
+                <ul class="profileNav-list" style="padding: 0px;">    
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                    </li>
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                    </li>
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="row visible-xs">
+            <div class="col-xs-12">
+                <dl class="dl-horizontal">
+                    <dt ng-show="review.reproduction">Reproducción</dt>
+                    <dd ng-show="review.reproduction">{{review.reproduction}}</dd>
+                </dl>    
+                <p ng-bind-html="review.content | html"></p>
+            </div>
+        </div>
+        
+        <div class="row hidden-xs">
             <div class="col-md-3 col-sm-3 col-xs-3">
                 <a ng-href="{{review.slug | mountRecord }}" target="_blank">
                     <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
                 </a>
             </div>  
             <div class="col-sm-9 col-md-9 col-xs-9">
-                <div class="social-links" ng-show="review.status === 'public'">
+                <ul class="profileNav-list pull-right" style="padding: 0px;">    
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                    </li>
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                    </li>
+                    <li class="profileNav-item">
+                        <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                    </li>
+                </ul>
+                <!--<div class="social-links" ng-show="review.status === 'public'">
                     <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank" class="btn btn-primary"><i class="fa fa-facebook"></i></a>
                     <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank" class="btn btn-info"><i class="fa fa-twitter"></i></a>
                     <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" ng-click="showEmailForm()" class="btn btn-warning"><i class="fa fa-envelope"></i></a> 
@@ -112,7 +157,7 @@
                       <rating ng-model="rate" max="max" state-on="'glyphicon-star'" state-off="'glyphicon-star-empty'" aria-labelledby="group.title" titles="['1','2','3','4','5']" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="leavingRate()" ></rating>
                       <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
                     </div>
-                </div>  
+                </div>  -->
                 <h3 class="title">{{ review.title }}</h3>
                 <h4 class="authors" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
                 <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>

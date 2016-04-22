@@ -5,18 +5,32 @@
 
 <form name="form.bookForm" ng-submit="submitForm()" novalidate>
     <div class="modal-body">
-        <!-- TITLE --> 
-        <div class="well">
+        
+        <div class="visible-xs">
+            <div class="form-group">
+                <label for="title">Selecciona la obra: </label>
+                <input type="text" ng-model="title" 
+                   placeholder="Escribe el título de la obra" 
+                   typeahead-on-select="setWorkValues($item)"
+                   typeahead="item as item.title for item in getWork($viewValue)"
+                   typeahead-loading="loadingWorks" 
+                   typeahead-no-results="noResults"
+                   typeahead-template-url="/modules/booklists/client/views/custom.select.template.html"
+                   typeahead-min-length="4"
+                   class="form-control" name="title" required>
+            </div>
+        </div>
+        
+        <div class="well hidden-xs">
 
          <div class="bs-callout bs-callout-danger bs-callout-modal">
           <h4>Selecciona una obra del catálogo</h4>
           Comienza a escribir el título de la obra sobre la que vas a escribir la reseña. Te mostraremos los resultados de nuestro catálogo.
          </div>
 
-        <div class="input-panel dropdown-menu-work">
-            
+         <div class="input-panel dropdown-menu-work">
             <input type="text" ng-model="title" 
-                   placeholder="Escribe el título de la obra de la reseña" 
+                   placeholder="Escribe el título de la obra" 
                    typeahead-on-select="setWorkValues($item)"
                    typeahead="item as item.title for item in getWork($viewValue)"
                    typeahead-loading="loadingWorks" 
@@ -30,43 +44,47 @@
                 <strong>Aviso:</strong> No se han encontrado resultados. Introduce un título de nuestro catálogo por favor.
             </div>
             <p ng-show="form.bookForm.title.$invalid && !form.bookForm.title.$pristine" class="help-block">Introduzca una obra.</p>
-        </div>
+         </div>
         </div> <!-- well -->
-
-        <div class="well well-sm" ng-show="uuid">
-          <div class="row">
-            <div class="col-xs-3 col-md-3 text-center">
-               <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9 section-box">
-              <h3>
-                  <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ slug | mountRecord }}" target="_blank"><p ng-bind="title | htmlLimit: 200"></p></a>
-              </h3>
-              <h4 style="color:#B43C2C" ng-show="authors" ng-bind="authors | htmlLimit: 200"></h4>
-              <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
-              <div class="row rating-desc">
-                <div class="col-md-12">
-                  <span class="label label-danger" ng-show="mediaType" ng-switch on="mediaType">
-                    <span ng-switch-when="audio">
-                      <i class="glyphicon glyphicon-headphones"></i> {{mediaType}}
+        
+        <div class="row">
+         <div class="col-xs-4 col-sm-4 col-md-2">
+           <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ slug | mountRecord }}" target="_blank">
+             <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-responsive" />
+           </a>
+         </div>
+        
+         <div class="col-xs-12 col-sm-8 col-md-8">
+            <h4 ng-if="title.length <= 200" class="title">{{ title }}</h4>
+            <h5 ng-if="title.length > 200" class="title">{{ title }}</h5>
+            <h4 class="authors" ng-show="authors" ng-bind="authors | htmlLimit: 200"></h4>
+            <dl class="dl-horizontal">
+                <dt ng-show="reproduction">Reproducción</dt>
+                <dd ng-show="reproduction">{{reproduction}}</dd>
+                <dt ng-show="language">Idioma</dt>
+                <dd ng-show="language">{{language}}</dd>
+                <dt ng-show="mediaType">Forma soporte</dt>
+                <dd ng-show="mediaType">
+                    <span ng-show="mediaType" ng-switch on="mediaType">
+                        <span ng-switch-when="audio">
+                            <i class="glyphicon glyphicon-headphones"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-when="video">
+                            <i class="glyphicon glyphicon-film"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-when="texto">
+                            <i class="glyphicon glyphicon-book"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-default>
+                            {{mediaType}}
+                        </span>
                     </span>
-                    <span ng-switch-when="video">
-                      <i class="glyphicon glyphicon-film"></i> {{mediaType}}
-                    </span>
-                    <span ng-switch-when="texto">
-                      <i class="glyphicon glyphicon-book"></i> {{mediaType}}
-                    </span>
-                    <span ng-switch-default>
-                      {{mediaType}}
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+                </dd>
+            </dl>
+         </div>
         </div>
 
-            <!-- Comments -->
+        <!-- Comments -->
         <div class="well">
 
          <div class="bs-callout bs-callout-danger bs-callout-modal">
@@ -77,7 +95,7 @@
         </div> <!-- well -->
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-danger" ng-disabled="form.bookForm.$invalid">Guardar</button>
+        <button type="submit" class="btn btn-danger" ng-disabled="form.bookForm.$invalid">Añadir</button>
         <button class="btn btn-danger" ng-click="cancel()">Cancelar</button>
     </div>
 </form>

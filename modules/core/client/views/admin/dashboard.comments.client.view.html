@@ -222,7 +222,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="list-group">
-                              <a ng-repeat="comment in commentsReview" ui-sref="reviews.view({reviewId: comment._id.reviewId})" class="list-group-item">
+                              <a ng-repeat="comment in commentsReview" ui-sref="admin.review({reviewId: comment._id.reviewId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
@@ -256,7 +256,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="list-group">
-                              <a ng-repeat="comment in commentsBooklist" ui-sref="booklists.view({booklistId: comment._id.booklistId})" class="list-group-item">
+                              <a ng-repeat="comment in commentsBooklist" ui-sref="admin.booklist({booklistId: comment._id.booklistId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
@@ -289,7 +289,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="list-group">
-                              <a ng-repeat="comment in commentsGroup" ui-sref="groups.view({groupId: comment._id.groupId})" class="list-group-item">
+                              <a ng-repeat="comment in commentsGroup" ui-sref="admin.group({groupId: comment._id.groupId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
                                 <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>

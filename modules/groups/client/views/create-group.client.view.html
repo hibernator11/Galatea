@@ -1,4 +1,4 @@
-<section ng-controller="GroupsController" class="container">
+<section ng-controller="GroupsController" class="container" ng-init="warningopen = true">
 
     <div class="col-md-12">
 
@@ -12,12 +12,8 @@
        <strong>Aviso:</strong> {{error}}
       </div>
 
-      <div class="alert alert-warning" ng-show="group.status === 'draft' && warningopen">
-       <button href="#" type="button" class="close" ng-click="warningopen = !warningopen"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
-       <strong>Aviso: El grupo no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú superior.</strong> 
-      </div>
-        
-      <div class="alert alert-warning">
+      <div class="alert alert-warning" ng-show="warningopen">
+          <button href="#" type="button" class="close" ng-click="warningopen = false"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
           <strong>Aviso:</strong> 
               Los creadores de grupos serán los primeros encargados de velar por el buen uso de Galatea. Quedan facultados por tanto para eliminar comentarios 
               improcedentes e incluso para vetar a aquellos usuarios que no guarden las normas de respeto adecuadas.
@@ -30,7 +26,7 @@
           Puedes crear un grupo de una obra, de un autor o de una lista de obras.
          </div>
             
-          <select class="form-control" style="width:30%;" ng-model="type" ng-change="selectTypeAction()" required>
+          <select class="form-control" ng-model="type" ng-change="selectTypeAction()" required>
             <option value="">---Por favor selecciona---</option>
             <option value="obra">Obra</option>
             <option value="autor">Autor</option>

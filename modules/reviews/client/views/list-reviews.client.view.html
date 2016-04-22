@@ -10,7 +10,7 @@
   <div class="container">
 
     <div class="row" ng-controller="ReviewsController">
-        <ul class="profileNav-list">
+        <ul class="profileNav-list hidden-xs">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Reseñas</span>
                 <span class="profileNav-value" data-is-compact="false">{{total}}</span>
@@ -34,6 +34,13 @@
             </li>
         </ul>
     </div>
+      
+    <div class="row visible-xs">
+        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+            <button type="button" href="#" ui-sref="reviews.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear reseña</button> 
+            <a tooltip="Buscar reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar listas</a> 
+        </div>
+    </div>
  
     <div class="row">  
       <div class="list-group col-xs-12">
@@ -50,7 +57,7 @@
             <span ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
             <span ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
             <span><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
-            <span><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>
+            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
             <span ng-show="review.mediaType" ng-switch on="review.mediaType">
                 <span ng-switch-when="audio">
                     <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}} |

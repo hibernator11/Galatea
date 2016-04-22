@@ -106,7 +106,7 @@
 .dropdown-menu:after {
   position: absolute;
   top: -6px;
-  left: 9px;
+  right: 15px;
   display: inline-block;
   border-right: 6px solid transparent;
   border-bottom: 6px solid #ffffff;
@@ -297,6 +297,7 @@ footer {
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bold;
+    width:123px;
 }
 
 .btn-header-transparent:hover, .btn-header-transparent:focus, .btn-header-transparent:active {
@@ -314,6 +315,8 @@ footer {
     font-size: 14px;
     font-weight: bold;
     border: 1px solid #B43C2C;
+    width:123px;
+    padding:17px;
 }
 
 .btn-header:hover, .btn-header:focus{
@@ -329,7 +332,8 @@ footer {
 }
 
 .title {
-    font-weight: bold !important;
+    font-weight: bold;
+    color: grey;
 }
 
 .page-header {
@@ -556,3 +560,37 @@ footer {
 .label-danger {
     white-space: normal;
 }
+
+.booklist-title {
+    font-weight: bold;
+    color: grey;    
+}
+
+.bvmc-btn {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.detail {
+    text-align:center; 
+    margin-top:10px;
+}
+
+.detail-image {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-top: 20px;
+    background: #b7c0ce;
+}
+
+.detail-comment {
+    margin-top: 5px;
+}
+
+
+.hero-widget { text-align: center; padding-top: 20px; padding-bottom: 20px; }
+.hero-widget .icon { display: block; font-size: 96px; line-height: 96px; margin-bottom: 10px; text-align: center; }
+.hero-widget var { display: block; height: 64px; font-size: 64px; line-height: 64px; font-style: normal; }
+.hero-widget label { font-size: 17px; }
+.hero-widget .options { margin-top: 10px; }

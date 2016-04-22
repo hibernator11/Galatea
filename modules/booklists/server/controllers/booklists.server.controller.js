@@ -363,13 +363,11 @@ exports.addRating = function(req, res){
  */
 exports.booklistByID = function (req, res, next, id) {
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'La lista de obras no es correcta'
-    });
-  }
-  
-  console.log('viene  a booklistbyId controller server');
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send({
+            message: 'La lista de obras no es correcta'
+        });
+    }
   
     Booklist.findById(id).populate('user', 'displayName profileImageURL')
                        .populate('comments.user', 'displayName profileImageURL')

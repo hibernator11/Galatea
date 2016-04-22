@@ -19,8 +19,23 @@
 
     <form name="reviewForm" class="form-horizontal" ng-submit="create(reviewForm.$valid)">
       <fieldset>
-        <!-- TITLE -->
-        <div class="well">
+        
+        <div class="visible-xs">
+            <div class="form-group">
+                <label for="title">Selecciona la obra: </label>
+                 <input type="text" ng-model="title" 
+                   placeholder="Escribe el título de la obra de la reseña" 
+                   typeahead-on-select="setWorkValues($item)"
+                   typeahead="item as item.title for item in getWorkLike($viewValue)"
+                   typeahead-loading="loadingWorks" 
+                   typeahead-no-results="noResults"
+                   typeahead-template-url="/modules/booklists/client/views/custom.select.template.html"
+                   typeahead-min-length="4"
+                   class="form-control" required>
+            </div>
+        </div>
+        
+        <div class="well hidden-xs">
 
          <div class="bs-callout bs-callout-danger">
           <h4>Selecciona una obra del catálogo</h4>
@@ -44,46 +59,69 @@
             </div>
             <p ng-show="form.reviewForm.title.$invalid && !form.reviewForm.title.$pristine" class="help-block">Introduzca una obra.</p>
           </div>
+         </div>
         </div>
-        </div>
+          
+          
+        <div class="row">
+         <div class="col-xs-4 col-sm-4 col-md-2">
+           <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ slug | mountRecord }}" target="_blank">
+             <img ng-if="uuid" ng-src="{{uuid | mountCover }}" alt="Obra seleccionada" class="img-responsive" />
+           </a>
+         </div>
+        
+         <div class="col-xs-12 col-sm-8 col-md-8" ng-show="uuid">
+            <h4 ng-if="title.length <= 200" class="title">{{ title }}</h4>
+            <h5 ng-if="title.length > 200" class="title">{{ title }}</h5>
+            <h4 class="authors" ng-show="authors" ng-bind="authors | htmlLimit: 200"></h4>
+            <dl class="dl-horizontal">
+                <dt ng-show="reproduction">Reproducción</dt>
+                <dd ng-show="reproduction">{{reproduction}}</dd>
+                <dt ng-show="language">Idioma</dt>
+                <dd ng-show="language">{{language}}</dd>
+                <dt ng-show="mediaType">Forma soporte</dt>
+                <dd ng-show="mediaType">
+                    <span ng-show="mediaType" ng-switch on="mediaType">
+                        <span ng-switch-when="audio">
+                            <i class="glyphicon glyphicon-headphones"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-when="video">
+                            <i class="glyphicon glyphicon-film"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-when="texto">
+                            <i class="glyphicon glyphicon-book"></i> {{mediaType}}
+                        </span>
+                        <span ng-switch-default>
+                            {{mediaType}}
+                        </span>
+                    </span>
+                </dd>
+            </dl>
+         </div>
+        </div>  
 
-        <div class="well well-sm" ng-show="uuid">
-          <div class="row">
-            <div class="col-xs-3 col-md-3 text-center">
-               <img ng-if="uuid" ng-src="{{ uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9 section-box">
-              <h3>
-                  <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ slug | mountRecord }}" target="_blank"><p ng-bind="title | htmlLimit: 200"></p></a>
-              </h3>
-              <h4 style="color:#B43C2C" ng-show="authors" ng-bind="authors | htmlLimit: 200"></h4>
-              <p class="text-muted" ng-show="reproduction" ng-bind-html="reproduction | htmlLimit: 200"></p>
-              <div class="row rating-desc">
-                <div class="col-md-12">
-                  <!--<span class="label label-danger" ng-show="language">{{language}}</span>-->
-                  <span class="label label-danger" ng-show="mediaType">{{mediaType}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-       <div class="well">
-
+       <div class="well hidden-xs">
          <div class="bs-callout bs-callout-danger">
           <h4>Escribe la reseña</h4>
           Utiliza el siguiente formulario para escribir la reseña. Tienes la opción de incluir enlaces a páginas externas. 
          </div>
-
         <div class="form-group input-panel">
           <textarea ui-tinymce="tinymceOptions" name="content" ng-model="content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
         </div>
-
-        <div class="form-group input-panel text-right">
+       </div> 
+          
+       <div class="visible-xs">
+            <div class="form-group">
+                <label for="content">Introduce la reseña: </label>
+                <textarea ui-tinymce="tinymceOptions" name="content" ng-model="content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+            </div>
+       </div>
+          
+       <div class="form-group input-panel text-right">
           <input type="submit" value="Crear" class="btn btn-danger">
           <input type="button" value="Cancelar" class="btn btn-danger" ng-click="showList();">
-        </div>
-       </div> 
+       </div>   
+          
       </fieldset>
     </form>
    </div>

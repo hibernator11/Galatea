@@ -10,7 +10,7 @@
   <div class="container">    
 
     <div class="row" ng-controller="GroupsController">
-        <ul class="profileNav-list">
+        <ul class="profileNav-list hidden-xs">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Grupos</span>
                 <span class="profileNav-value" data-is-compact="false">{{total}}</span>
@@ -47,6 +47,13 @@
         </ul>
     </div>
       
+    <div class="row visible-xs">
+        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+            <button type="button" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</button> 
+            <a tooltip="Buscar grupos" tooltip-placement="top" href="#" ui-sref="groups.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar grupos</a> 
+        </div>
+    </div>  
+      
       
     <div class="row">
       <div class="list-group col-xs-12">
@@ -71,7 +78,7 @@
                 </span>
             </span>
             <span><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
-            <span><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>
+            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
             <span><i class="fa fa-calendar"></i> {{group.created | date:'dd/MM/yyyy'}}</span>
           </div> 
 

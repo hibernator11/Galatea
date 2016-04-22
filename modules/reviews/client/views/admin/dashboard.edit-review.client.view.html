@@ -17,51 +17,70 @@
             <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
         </div>
       </div>
+        
+        
+    <div class="hero-widget well well-sm visible-xs">
+        <div class="icon">
+            <img width="100px" ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+        </div>
+        <div class="text">
+              <label class="text-muted">{{ review.title }}</label>
+              <label class="text-muted authors">{{ review.authors }}</label>
+        </div>
+    </div>
+        
+    <div class="row visible-xs">
+        <div class="col-xs-12">
+            <dl class="dl-horizontal">
+                <dt ng-show="review.reproduction">Reproducción</dt>
+                <dd ng-show="review.reproduction">{{review.reproduction}}</dd>
+            </dl>    
+        </div>
+    </div>  
               
+    <div class="row">
+        <div class="col-md-9">
+            <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
 
-      <form name="reviewForm" class="form-horizontal" ng-submit="update(reviewForm.$valid)">
+                <fieldset>
+                  <div class="well hidden-xs" style="margin-right: 0px;margin-left: 0px;">
+                   <div class="bs-callout bs-callout-danger">
+                    <h4>Modifica la reseña</h4>
+                    Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
+                   </div>
 
-          <fieldset>
-            <div class="well" style="margin-right: 0px;margin-left: 0px;">
-             <div class="bs-callout bs-callout-danger">
-              <h4>Modifica la reseña</h4>
-              Utiliza el siguiente formulario para modificar la reseña. Tienes la opción de incluir enlaces a páginas externas. 
-             </div>
+                   <div class="form-group input-panel">
+                    <textarea ui-tinymce="tinymceOptions" name="content" ng-model="review.content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+                   </div>
+                  </div> <!-- well -->
 
-             <div class="form-group input-panel">
-              <textarea ui-tinymce="tinymceOptions" name="content" ng-model="review.content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
-             </div>
+                  <div class="row visible-xs">
+                      <div class="col-xs-12">
+                          <div class="form-group input-panel">
+                              <label for="content">Modifica la reseña: </label>
+                              <textarea ui-tinymce="tinymceOptions" name="content" ng-model="review.content" id="content" class="form-control" cols="30" rows="20" placeholder="Modifica la reseña..."></textarea>
+                          </div>
+                      </div>
+                  </div>
 
-             <div class="form-group input-panel" style="text-align:right">
-              <input type="submit" value="Guardar" class="btn btn-danger">
-              <a ui-sref="admin.reviews" class="btn btn-danger">Cancelar</a>
-             </div>
-            </div> <!-- well -->
-          </fieldset>
-        </form>
+                </fieldset>
 
-
-        <div class="row well" style="margin-right: 0px;margin-left: 0px;" ng-if="review.slug && review.uuid">
-            <div class="col-xs-3 col-md-3">
-                <img ng-src="{{review.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
-            </div>
-            <div class="col-xs-9 col-md-9">
-                <h3>
-                    <a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{ review.slug | mountRecord }}" target="_blank"><p ng-bind="review.title | htmlLimit: 200"></p></a>
-                </h3>
-                <h4 style="color:#B43C2C" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
-                <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 200"></p>
-                <div class="row">
-                    <div class="col-md-12">
-                      <span class="label label-danger" ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                      <span class="label label-danger" ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                      <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} Comentarios</span>
-                      <span class="label label-danger" ng-show="review.language"><i class="glyphicon glyphicon-tag"></i> {{review.language}}</span>
-                      <span class="label label-danger" ng-show="review.mediatype"><i class="glyphicon glyphicon-tag"></i> {{review.mediatype}}</span>
-                    </div>
+                <div class="form-group input-panel" style="text-align:right">
+                  <input type="submit" value="Guardar" class="btn btn-danger">
+                  <a ui-sref="admin.reviews" class="btn btn-danger">Cancelar</a>
+                </div>
+           </form>
+        </div>
+        <div class="col-md-3 hidden-xs">
+            <div class="hero-widget well well-sm">
+                <div class="icon">
+                    <img width="100px" ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+                </div>
+                <div class="text">
+                      <label class="text-muted">{{ review.title }}</label>
+                      <label class="text-muted authors">{{ review.authors }}</label>
                 </div>
             </div>
         </div>
-        
-    </div>
+    </div>    
 </div>
