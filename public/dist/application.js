@@ -1698,8 +1698,8 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     
     $scope.init = function() {
       $scope.getReviewComments();
-      $scope.getBooklistComments();
-      $scope.getGroupComments();
+      //$scope.getBooklistComments();
+      //$scope.getGroupComments();
     };
   }
 ]);
