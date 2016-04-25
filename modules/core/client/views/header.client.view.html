@@ -50,7 +50,7 @@
           <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
             <a ui-sref="settings.password">Cambiar contraseña</a>
           </li>
-          <li class="divider"></li>
+          <!--<li class="divider"></li>
           <li ui-sref-active="active">
             <a href="/booklists">Mis listas</a>
           </li>
@@ -59,7 +59,7 @@
           </li>
           <li ui-sref-active="active">
             <a href="/groups">Mis grupos</a>
-          </li>
+          </li>-->
           <li class="divider"></li>
           <li ui-sref-active="active">
             <a ui-sref="settings.accounts">Configuración</a>
@@ -82,6 +82,18 @@
         <a class="global-nav" href="/groups">Mis grupos</a>
       </li>
     </ul>
+      
+    <ul class="nav navbar-nav navbar-right" ng-show="!authentication.user">
+      <li ui-sref-active="active">
+        <a class="global-nav" href="/reviews/search">Reseñas</a>
+      </li>
+      <li ui-sref-active="active">
+        <a class="global-nav" href="/booklists/search">Listas</a>
+      </li>
+      <li ui-sref-active="active">
+        <a class="global-nav" href="/groups/search">Grupos</a>
+      </li>
+    </ul>  
 
   </nav>
 </div>

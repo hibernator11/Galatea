@@ -9,30 +9,100 @@
             <strong>Aviso:</strong> {{error}}
         </div>
         
-      <div class="row">
-        <div class="col-xs-12" style="margin-bottom: 20px;">
-            <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
-            <span ng-bind="group.user.displayName"></span>
-            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
-            <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-            <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-            <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+        
+        <div class="row hidden-xs">
+            <div class="col-xs-12" style="margin-bottom: 20px;">
+                <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+                <span ng-bind="group.user.displayName"></span>
+                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+                <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+            </div>
         </div>
-      </div>  
+        
+        <div class="row visible-xs">
+            <div class="col-xs-12" style="margin-bottom: 20px;">
+                <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+            </div>
+        </div>    
+        
+        <div class="row visible-xs">
+          <div class="col-xs-6" style="margin-bottom: 20px;">
+              <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+              <span ng-bind="group.user.displayName"></span>
+          </div>    
+          <div class="col-xs-6" style="margin-bottom: 20px;">
+              <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+          </div>
+        </div>
         
         <div tabset>
           <div tab>
               <span tab-heading>Descripción</span>
-              <div tab-content class="row">
+              <div tab-content>
+                  <div class="hero-widget well well-sm visible-xs" >
+                    <div class="icon">
+                        <img ng-if="group.type === 'obra' && group.uuid" 
+                             width="100px" ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" 
+                             tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+                        
+                        <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0"">
+                            <carousel interval="myInterval" no-wrap="noWrapSlides">
+                                <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                                    <img width="100px" ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
+                                    <!--<div class="carousel-caption"> 
+                                       <p>{{slide.title | htmlLimit: 80}}</p>
+                                    </div>-->
+                                </slide>
+                            </carousel>
+                        </div>
+                    </div>
+                    <div class="text">
+                        <label class="text-muted">{{ group.name }}</label>
+                    </div>
+                    <div class="options">
+                        <ul class="profileNav-list" style="padding: 0px;">    
+                            <li class="profileNav-item">
+                                <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                            </li>
+                            <li class="profileNav-item">
+                                <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                            </li>
+                            <li class="profileNav-item">
+                                <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row visible-xs">
+                    <div class="col-xs-12">
+                        <dl class="dl-horizontal">
+                            <dt ng-show="group.title">Grupo sobre la obra</dt>
+                            <dd ng-show="group.title">{{group.title}}</dd>
+                            <dt ng-show="group.authorName">Grupo sobre el autor</dt>
+                            <dd ng-show="group.authorName">{{group.authorName}}</dd>
+                            <dt ng-show="group.themeName">Grupo sobre el tema</dt>
+                            <dd ng-show="group.themeName">{{group.themeName}}</dd>
+                            <dt ng-show="group.content">Descripción del grupo</dt>
+                            <dd ng-show="group.content" ng-bind-html="group.content | html"></dd>
+                        </dl>
+                    </div>
+                </div>  
+                  
+                <div class="row hidden-xs">
                   <div ng-if="group.type === 'obra' && group.uuid" 
                       class="col-sm-3 col-md-3 col-xs-12"
                       style="margin-top:10px">
                      <a ng-href="{{group.source | mountRecord }}" target="_blank">
                          <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
                      </a>
-                 </div>
+                  </div>
                   
-                 <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
+                  <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
                      <carousel interval="myInterval" no-wrap="noWrapSlides">
                          <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
                              <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
@@ -41,13 +111,29 @@
                              </div>-->
                          </slide>
                      </carousel>
-                     <!--<a style="margin-top: 5px" tooltip="Ver todas las obras de la lista" tooltip-placement="bottom" href="#" class="btn btn-danger" ui-sref="booklists.view({booklistId: group.source})" >Ver la lista completa <span class="glyphicon glyphicon-zoom-in"></span></a>-->
-                 </div>
+                  </div>
+                 
+                  <div class="col-xs-12"> 
+                    <ul class="profileNav-list pull-right" style="padding: 10px;">    
+                      <li class="profileNav-item">
+                          <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                      </li>
+                      <li class="profileNav-item">
+                          <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                      </li>
+                      <li class="profileNav-item">
+                          <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                      </li>
+                    </ul>
+
+                    <h3 class="title">{{group.name}}</h3>
+                    <h3 class="title">{{group.authorName}}</h3>
+                    <h3 class="title">{{group.themeName}}</h3>
+                    <h5 class="title">{{group.title}}</h5>
+                    <p ng-bind-html="group.content | html"></p>
+                  </div>
                   
-                 <div class="col-sm-9 col-md-9 col-xs-12">
-                     <h3 class="title">{{group.name}}</h3>
-                     <p ng-bind-html="group.content | html"></p>
-                 </div>
+                </div>
              </div>     
          </div> <!--tab -->
          <div tab>
@@ -59,7 +145,7 @@
                  <div class="col-md-9 col-xs-12" ng-if="group.members.length === 0">
                      <p style="margin-top:10px;">El grupo no tiene miembros asociados</p>
                  </div>
-                 <div class="col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2"
+                 <div class="col-md-3 col-md-offset-0 col-xs-12"
                       style="margin-top: 35px;">
 
                      <div class="well well-sm">
@@ -96,7 +182,7 @@
 
             <div ng-repeat="comment in group.comments" class="media">
                 <div class="media-left">
-                    <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                    <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
                 </div>
                 <div class="media-body">
                     <small>
@@ -110,11 +196,16 @@
                        confirm="¿Estás seguro que deseas eliminar el comentario?"
                        ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
                     </small>
-                    <p>
-                        <a href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
+                    <div class="visible-xs detail-comment">
+                        <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
+                            <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
+                        </a>
+                    </div>
+                    <div class="hidden-xs detail-comment">
+                        <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
                             <pre>{{ comment.content || 'comentario vacío' }}</pre>
                         </a>
-                    </p>
+                    </div>
                 </div>
             </div>
             <hr>

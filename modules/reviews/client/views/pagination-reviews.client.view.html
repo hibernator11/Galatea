@@ -10,7 +10,7 @@
     <div class="container">
         
     <div class="row" ng-controller="ReviewsController">
-        <ul class="profileNav-list">
+        <ul class="profileNav-list hidden-xs">
             <li class="profileNav-item pull-left">
                 <span class="profileNav-label">Reseñas</span>
                 <span class="profileNav-value" data-is-compact="false">{{total}}</span>
@@ -35,10 +35,19 @@
         </ul>
     </div>
         
+    <div class="row visible-xs">
+        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+            <button type="button" href="#" ui-sref="reviews.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear reseña</button> 
+            <button type="button" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+                <span class="glyphicon glyphicon-search"></span> Búsqueda
+            </button>
+        </div>
+    </div>    
+        
         
     <div class="row">
         <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-            <button type="button" style="margin-bottom:10px;" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+            <button type="button" style="margin-bottom:10px;" class="btn btn-danger hidden-xs" ng-click="searchIsCollapsed = !searchIsCollapsed">
                 <span class="glyphicon glyphicon-search"></span> Búsqueda avanzada
             </button>
             <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
@@ -55,12 +64,6 @@
                                     <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
                                 </select> 
                             </div> <!-- form group [order by] --> 
-                            <!--<div class="form-group">
-                                <label class="filter-col" for="pref-status">Estado:</label>
-                                <select id="pref-status" class="form-control" ng-model="status">
-                                    <option ng-repeat="x in optionsStatus" value="{{x.value}}">{{x.text}}</option>
-                                </select> 
-                            </div> <!-- form group [status] --> 
                             <div class="form-group">
                                 <label class="filter-col" for="pref-perpage">Elementos página:</label>
                                 <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
@@ -77,8 +80,47 @@
         </div>
     </div>
         
+    
+    <div class="row visible-xs">  
+      <div class="list-group col-xs-12">
+      <a ng-repeat="review in pagedItems" ui-sref="reviews.view({reviewId: review._id})" class="list-group-item">
+        <div class="media">
+        <div class="media-left">
+          <img style="width: 80px;height: 120px;" ng-src="{{review.uuid | mountCover }}" alt="{{review.title}}" class="media-object">
+        </div>
+        <div class="media-body">
+          <h5 class="media-heading">{{ review.title | htmlLimit: 200 }}</h5>
+          <!--<p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit: 100"></p>-->
+          <p class="text-muted">
+            <span><i class="glyphicon glyphicon-user"></i> {{review.user.displayName}} |</span> 
+            <span ng-show="review.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
+            <span ng-show="review.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
+            <span><i class="glyphicon glyphicon-comment"></i> {{review.comments.length}} {{review.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
+            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{review.ratings.length}} {{review.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
+            <span ng-show="review.mediaType" ng-switch on="review.mediaType">
+                <span ng-switch-when="audio">
+                    <i class="glyphicon glyphicon-headphones"></i> {{review.mediaType}} |
+                </span>
+                <span ng-switch-when="video">
+                    <i class="glyphicon glyphicon-film"></i> {{review.mediaType}} |
+                </span>
+                <span ng-switch-when="texto">
+                    <i class="glyphicon glyphicon-book"></i> {{review.mediaType}} |
+                </span>
+                <span ng-switch-default>
+                    {{review.mediaType}} |
+                </span>
+            </span>
+            <span><i class="fa fa-calendar"></i> {{review.created | date:'dd/MM/yyyy'}}</span>
+          </p>
+        </div>
+        </div> <!-- media -->
+      </a> 
+      </div> <!-- repeat -->
+    </div>
         
-    <div style="margin-top: 20px" class="row" scroll-container>
+        
+    <div style="margin-top: 20px" class="row hidden-xs" scroll-container>
         <div ng-repeat="review in pagedItems" ng-class="{ '': $index <= 5, 'hideme': $index > 5 }" class="col-md-4"  ui-sref="reviews.view({reviewId: review._id})" flip ng-mouseover="showBackPanel()" ng-mouseleave="showFrontPanel()">
           <div>
             <img width="100%" class="img-responsive" ng-if="pagedItems" ng-src="{{review.uuid | mountCover }}"/>

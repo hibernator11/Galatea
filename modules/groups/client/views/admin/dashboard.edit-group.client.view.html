@@ -15,62 +15,140 @@
             <span ng-bind="group.user.displayName"></span>
             <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
         </div>
-    </div>          
+    </div>
+        
+    <div class="hero-widget well well-sm visible-xs" >
+        <div class="icon">
+            <img ng-if="group.type === 'obra' && group.uuid" 
+                 width="100px" ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" 
+                 tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
 
-    <form name="groupForm" class="form-horizontal" ng-submit="update(groupForm.$valid)">
-
-      <fieldset>
-       
-        <div class="well">
-            <div class="bs-callout bs-callout-danger">
-                <h4>Modifica el nombre del grupo</h4>
-                Utiliza el siguiente campo para introducir el nombre del grupo que deseas crear. 
+            <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0"">
+                <carousel interval="myInterval" no-wrap="noWrapSlides">
+                    <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                        <img width="100px" ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
+                        <!--<div class="carousel-caption"> 
+                           <p>{{slide.title | htmlLimit: 80}}</p>
+                        </div>-->
+                    </slide>
+                </carousel>
             </div>
+        </div>
+        <div class="text">
+            <label class="text-muted">{{ group.name }}</label>
+        </div>
+        <div class="options">
+            <ul class="profileNav-list" style="padding: 0px;">    
+                <li class="profileNav-item">
+                    <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                </li>
+                <li class="profileNav-item">
+                    <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                </li>
+                <li class="profileNav-item">
+                    <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-            <div class="form-group input-panel">
-                <input name="name" type="text" ng-model="group.name" id="name" class="form-control" placeholder="Nombre para el grupo" required>
-                <div ng-messages="groupForm.namee.$error" role="alert">
-                    <p class="help-block error-text" ng-message="required">El nombre del grupo es necesario.</p>
+    <div class="row visible-xs">
+        <div class="col-xs-12">
+            <dl class="dl-horizontal">
+                <dt ng-show="group.title">Grupo sobre la obra</dt>
+                <dd ng-show="group.title">{{group.title}}</dd>
+                <dt ng-show="group.authorName">Grupo sobre el autor</dt>
+                <dd ng-show="group.authorName">{{group.authorName}}</dd>
+                <dt ng-show="group.themeName">Grupo sobre el tema</dt>
+                <dd ng-show="group.themeName">{{group.themeName}}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+        <form name="groupForm" class="form-horizontal" ng-submit="update(groupForm.$valid)">
+
+          <fieldset>
+
+            <div class="well hidden-xs">
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Modifica el nombre del grupo</h4>
+                    Utiliza el siguiente campo para introducir el nombre del grupo que deseas crear. 
                 </div>
-            </div>
-        </div> 
 
-        <div class="well" style="margin-right: 0px;margin-left: 0px;">
-            <div class="bs-callout bs-callout-danger">
-                <h4>Modifica la descripción del grupo</h4>
-                Utiliza el siguiente formulario para modificar la descripción del grupo. Tienes la opción de incluir enlaces a páginas externas. 
-            </div>
+                <div class="form-group input-panel">
+                    <input name="name" type="text" ng-model="group.name" id="name" class="form-control" placeholder="Nombre para el grupo" required>
+                    <div ng-messages="groupForm.namee.$error" role="alert">
+                        <p class="help-block error-text" ng-message="required">El nombre del grupo es necesario.</p>
+                    </div>
+                </div>
+            </div> 
 
-            <div class="form-group input-panel">
-                <textarea ui-tinymce name="content" ng-model="group.content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+            <div class="well hidden-xs" style="margin-right: 0px;margin-left: 0px;">
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Modifica la descripción del grupo</h4>
+                    Utiliza el siguiente formulario para modificar la descripción del grupo. Tienes la opción de incluir enlaces a páginas externas. 
+                </div>
+
+                <div class="form-group input-panel">
+                    <textarea ui-tinymce name="content" ng-model="group.content" id="content" class="form-control" cols="30" rows="20" placeholder="Escribe tu reseña..."></textarea>
+                </div>
+            </div> <!-- well -->
+
+            <div class="row visible-xs">
+                <div class="col-xs-12">
+                    <div class="form-group input-panel">
+                        <label for="content">Modifica el nombre del grupo: </label>
+                        <input name="name" type="text" ng-model="group.name" id="name" class="form-control" placeholder="Nombre del grupo" required>
+                        <div ng-messages="groupForm.name.$error" role="alert">
+                            <p class="help-block error-text" ng-message="required">El nombre del grupo es necesario.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group input-panel">
+                        <label for="content">Modifica el contenido del grupo: </label>
+                        <textarea ui-tinymce="tinymceOptions" name="content" ng-model="group.content" id="content" class="form-control" cols="30" rows="20" placeholder="Modifica la reseña..."></textarea>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group input-panel" style="text-align:right">
                 <input type="submit" value="Guardar" class="btn btn-danger">
                 <a ui-sref="admin.groups" class="btn btn-danger">Cancelar</a>
             </div>
-        </div> <!-- well -->
-      </fieldset>
-    </form>
 
-    <div class="row well" style="margin-right: 0px;margin-left: 0px;" ng-if="group.uuid">
-        <div class="col-xs-3 col-md-3">
-            <img ng-src="{{group.uuid | mountCover }}" alt="Obra seleccionada" class="img-rounded img-responsive" />
+          </fieldset>
+        </form>
         </div>
-        <div class="col-xs-9 col-md-9">
-            <h4><a tooltip="Abrir obra en una pestaña nueva" tooltip-placement="top" ng-href="{{group.slug | mountRecord }}" target="_blank"><i class="glyphicon glyphicon-new-window"></i> Ver obra en catálogo</a></h4>
-            <p>{{ group.title | htmlLimit: 200 }}</p>
-            <p class="text-muted" ng-show="group.reproduction" ng-bind-html="group.reproduction | htmlLimit: 200"></p>
-            <div class="row">
-                <div class="col-md-12">
-                  <span class="label label-danger" ng-show="group.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado</span> 
-                  <span class="label label-danger" ng-show="group.status !== 'public'"><i class="glyphicon glyphicon-eye-close"></i> Borrador</span>
-                  <span class="label label-danger"><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} Comentarios</span>
+        <div class="col-md-3 hidden-xs">
+            <div class="hero-widget well well-sm">
+                <div class="icon">
+                    <img ng-if="group.type === 'obra' && group.uuid" 
+                        width="100px" ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" 
+                        tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+
+                    <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0"">
+                       <carousel interval="myInterval" no-wrap="noWrapSlides">
+                           <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                               <img width="100px" ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
+                               <!--<div class="carousel-caption"> 
+                                  <p>{{slide.title | htmlLimit: 80}}</p>
+                               </div>-->
+                           </slide>
+                       </carousel>
+                    </div>
+                </div>
+                <div class="text">
+                    <label class="text-muted">{{ group.name }}</label>
+                    <label ng-show="group.title">{{group.title}}</label>
+                    <label ng-show="group.authorName">{{group.authorName}}</label>
+                    <label ng-show="group.themeName">{{group.themeName}}</label>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 
-        
     </div>
 </div>
