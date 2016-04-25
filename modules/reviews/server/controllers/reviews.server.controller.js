@@ -310,7 +310,10 @@ exports.getComments = function(req, res){
     d.setDate(d.getDate()-7);
 
     Review.aggregate(
-      { $match: {'comments.created': {$gt: d}}},
+      { $match: { $and: [{'comments.created': {$gt: d}}, 
+                         {'status': 'public'}]
+                }
+      },
       { $project : { _id: 1, title : 1 , comments : 1, user: 1 } },
       { $unwind : "$comments" },
       { $match: {'comments.created': {$gt: d}}},
