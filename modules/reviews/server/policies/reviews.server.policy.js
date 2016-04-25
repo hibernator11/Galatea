@@ -56,6 +56,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/reviews/uuid/:uuid',
       permissions: ['get']
+    }, {
+      resources: '/api/comments/reviews/results/:results',
+      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
@@ -67,6 +70,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/reviews/uuid/:uuid',
+      permissions: ['get']
+    }, {
+      resources: '/api/comments/reviews/results/:results',
       permissions: ['get']
     }]
   }]);
