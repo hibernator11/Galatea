@@ -1,4 +1,4 @@
-<section ng-controller="GroupPaginationController" ng-init="initTypeObra(3)" ng-show="pagedItems">
+<section ng-controller="BooklistPaginationController" ng-init="init(3)" ng-show="pagedItems">
 
 <!--<div class="row">
     <h4 class="section-title">Consulta los últimos grupos</h4>
@@ -33,11 +33,9 @@
 
 
 <div class="row">
-    <div class="col-xs-12">
-        <h6 class="section-title">Últimos grupos</h6>
-    </div>
+    <span class="section-title-mini">Últimas listas de obras</span> 
 </div>
-<div class="row" ng-repeat="group in pagedItems">
+<div class="row" ng-repeat="booklist in pagedItems">
     <div class="col-xs-12">
         <section class="widget">
             <div class="widget-controls">
@@ -46,25 +44,25 @@
             </div>
             <div class="widget-body">
                 <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
-                    <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Grupo</span> - {{ group.name | htmlLimit: 60 }}</h3>
+                    <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Lista</span> - {{ booklist.title | htmlLimit: 60 }}</h3>
                     <ul class="tags text-grey pull-right">
-                        <li><a href="#" ui-sref="groups.view({groupId: group._id})">detalles</a></li>
+                        <li><a href="#" ui-sref="booklists.view({booklistId: booklist._id})">detalles</a></li>
                     </ul>
                 </div>
                 <div class="post-user mt-n-lg">
                     <span class="thumb-lg pull-left mr">
-                        <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="img-circle">
+                        <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="img-circle">
                     </span>
-                    <h5 class="mt-sm fw-normal text-grey">{{group.user.displayName}} <small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="group.created | date:'dd/MM/yyyy'"></span></small></h5>
+                    <h5 class="mt-sm fw-normal text-grey">{{booklist.user.displayName}} <small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span></small></h5>
                 </div>
-                <p class="text-light fs-mini m" ng-bind-html="group.content | htmlLimit:50"></p>
+                <p class="text-light fs-mini m" ng-bind="booklist.description | htmlLimit:50"></p>
             </div>
         </section>
     </div>
 </div>
 <div class="row">
     <div class="pull-right">
-        <a href="#" ui-sref="groups.search"><h4 style="color:#B43C2C">Ver más grupos</h4></a>
+        <a href="#" ui-sref="booklists.search"><h4 style="color:#B43C2C">Ver más listas</h4></a>
     </div>
 </div>
 

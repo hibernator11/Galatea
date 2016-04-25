@@ -311,13 +311,14 @@ exports.getComments = function(req, res){
 
     Review.aggregate(
       { $match: {'comments.created': {$gt: d}}},
-      { $project : { _id: 1, title : 1 , comments : 1 } },
+      { $project : { _id: 1, title : 1 , comments : 1, user: 1 } },
       { $unwind : "$comments" },
       { $match: {'comments.created': {$gt: d}}},
       { $group : {
-          _id: { comment: "$comments", title: "$title", reviewId: "$_id"}
+          _id: { comment: "$comments", title: "$title", reviewId: "$_id", user: "$user"}
       } },
-      //{ $lookup: {from: 'users', localField: 'user', foreignField: 'id', as: 'user_info'} } ,
+      { $lookup: {from: 'users', localField: '_id.comment.user', foreignField: '_id', as: 'user_info'} } ,
+      { $project : { _id: 1, title : 1 , comments : 1, user: 1, 'user_info.displayName':1, 'user_info.profileImageURL':1 } },
       { $sort : { '_id.comment.created' : -1 } },
       { $limit : limit*1 })
     .exec(function(err, comments) {

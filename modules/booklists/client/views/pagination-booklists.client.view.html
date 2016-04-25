@@ -85,7 +85,7 @@
         <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
           <h4 class="list-group-item-heading" ng-bind="booklist.title | htmlLimit:200"></h4>
           <p>
-            <span><i class="glyphicon glyphicon-user"></i> {{review.user.displayName}} |</span>     
+            <span><i class="glyphicon glyphicon-user"></i> {{booklist.user.displayName}} |</span>     
             <span ng-show="booklist.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
             <span ng-show="booklist.status === 'draft'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
             <span><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>

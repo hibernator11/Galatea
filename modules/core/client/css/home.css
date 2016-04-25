@@ -200,6 +200,15 @@ div.tooltip-inner {
     text-align: center;
 }
 
+.section-title-mini {
+    font-weight: 400;
+    margin-top: 30px;
+    color: #B43C2C;
+    line-height: 1.5;
+    font-size: 23px;
+    text-align: center;
+}
+
 input[type="text"], input[type="password"], input[type="search"], input[type="url"], input[type="email"], textarea {
     border: 1px solid #c1c1c1;
     background-color: #ffffff;

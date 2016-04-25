@@ -1,4 +1,4 @@
-<section class="container-home" ng-controller="HomeController">
+<section class="container-home" ng-controller="HomeController" ng-init="init()">
 
 <div class="jumbotron">
   <div class="container">
@@ -34,7 +34,63 @@
         <div class="col-md-2 col-md-offset-10"><a tooltip="Ver más reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search"><h4 style="color:#B43C2C">Ver más reseñas</h4></a></div>
     </div>
     <hr>
-    <div ng-include src="'modules/groups/client/views/slider-groups.client.view.html'"></div>
+    <!--<div class="row">
+        <div class="col-sm-6 col-xs-12" ng-include src="'modules/groups/client/views/slider-groups.client.view.html'"></div>
+        <div class="col-sm-6 col-xs-12" ng-include src="'modules/booklists/client/views/slider-booklists.client.view.html'"></div>
+    </div>-->
+    
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            <span class="section-title-mini">Últimos comentarios</span> 
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <span class="section-title-mini">Nuestros proyectos</span> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+        <div ng-repeat="comment in commentsReview">
+            <section class="widget">
+                <div class="widget-controls">
+                    <!--<a href="#"><i class="fa fa-refresh"></i></a>
+                    <a href="#" data-widgster="close"><i class="glyphicon glyphicon-remove"></i></a>-->
+                </div>
+                <div class="widget-body">
+                    <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
+                        <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Reseña</span> - {{ comment._id.title | htmlLimit: 100 }}</h3>
+                        <ul class="tags text-grey pull-right">
+                            <li><a href="#" ui-sref="reviews.view({reviewId: comment._id.reviewId})">detalles</a></li>
+                        </ul>
+                    </div>
+                    <div class="post-user mt-n-lg">
+                        <span class="thumb-lg pull-left mr">
+                            <img ng-src="{{comment.user_info[0].profileImageURL}}" alt="{{comment.user_info[0].displayName}}" class="img-circle">
+                        </span>
+                        <h5 class="mt-sm fw-normal text-grey">{{comment.user_info[0].displayName}} <small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="comment._id.comment.created | date:'dd/MM/yyyy'"></span></small></h5>
+                    </div>
+                    <p class="text-light fs-mini m" ng-bind="comment._id.comment.content | htmlLimit:150"></p>
+                </div>
+            </section>
+        </div>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="col-sm-12 col-xs-12" style="padding: 18px;text-align: center;">
+                <a style="text-decoration:none" target="_blank" href="http://www.digitisation.eu">
+                    <img src="http://blog.cervantesvirtual.com/wp-content/uploads/2013/03/logoCoCblue.jpg">
+                </a>
+            </div>
+            <div class="col-sm-12 col-xs-12" style="padding: 18px;text-align: center;">
+                <a style="text-decoration:none" target="_blank" href="http://www.cervantesvirtual.com">
+                    <img src="http://blog.cervantesvirtual.com/wp-content/uploads/2013/03/BVMC.png">
+                </a>
+            </div>
+            <div class="col-sm-12 col-xs-12" style="padding: 18px;text-align: center;">
+                <a style="text-decoration:none" target="_blank" href="http://www.catedravargasllosa.com">
+                    <img src="http://blog.cervantesvirtual.com/wp-content/uploads/2013/03/CVLL.jpg">
+                </a>
+            </div>
+        </div>
+    </div>
 </div> 
 
 </section>
