@@ -8,7 +8,7 @@
                 <img width="123px" height="123px" src="/modules/core/client/img/brand/galatea_icono.png">
             </div>
             <div class="col-xs-10 col-sm-8 col-md-8 col-lg-9">
-                <h2>La forma más fácil y rápida de crear tu propia biblioteca</h2>
+                <h2>La forma más fácil y rápida de compartir tus contenidos preferidos de la BVMC</h2>
             </div>
         </div>
         <div class="row">
@@ -26,22 +26,33 @@
 
 <div class="container">
     <div ng-include src="'modules/core/client/views/row-options.view.html'"></div>
-    <div class="row">
-        <h4 class="section-title">Consulta las últimas reseñas</h4>
+</div>
+
+<div class="home-reviews">    
+<div class="container">
+    <div class="row home-title">
+        <span>Consulta las últimas reseñas</span><hr>
     </div>
     <div ng-include src="'modules/reviews/client/views/slider-reviews.client.view.html'"></div>
     <div class="row">
-        <div class="col-md-2 col-md-offset-10"><a tooltip="Ver más reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search"><h4 style="color:#B43C2C">Ver más reseñas</h4></a></div>
+        <div class="col-md-2 col-md-offset-10">
+            <a tooltip="Ver más reseñas" tooltip-placement="top" href="#" ui-sref="reviews.search">
+                <h4 class="home-more-link">Ver más...</h4>
+            </a>
+        </div>
     </div>
-    <hr>
+</div>
+</div>    
     <!--<div class="row">
         <div class="col-sm-6 col-xs-12" ng-include src="'modules/groups/client/views/slider-groups.client.view.html'"></div>
         <div class="col-sm-6 col-xs-12" ng-include src="'modules/booklists/client/views/slider-booklists.client.view.html'"></div>
     </div>-->
-    
+<div class="container">    
     <div class="row">
         <div class="col-sm-6 col-xs-12">
-          <span class="section-title-mini">Últimos comentarios</span> 
+          <div class="row home-title">
+              <span>Últimos comentarios</span><hr>
+          </div>
           <div ng-repeat="comment in commentsReview">
             <section class="widget">
                 <div class="widget-controls">
@@ -64,10 +75,12 @@
                     <p class="text-light fs-mini m" ng-bind="comment._id.comment.content | htmlLimit:150"></p>
                 </div>
             </section>
-        </div>
+          </div>
         </div>
         <div class="col-sm-6 col-xs-12">
-            <span class="section-title-mini">Nuestros proyectos</span> 
+            <div class="row home-title">
+              <span>Nuestros proyectos</span><hr>
+            </div>
             <div class="col-sm-12 col-xs-12" style="padding: 18px;text-align: center;">
                 <a style="text-decoration:none" target="_blank" href="http://www.digitisation.eu">
                     <img src="http://blog.cervantesvirtual.com/wp-content/uploads/2013/03/logoCoCblue.jpg">
@@ -85,6 +98,6 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 </section>
