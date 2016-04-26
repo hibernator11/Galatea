@@ -4,11 +4,10 @@
     </div>
     <div class="panel-body">
 
-        <div class="alert alert-warning col-xs-12" ng-show="error">
+        <div class="alert alert-warning" ng-show="error">
             <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
             <strong>Aviso:</strong> {{error}}
         </div>
-        
         
         <div class="row hidden-xs">
             <div class="col-xs-12" style="margin-bottom: 20px;">
@@ -94,45 +93,44 @@
                 </div>  
                   
                 <div class="row hidden-xs">
-                  <div ng-if="group.type === 'obra' && group.uuid" 
-                      class="col-sm-3 col-md-3 col-xs-12"
-                      style="margin-top:10px">
-                     <a ng-href="{{group.source | mountRecord }}" target="_blank">
-                         <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
-                     </a>
-                  </div>
-                  
-                  <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
-                     <carousel interval="myInterval" no-wrap="noWrapSlides">
-                         <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
-                             <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
-                             <!--<div class="carousel-caption"> 
-                                <p>{{slide.title | htmlLimit: 80}}</p>
-                             </div>-->
-                         </slide>
-                     </carousel>
-                  </div>
-                 
-                  <div class="col-xs-12"> 
-                    <ul class="profileNav-list pull-right" style="padding: 10px;">    
-                      <li class="profileNav-item">
-                          <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
-                      </li>
-                      <li class="profileNav-item">
-                          <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
-                      </li>
-                      <li class="profileNav-item">
-                          <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
-                      </li>
-                    </ul>
+                    <div class="col-xs-12">
+                        <div ng-if="group.type === 'obra' && group.uuid" 
+                            class="col-sm-3 col-md-3 col-xs-12"
+                            style="margin-top:10px">
+                           <a ng-href="{{group.source | mountRecord }}" target="_blank">
+                               <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
+                           </a>
+                        </div>
 
-                    <h3 class="title">{{group.name}}</h3>
-                    <h3 class="title">{{group.authorName}}</h3>
-                    <h3 class="title">{{group.themeName}}</h3>
-                    <h5 class="title">{{group.title}}</h5>
-                    <p ng-bind-html="group.content | html"></p>
-                  </div>
-                  
+                        <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
+                           <carousel interval="myInterval" no-wrap="noWrapSlides">
+                               <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                                   <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
+                                   <!--<div class="carousel-caption"> 
+                                      <p>{{slide.title | htmlLimit: 80}}</p>
+                                   </div>-->
+                               </slide>
+                           </carousel>
+                        </div>
+
+                        <ul class="profileNav-list pull-right" style="padding: 10px;">    
+                          <li class="profileNav-item">
+                              <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                          </li>
+                          <li class="profileNav-item">
+                              <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                          </li>
+                          <li class="profileNav-item">
+                              <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                          </li>
+                        </ul>
+
+                        <h3 class="title">{{group.name}}</h3>
+                        <h3 class="title">{{group.authorName}}</h3>
+                        <h3 class="title">{{group.themeName}}</h3>
+                        <h5 class="title">{{group.title}}</h5>
+                        <p ng-bind-html="group.content | html"></p>
+                    </div>
                 </div>
              </div>     
          </div> <!--tab -->

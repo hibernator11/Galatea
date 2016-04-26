@@ -440,7 +440,6 @@ footer {
     cursor:pointer;
 }
 
-
 .carousel-inner {
   border-radius: 15px;
 }
@@ -485,13 +484,6 @@ footer {
 .carousel-control span.glyphicon.glyphicon-chevron-left{
     color:grey;
 }
-
-/*.profileNav-list {
-    margin: 0;
-    list-style: none;
-    padding: 0;
-    margin-bottom: 10px;
-}*/
 
 .profileNav-item {
     display: inline-block;
@@ -596,7 +588,6 @@ footer {
 .detail-comment {
     margin-top: 5px;
 }
-
 
 .hero-widget { text-align: center; padding-top: 20px; padding-bottom: 20px; }
 .hero-widget .icon { display: block; font-size: 96px; line-height: 96px; margin-bottom: 10px; text-align: center; }
