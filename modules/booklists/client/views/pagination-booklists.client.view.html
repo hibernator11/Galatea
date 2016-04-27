@@ -9,95 +9,82 @@
   
     <div class="container">
     
-    <div class="row" ng-controller="BooklistsController">
-        <ul class="profileNav-list hidden-xs">
-            <li class="profileNav-item pull-left">
-                <span class="profileNav-label">Total listas</span>
-                <span class="profileNav-value" data-is-compact="false">{{total}}</span>
-            </li>
-            <li class="profileNav-item pull-right">
-                <a tooltip="Crear lista" tooltip-placement="top" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</a> 
-            </li>
-            <li class="profileNav-item pull-right">
-                <a tooltip="Mis listas" tooltip-placement="top" href="#" ui-sref="booklists.list" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis listas</a> 
-            </li>
-            <li class="profileNav-item pull-right">
-                <span class="dropdown" dropdown>
-                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
-                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
-                </a>
-                <ul class="dropdown-menu" dropdown-menu>
-                    <li>
-                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-        
-    <div class="row visible-xs">
-        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
-            <button type="button" href="#" ui-sref="booklists.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear lista</button> 
-            <!--<a tooltip="Mis listas" tooltip-placement="top" href="#" ui-sref="booklists.list" class="btn btn-danger"><i class="fa fa-th-list"></i> Mis listas</a> -->
-            <button type="button" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
-                <span class="glyphicon glyphicon-search"></span> Búsqueda
-            </button>
+        <div class="row">
+            <ul class="profileNav-list">
+                <li class="profileNav-item pull-left">
+                    <span class="profileNav-label">Total listas</span>
+                    <span class="profileNav-value" data-is-compact="false">{{total}}</span>
+                </li>
+                <li class="profileNav-item pull-right">
+                    <button type="button" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+                        <span class="glyphicon glyphicon-search"></span> Búsqueda avanzada
+                    </button> 
+                </li>
+            </ul>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-            <button type="button" style="margin-bottom:10px;" class="btn btn-danger hidden-xs" ng-click="searchIsCollapsed = !searchIsCollapsed">
-                <span class="glyphicon glyphicon-search"></span> Búsqueda avanzada
-            </button>
-            <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <form class="form-inline" role="form">
-                            <div class="form-group">
-                                <label class="filter-col" for="pref-search">Texto:</label>
-                                <input type="text" class="form-control input-sm" id="pref-search" ng-model="text">
-                            </div><!-- form group [search] -->
-                            <div class="form-group">
-                                <label class="filter-col" for="pref-orderby">Orden:</label>
-                                <select id="pref-orderby" class="form-control" ng-model="order">
-                                    <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
-                                </select> 
-                            </div> <!-- form group [order by] --> 
-                            <div class="form-group">
-                                <label class="filter-col" for="pref-perpage">Elementos página:</label>
-                                <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
-                                    <option ng-repeat="x in optionsItemsPage" value="{{x.value}}">{{x.text}}</option>
-                                </select> 
-                            </div> <!-- form group [rows] -->
-                            <button ng-click="find()" class="btn btn-danger" style="margin-top: 4px;">
-                                <span class="glyphicon glyphicon-search"></span> Buscar
-                            </button>
-                        </form>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+                <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <label class="filter-col" for="pref-search">Texto:</label>
+                                    <input type="text" class="form-control input-sm" id="pref-search" ng-model="text">
+                                </div><!-- form group [search] -->
+                                <div class="form-group">
+                                    <label class="filter-col" for="pref-orderby">Orden:</label>
+                                    <select id="pref-orderby" class="form-control" ng-model="order">
+                                        <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
+                                    </select> 
+                                </div> <!-- form group [order by] --> 
+                                <div class="form-group">
+                                    <label class="filter-col" for="pref-perpage">Elementos página:</label>
+                                    <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
+                                        <option ng-repeat="x in optionsItemsPage" value="{{x.value}}">{{x.text}}</option>
+                                    </select> 
+                                </div> <!-- form group [rows] -->
+                                <button ng-click="find()" class="btn btn-danger" style="margin-top: 4px;">
+                                    <span class="glyphicon glyphicon-search"></span> Buscar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>        
+        
+        <div class="row">
+            <div ng-repeat="booklist in pagedItems">
+                <section class="widget">
+                    <div class="widget-controls">
+                       
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
+                            <a href="#" ui-sref="booklists.view({booklistId: booklist._id})">
+                                <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Lista</span> - {{ booklist.title | htmlLimit: 100 }}</h3>
+                            </a>
+                            <ul class="tags text-grey pull-right">
+                                <li><a href="#" ui-sref="booklists.view({booklistId: booklist._id})">detalles</a></li>
+                            </ul>
+                        </div>
+                        <div class="post-user mt-n-lg">
+                            <span class="thumb-lg pull-left mr">
+                                <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="img-circle">
+                            </span>
+                            <h5 class="mt-sm fw-normal text-grey">{{booklist.user.displayName}} <small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span></small></h5>
+                        </div>
+                        <p class="text-light fs-mini m">
+                            <span>{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}} |</span>&nbsp;{{booklist.description | htmlLimit:150}}
+                        </p>
+                    </div>
+                </section>
+            </div>
         </div>
-    </div>        
         
-    <div class="row">
-      <div class="list-group col-xs-12">
-        <a ng-repeat="booklist in pagedItems" ui-sref="booklists.view({booklistId: booklist._id})" class="list-group-item">
-          <h4 class="list-group-item-heading" ng-bind="booklist.title | htmlLimit:200"></h4>
-          <p>
-            <span><i class="glyphicon glyphicon-user"></i> {{booklist.user.displayName}} |</span>     
-            <span ng-show="booklist.status === 'public'"><i class="glyphicon glyphicon-eye-open"></i> Publicado |</span> 
-            <span ng-show="booklist.status === 'draft'"><i class="glyphicon glyphicon-eye-close"></i> Borrador |</span>
-            <span><i class="glyphicon glyphicon-comment"></i> {{booklist.comments.length}} {{booklist.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
-            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{booklist.ratings.length}} {{booklist.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
-            <span>{{booklist.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}} |</span>
-            <span><i class="fa fa-calendar"></i> {{booklist.created | date:'dd/MM/yyyy'}}</span>
-          </p>
-        </a>
-      </div>
-    </div>
-        
-    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
+        <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
     </div> 
 
 </section>

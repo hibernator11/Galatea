@@ -180,7 +180,7 @@ var page = 1;
     
     Booklist.find(query).sort(order).
             skip((page-1)*per_page).limit(per_page).
-            populate('user', 'displayName').exec(function (err, booklists) {
+            populate('user', 'displayName profileImageURL').exec(function (err, booklists) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)

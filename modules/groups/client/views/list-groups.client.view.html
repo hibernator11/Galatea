@@ -1,95 +1,81 @@
 <section ng-controller="GroupUserPaginationController" ng-init="init(10)">
 
- <div class="page-header">
-    <div class="container">
-        <h1><i class="fa fa-users"></i> Mis grupos</h1>
-        <h2></h2>
-    </div>
-  </div>    
-    
-  <div class="container">    
-
-    <div class="row" ng-controller="GroupsController">
-        <ul class="profileNav-list hidden-xs">
-            <li class="profileNav-item pull-left">
-                <span class="profileNav-label">Grupos</span>
-                <span class="profileNav-value" data-is-compact="false">{{total}}</span>
-            </li>
-            <li class="profileNav-item pull-right">
-                <a tooltip="Crear grupo" tooltip-placement="top" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</a> 
-            </li>
-            <li class="profileNav-item pull-right">
-                <a tooltip="Buscar grupos" tooltip-placement="top" href="#" ui-sref="groups.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar grupos</a> 
-            </li>
-            <li class="profileNav-item pull-right">
-                <span class="dropdown" dropdown>
-                <a tooltip="Más acciones de usuario" tooltip-placement="top" href="" class="dropdown-toggle" dropdown-toggle>
-                    <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
-                </a>
-                <ul class="dropdown-menu" dropdown-menu>
-                    <li ng-show="authentication.user._id === group.user._id"> 
-                        <a ui-sref="groups.edit({groupId: group._id})"><i class="glyphicon glyphicon-edit"></i> Editar grupo</a>
-                    </li>
-                    <li ng-show="authentication.user._id === group.user._id">
-                        <a ng-show="group.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar grupo</a>
-                    </li>
-                    <li ng-show="authentication.user._id === group.user._id">
-                        <a ng-show="group.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
-                    </li>
-                    <li ng-show="authentication.user._id === group.user._id">
-                        <a ng-click="remove()" confirm="¿Estas seguro que deseas borrar el grupo?"><i class="glyphicon glyphicon-trash"></i> Eliminar grupo</a>
-                    </li>
-                    <li>
-                        <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-      
-    <div class="row visible-xs">
-        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
-            <button type="button" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</button> 
-            <a tooltip="Buscar grupos" tooltip-placement="top" href="#" ui-sref="groups.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar grupos</a> 
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fa fa-users"></i> Mis grupos</h1>
         </div>
-    </div>  
-      
-      
-    <div class="row">
-      <div class="list-group col-xs-12">
-        <a ng-repeat="group in pagedItems" ui-sref="groups.view({groupId: group._id})" class="list-group-item">
-          <h4 class="list-group-item-heading" ng-bind="group.name | htmlLimit: 100"></h4>
-          <!--<h5 class="list-group-item-heading" ng-show="group.title">Grupo sobre {{group.title | htmlLimit: 100}}</h5> 
-          <h5 class="list-group-item-heading" ng-show="group.authorName">Grupo sobre el autor {{group.authorName}}</h5>-->
-
-          <div>
-            <span ng-switch on="group.type">
-                <span ng-switch-when="obra">
-                  <i class="glyphicon glyphicon-book"></i> Obra |
-                </span>
-                <span ng-switch-when="lista">
-                  <i class="glyphicon glyphicon-th-list"></i> Lista |
-                </span>
-                <span ng-switch-when="autor">
-                  <i class="glyphicon glyphicon-pencil"></i> Autor |
-                </span>
-                <span ng-switch-default>
-                  <i class="fa fa-comments"></i> Tema |
-                </span>
-            </span>
-            <span><i class="glyphicon glyphicon-comment"></i> {{group.comments.length}} {{group.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>
-            <!--<span><i class="glyphicon glyphicon-thumbs-up"></i> {{group.ratings.length}} {{group.ratings.length == 1 ? 'Valoración' : 'Valoraciones'}} |</span>-->
-            <span><i class="fa fa-calendar"></i> {{group.created | date:'dd/MM/yyyy'}}</span>
-          </div> 
-
-        </a>
-      </div>
-    </div>
-
-    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>  
+    </div>    
     
-    <div class="alert alert-warning text-center" ng-show="pagedItems.length === 0">
-        No ha creado ningún grupo todavía, ¿<a ui-sref="groups.create">desea crear uno</a>?
-    </div>
-</div> 
+    <div class="container">    
+
+        <div class="row" ng-controller="GroupsController">
+            <ul class="profileNav-list hidden-xs">
+                <li class="profileNav-item pull-left">
+                    <span class="profileNav-label">Grupos</span>
+                    <span class="profileNav-value" data-is-compact="false">{{total}}</span>
+                </li>
+                <li class="profileNav-item pull-right">
+                    <a tooltip="Crear grupo" tooltip-placement="top" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</a> 
+                </li>
+                <li class="profileNav-item pull-right">
+                    <a tooltip="Buscar grupos" tooltip-placement="top" href="#" ui-sref="groups.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar grupos</a> 
+                </li>
+            </ul>
+        </div>
+      
+        <div class="row visible-xs">
+            <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+                <button type="button" href="#" ui-sref="groups.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear grupo</button> 
+                <a tooltip="Buscar grupos" tooltip-placement="top" href="#" ui-sref="groups.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar grupos</a> 
+            </div>
+        </div>  
+      
+        <div class="row">
+            <div ng-repeat="group in pagedItems">
+                <section class="widget">
+                    <div class="widget-controls">
+                        <!--<a href="#"><i class="fa fa-refresh"></i></a>
+                        <a href="#" data-widgster="close"><i class="glyphicon glyphicon-remove"></i></a>-->
+                        <span ng-switch on="group.type">
+                            <span ng-switch-when="obra">
+                              <i class="glyphicon glyphicon-book"></i> Obra
+                            </span>
+                            <span ng-switch-when="lista">
+                              <i class="glyphicon glyphicon-th-list"></i> Lista
+                            </span>
+                            <span ng-switch-when="autor">
+                              <i class="glyphicon glyphicon-pencil"></i> Autor
+                            </span>
+                            <span ng-switch-default>
+                              <i class="fa fa-comments"></i> Tema
+                            </span>
+                        </span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
+                            <a href="#" ui-sref="groups.view({groupId: group._id})">
+                                <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Grupo</span> - {{ group.name | htmlLimit: 100 }}</h3>
+                            </a>
+                            <ul class="tags text-grey pull-right">
+                                <li><a href="#" ui-sref="groups.view({groupId: group._id})">detalles</a></li>
+                            </ul>
+                        </div>
+                        <div class="post-user mt-n-lg">
+                            <span class="thumb-lg pull-left mr">
+                                <!--<img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="img-circle">-->
+                            </span>
+                            <h5 class="mt-sm fw-normal text-grey"><small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="group.created | date:'dd/MM/yyyy'"></span></small></h5>
+                        </div>
+                        <p class="text-light fs-mini m" ng-bind-html="group.content | htmlLimit:150"></p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>  
+    
+        <div class="alert alert-warning text-center" ng-show="pagedItems.length === 0">
+            No ha creado ningún grupo todavía, ¿<a ui-sref="groups.create">desea crear uno</a>?
+        </div>
+    </div> 
 </section>

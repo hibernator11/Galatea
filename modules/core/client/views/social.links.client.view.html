@@ -1,0 +1,23 @@
+<ul class="profileNav-list">
+    <li class="profileNav-item">
+        <span class="profileNav-label">
+            <a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank">
+                <i class="fa fa-facebook fa-2x"></i>
+            </a>
+        </span>
+    </li>
+    <li class="profileNav-item">
+        <span class="profileNav-label">
+            <a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank">
+                <i class="fa fa-twitter fa-2x"></i>
+            </a>
+        </span>
+    </li>
+    <li class="profileNav-item">
+        <span class="profileNav-label">
+            <a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()">
+                <i class="fa fa-envelope fa-2x"></i>
+            </a>
+        </span>
+    </li>
+ </ul>

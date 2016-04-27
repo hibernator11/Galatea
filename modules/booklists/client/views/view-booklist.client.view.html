@@ -1,28 +1,27 @@
 <section ng-controller="BooklistsController" ng-init="findOne()">
 
-  <div class="page-header">
-    <div class="container">
-        <h2><i class="fa fa-pencil-square-o"></i> Lista de obras</h2>
-        <div class="row visible-xs">
-            <div class="col-xs-12" style="text-align: center;">
-                <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
-                <span ng-bind="booklist.user.displayName"></span>
+    <div class="page-header">
+        <div class="container">
+            <h2><i class="fa fa-pencil-square-o"></i> Lista de obras</h2>
+            <div class="row visible-xs">
+                <div class="col-xs-12" style="text-align: center;">
+                    <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
+                    <span ng-bind="booklist.user.displayName"></span>
+                </div>
+                <div class="col-xs-12" style="margin-top:10px;text-align: center;">
+                    <i class="fa fa-calendar fa-2x"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
+                </div>
             </div>
-            <div class="col-xs-12" style="margin-top:10px;text-align: center;">
-                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
+            <div class="row visible-sm visible-md visible-lg">
+                <div class="col-xs-12">
+                    <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
+                    <span ng-bind="booklist.user.displayName"></span>
+                    <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
+                </div>
             </div>
         </div>
-        <div class="row visible-sm visible-md visible-lg">
-            <div class="col-xs-12">
-                <img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="header-profile-image" />
-                <span ng-bind="booklist.user.displayName"></span>
-                <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="booklist.created | date:'dd/MM/yyyy'"></span>
-            </div>
-        </div>
-    </div>
-  </div>    
+    </div>    
     
-
     <div class="container">
         <div class="row">
             <ul class="profileNav-list">
@@ -43,7 +42,7 @@
                     <span class="profileNav-value" data-is-compact="false">{{booklist.status === 'public' ? 'Si' : 'No' }}</span>
                 </li>
                 <li class="profileNav-item pull-right hidden-xs" ng-show="authentication.user._id === booklist.user._id && booklist.status === 'draft'">
-                   <a tooltip="Publicar lista" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                   <a tooltip="Publicar lista" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger bvmc-btn"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                 </li>
                 <li class="profileNav-item pull-right hidden-xs" ng-show="authentication.user._id === booklist.user._id">
                    <a tooltip="Añadir obra" tooltip-placement="top" href="#" ng-click="showBookForm()" class="btn btn-danger bvmc-btn"><i class="fa fa-plus"></i> Añadir obra</a> 
@@ -51,7 +50,7 @@
                 <li class="profileNav-item pull-right" >
                    <span class="dropdown" dropdown>
                        <a tooltip="Más acciones de usuario" tooltip-placement="left" href="" class="dropdown-toggle" dropdown-toggle>
-                           <i style="padding: 3px; margin-right: 10px; color: #d9534f" class="fa fa-cog fa-2x"></i>
+                           <i class="fa fa-cog fa-2x icon-tools"></i>
                        </a>
                        <ul class="dropdown-menu" dropdown-menu>
                          <li>
@@ -95,26 +94,28 @@
             </ul>
         </div>
 
-      <div class="alert alert-success" ng-show="messageok">
-       <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
-       <strong>Resultado:</strong> {{messageok}}
-      </div>
+        <div class="alert alert-success" ng-show="messageok">
+            <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Resultado:</strong> {{messageok}}
+        </div>
         
-      <div class="alert alert-warning" ng-show="error">
-       <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
-       <strong>Aviso:</strong> {{error}}
-      </div>
+        <div class="alert alert-warning" ng-show="error">
+            <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+            <strong>Aviso:</strong> {{error}}
+        </div>
         
-      <div class="alert alert-warning" ng-show="booklist.status === 'draft' && warningopen">
-        <button ng-click="warningopen = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>  
-        <strong>Aviso:</strong> La lista de obras no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
-      </div>
-
-      <hr>
+        <div class="alert alert-warning" ng-show="booklist.status === 'draft' && warningopen">
+            <button ng-click="warningopen = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>  
+            <strong>Aviso:</strong> La lista de obras no se ha publicado todavía. Si desea publicarlo, cambie su estado desde el menú de configuración o haga click en el siguiente enlace.
+        </div>
+        <hr>
       
-      <!--<div ng-include src="'modules/booklists/client/views/templates/booklists.print.template.html'"></div> -->
+        <!--<div ng-include src="'modules/booklists/client/views/templates/booklists.print.template.html'"></div> -->
       
-      <div>
+        <div>
+            <div class="row home-title">
+                <span>Descripción</span><hr>
+            </div>
             <!--<a ng-if="authentication.user" ng-show="authentication.user._id !== booklist.user._id && showRatingButton" tooltip="Valorar el grupo" tooltip-placement="top" ng-click="checkRatingBar()" class="btn btn-danger">
                 <i class="fa fa-star"></i> Valorar
             </a>
@@ -124,20 +125,9 @@
               <span class="label rating" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{overStar}}</span>
             </div> -->
 
+            <div class="pull-right" ng-include src="'modules/core/client/views/social.links.client.view.html'"></div>
             
-            <ul class="profileNav-list pull-right">    
-                <li class="profileNav-item">
-                    <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
-                </li>
-                <li class="profileNav-item">
-                    <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
-                </li>
-                <li class="profileNav-item">
-                    <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
-                </li>
-            </ul>
-            
-            <h3 class="booklist-title">{{ booklist.title | htmlLimit: 200 }}</h3>
+            <h4 class="title">{{ booklist.title | htmlLimit: 200 }}</h4>
             <dl class="dl-horizontal">
                 <dt ng-show="booklist.description">Descripción</dt>
                 <dd ng-show="booklist.description">{{booklist.description}}</dd>
@@ -151,111 +141,113 @@
                 </dd>
             </dl>
         </div>    
-      <hr>
+        <hr>
 
-      <div ng-repeat="book in booklist.books">
-       <div class="row">
-         <div class="col-xs-4 col-sm-4 col-md-2">
-           <a ng-href="{{book.slug | mountRecord }}" target="_blank">
-             <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
-           </a>
-         </div>
-         <div class="col-xs-8 col-md-2 pull-right">
-           <div class="btn-group">
-            <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-default">
-                <i class="glyphicon glyphicon-new-window"></i>
-            </a>
-            <a confirm="¿Desea eliminar la obra de la lista?" ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="top" ng-click="removeBook(book)" class="btn btn-default">
-                <i class="glyphicon glyphicon-trash" ></i>
-            </a>
-            <a tooltip="Ver reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-default">
-                <i class="glyphicon glyphicon-zoom-in" aria-hidden="true"></i>
-            </a>
-           </div>
-         </div>  
-         <div class="col-xs-12 col-sm-8 col-md-8">
-            <h4 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h4>
-            <h5 ng-if="book.title.length > 200" class="title">{{ book.title }}</h5>
-            <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
-            <dl class="dl-horizontal">
-                <dt ng-show="book.reproduction">Reproducción</dt>
-                <dd ng-show="book.reproduction">{{book.reproduction}}</dd>
-                <dt ng-show="book.language">Idioma</dt>
-                <dd ng-show="book.language">{{book.language}}</dd>
-                <dt ng-show="book.mediaType">Forma soporte</dt>
-                <dd ng-show="book.mediaType">
-                    <span ng-show="book.mediaType" ng-switch on="book.mediaType">
-                        <span ng-switch-when="audio">
-                            <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
-                        </span>
-                        <span ng-switch-when="video">
-                            <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
-                        </span>
-                        <span ng-switch-when="texto">
-                            <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
-                        </span>
-                        <span ng-switch-default>
-                            {{book.mediaType}}
-                        </span>
-                    </span>
-                </dd>
-                <dt ng-show="book.comments">Comentarios</dt>
-                <dd ng-show="book.comments">{{book.comments}}</dd>
-            </dl>
-         </div>
-       </div>
-       
-       <div class="alert alert-warning" ng-show="booklist.books.length === 0">
-         <a href="#" ng-click="showBookForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
-         <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
-       </div>
-       
-       <hr>
-       
-     </div> <!-- repeat books -->
+        <div class="row home-title">
+            <span>Obras</span><hr>
+        </div>
+        <div class="alert alert-warning" ng-show="booklist.books.length === 0">
+            <a href="#" ng-click="showBookForm()" class="btn btn-xs btn-warning pull-right">Añadir obras</a>
+            <strong>Aviso:</strong> Esta lista no contiene ninguna obra.
+        </div>
+        <div ng-repeat="book in booklist.books">
+            
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-2">
+                    <a ng-href="{{book.slug | mountRecord }}" target="_blank">
+                        <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
+                    </a>
+                </div>
+                <div class="col-xs-8 col-md-2 pull-right">
+                    <div class="btn-group">
+                        <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-default">
+                            <i class="glyphicon glyphicon-new-window"></i>
+                        </a>
+                        <a confirm="¿Desea eliminar la obra de la lista?" ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="top" ng-click="removeBook(book)" class="btn btn-default">
+                            <i class="glyphicon glyphicon-trash" ></i>
+                        </a>
+                        <a tooltip="Ver reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-default">
+                            <i class="glyphicon glyphicon-zoom-in" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>  
+                <div class="col-xs-12 col-sm-8 col-md-8">
+                    <h4 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h4>
+                    <h5 ng-if="book.title.length > 200" class="title">{{ book.title }}</h5>
+                    <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
+                    <dl class="dl-horizontal">
+                        <dt ng-show="book.reproduction">Reproducción</dt>
+                        <dd ng-show="book.reproduction">{{book.reproduction}}</dd>
+                        <dt ng-show="book.language">Idioma</dt>
+                        <dd ng-show="book.language">{{book.language}}</dd>
+                        <dt ng-show="book.mediaType">Forma soporte</dt>
+                        <dd ng-show="book.mediaType">
+                            <span ng-show="book.mediaType" ng-switch on="book.mediaType">
+                                <span ng-switch-when="audio">
+                                    <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
+                                </span>
+                                <span ng-switch-when="video">
+                                    <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
+                                </span>
+                                <span ng-switch-when="texto">
+                                    <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
+                                </span>
+                                <span ng-switch-default>
+                                    {{book.mediaType}}
+                                </span>
+                            </span>
+                        </dd>
+                        <dt ng-show="book.comments">Comentarios</dt>
+                        <dd ng-show="book.comments">{{book.comments}}</dd>
+                    </dl>
+                </div>
+            </div>
+            <hr>
+        </div> <!-- repeat books -->
      
 
-     <div ng-show="(booklist.comments).length > 0">
-      <h4>Actividad reciente</h4>	
-
-      <div ng-repeat="comment in booklist.comments" class="media">
-        <div class="media-left">
-          <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
-        </div>
-        <div class="media-body">
-            <small>
-            <em class="text-muted">
-            Añadido el
-            <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
-             por
-            <span ng-bind="comment.user.displayName"></span>
-            </em>
-            <a ng-show="authentication.user._id === booklist.user._id" href="#" tooltip="Eliminar comentario"
-               confirm="¿Estas seguro que deseas eliminar el comentario?"
-               ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
-            </small>
-            <p ng-bind="comment.content"></p>
-        </div>
-      </div>
-      <hr>
-     </div> <!-- last comments -->
+        <div ng-show="(booklist.comments).length > 0">
+            <div class="row home-title">
+                <span>Actividad reciente</span><hr>
+            </div>  
+            <div ng-repeat="comment in booklist.comments" class="media">
+                <div class="media-left">
+                  <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                </div>
+                <div class="media-body">
+                    <small>
+                    <em class="text-muted">
+                    Añadido el
+                    <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                     por
+                    <span ng-bind="comment.user.displayName"></span>
+                    </em>
+                    <a ng-show="authentication.user._id === booklist.user._id" href="#" tooltip="Eliminar comentario"
+                       confirm="¿Estas seguro que deseas eliminar el comentario?"
+                       ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
+                    </small>
+                    <p ng-bind="comment.content"></p>
+                </div>
+            </div>
+            <hr>
+        </div> <!-- last comments -->
      
-     <div ng-show="booklist.status === 'public' && authentication.user">
-        <form class="form-horizontal" name="form.commentForm"> 
-         <div class="form-group">
-           <label for="txtcomment" class="col-sm-2 control-label">Escribe tu comentario</label>
-           <div class="col-sm-10">
-              <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
-           </div>
-         </div>
-         <div class="form-group">
-           <div class="col-sm-offset-2 col-sm-10">                    
-              <button class="btn btn-danger btn-circle" ng-click="addComment()"><span class="glyphicon glyphicon-comment"></span> Añadir comentario</button>
-           </div>
-         </div>            
-        </form>
-     </div>
-
-    
-  </div>
+        <div ng-show="booklist.status === 'public' && authentication.user">
+            <div class="row home-title">
+                <span>Escribe tu comentario</span><hr>
+            </div>
+            <form class="form-horizontal" name="form.commentForm"> 
+             <div class="form-group">
+               <div class="col-sm-12">
+                  <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
+               </div>
+             </div>
+             <div class="form-group">
+               <div class="col-sm-12">
+                  <button class="btn btn-danger btn-circle" ng-click="addComment()"><span class="glyphicon glyphicon-comment"></span> Añadir</button>
+               </div>
+             </div>            
+            </form>
+        </div>
+    </div>
 </section>

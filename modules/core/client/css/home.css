@@ -342,13 +342,17 @@ footer {
 
 .title {
     font-weight: bold;
-    color: grey;
+    color: #494b55;
 }
 
 .page-header {
-    background-color: #bfbfbf;
-    color: white;
-    height: 175px;
+    background-color: #f6f6f6;
+    color: #494b55;
+    height: 140px;
+}
+
+label.col-sm-2.control-label {
+    color: #494b55;
 }
 
 /* header */
@@ -544,7 +548,7 @@ footer {
 /* end advanced search */
 
 .authors {
-    color:#B43C2C;
+    color:#B43C2C !important;
     font-weight: bold;
 }
 
@@ -560,11 +564,6 @@ footer {
 
 .label-danger {
     white-space: normal;
-}
-
-.booklist-title {
-    font-weight: bold;
-    color: grey;    
 }
 
 .bvmc-btn {
@@ -592,11 +591,30 @@ footer {
 .hero-widget { text-align: center; padding-top: 20px; padding-bottom: 20px; }
 .hero-widget .icon { display: block; font-size: 96px; line-height: 96px; margin-bottom: 10px; text-align: center; }
 .hero-widget var { display: block; height: 64px; font-size: 64px; line-height: 64px; font-style: normal; }
-.hero-widget label { font-size: 17px; }
+.hero-widget label { font-size: 17px; color:#494b55 }
 .hero-widget .options { margin-top: 10px; }
+.hero-widget ul.profileNav-list {
+    padding: 0px;
+}
+
+.row ul.profileNav-list {
+    padding: 10px;
+}
+
+.form-horizontal {
+    margin-top:20px;
+}
 
 
 .navbar-default .navbar-nav > li > a {
+    text-transform: uppercase;
+    color: #ffffff;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.navbar-inverse .navbar-nav > li > a {
     text-transform: uppercase;
     color: #ffffff;
     font-size: 12px;
@@ -609,12 +627,12 @@ footer {
     background-image: linear-gradient(to bottom, #494B55 0%, #494b55 100%) !important;
 }
 
-.navbar-inverse {
+.navbar-collapse {
     background-color: #494b55 !important;
     background-image: linear-gradient(to bottom, #494B55 0%, #494b55 100%) !important;
 }
 
-.navbar-inverse .navbar-collapse {
+.navbar-inverse {
     background-color: #494b55 !important;
     background-image: linear-gradient(to bottom, #494B55 0%, #494b55 100%) !important;
 }
@@ -650,4 +668,16 @@ footer {
     margin: 20px 0 30px 0;
 }
 
+.icon-tools {
+    padding: 3px; 
+    margin-right: 10px; 
+    color: #d9534f;
+}
 
+li.profileNav-item span a {
+    color: #494b55;
+}
+
+.widget-body h3{
+    color:#494b55;
+}
