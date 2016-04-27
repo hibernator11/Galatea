@@ -61,7 +61,9 @@
                 </div>
                 <div class="widget-body">
                     <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
-                        <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Reseña</span> - {{ comment._id.title | htmlLimit: 100 }}</h3>
+                        <a href="#" ui-sref="reviews.view({reviewId: comment._id.reviewId})">
+                            <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Reseña</span> - {{ comment._id.title | htmlLimit: 100 }}</h3>
+                        </a>
                         <ul class="tags text-grey pull-right">
                             <li><a href="#" ui-sref="reviews.view({reviewId: comment._id.reviewId})">detalles</a></li>
                         </ul>
