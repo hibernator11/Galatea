@@ -62,19 +62,6 @@
                     <div class="text">
                         <label class="text-muted">{{ group.name }}</label>
                     </div>
-                    <div class="options">
-                        <ul class="profileNav-list" style="padding: 0px;">    
-                            <li class="profileNav-item">
-                                <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
-                            </li>
-                            <li class="profileNav-item">
-                                <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
-                            </li>
-                            <li class="profileNav-item">
-                                <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
 
                 <div class="row visible-xs">
@@ -90,6 +77,20 @@
                             <dd ng-show="group.content" ng-bind-html="group.content | html"></dd>
                         </dl>
                     </div>
+                </div>
+                  
+                <div class="row visible-xs" ng-if="group.type === 'lista' && group.books.length > 0">
+                    <div class="col-xs-12">
+                         <div class="row home-title">
+                            <span>Obras</span><hr>
+                        </div>
+                        <dl class="dl-horizontal" ng-repeat="book in group.books">
+                            <dt ng-show="book.title">Título</dt>
+                            <dd ng-show="book.title">{{book.title}}</dd>
+                            <dt ng-show="book.authors">Autor</dt>
+                            <dd ng-show="book.authors">{{book.authors}}</dd>
+                        </dl>
+                    </div>
                 </div>  
                   
                 <div class="row hidden-xs">
@@ -102,29 +103,6 @@
                            </a>
                         </div>
 
-                        <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0" class="col-sm-3 col-md-3 col-xs-12">
-                           <carousel interval="myInterval" no-wrap="noWrapSlides">
-                               <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
-                                   <img ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
-                                   <!--<div class="carousel-caption"> 
-                                      <p>{{slide.title | htmlLimit: 80}}</p>
-                                   </div>-->
-                               </slide>
-                           </carousel>
-                        </div>
-
-                        <ul class="profileNav-list pull-right" style="padding: 10px;">    
-                          <li class="profileNav-item">
-                              <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
-                          </li>
-                          <li class="profileNav-item">
-                              <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
-                          </li>
-                          <li class="profileNav-item">
-                              <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
-                          </li>
-                        </ul>
-
                         <h3 class="title">{{group.name}}</h3>
                         <h3 class="title">{{group.authorName}}</h3>
                         <h3 class="title">{{group.themeName}}</h3>
@@ -132,6 +110,65 @@
                         <p ng-bind-html="group.content | html"></p>
                     </div>
                 </div>
+                
+                <div class="row home-title hidden-xs" ng-if="group.type === 'lista' && group.books.length > 0">
+                    <span>Obras</span><hr>
+                </div>
+                <div ng-repeat="book in group.books" class="hidden-xs">
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-2">
+                            <a ng-href="{{book.slug | mountRecord }}" target="_blank">
+                                <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
+                            </a>
+                        </div>
+                        <div class="col-xs-8 col-md-2 pull-right">
+                            <div class="btn-group">
+                                <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-new-window"></i>
+                                </a>
+                                <a confirm="¿Desea eliminar la obra de la lista?" ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="top" ng-click="removeBook(book)" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-trash" ></i>
+                                </a>
+                                <a tooltip="Ver reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-zoom-in" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>  
+                        <div class="col-xs-12 col-sm-8 col-md-8">
+                            <h4 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h4>
+                            <h5 ng-if="book.title.length > 200" class="title">{{ book.title }}</h5>
+                            <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
+                            <dl class="dl-horizontal">
+                                <dt ng-show="book.reproduction">Reproducción</dt>
+                                <dd ng-show="book.reproduction">{{book.reproduction}}</dd>
+                                <dt ng-show="book.language">Idioma</dt>
+                                <dd ng-show="book.language">{{book.language}}</dd>
+                                <dt ng-show="book.mediaType">Forma soporte</dt>
+                                <dd ng-show="book.mediaType">
+                                    <span ng-show="book.mediaType" ng-switch on="book.mediaType">
+                                        <span ng-switch-when="audio">
+                                            <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
+                                        </span>
+                                        <span ng-switch-when="video">
+                                            <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
+                                        </span>
+                                        <span ng-switch-when="texto">
+                                            <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
+                                        </span>
+                                        <span ng-switch-default>
+                                            {{book.mediaType}}
+                                        </span>
+                                    </span>
+                                </dd>
+                                <dt ng-show="book.comments">Comentarios</dt>
+                                <dd ng-show="book.comments">{{book.comments}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <hr ng-show="$index !== group.books.length -1">
+                </div> <!-- repeat books -->  
+                  
              </div>     
          </div> <!--tab -->
          <div tab>
