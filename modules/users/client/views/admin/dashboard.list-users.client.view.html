@@ -1,67 +1,139 @@
-<section ng-controller="UserListController" ng-init="init()">
-<div class="row">
-    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
-        <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form class="form-inline" role="form">
-                        <div class="form-group">
-                            <label class="filter-col" for="pref-search">Texto:</label>
-                            <input type="text" class="form-control input-sm" id="pref-search" ng-model="text">
-                        </div><!-- form group [search] -->
-                        <div class="form-group">
-                            <label class="filter-col" for="pref-orderby">Orden:</label>
-                            <select id="pref-orderby" class="form-control" ng-model="order">
-                                <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
-                            </select> 
-                        </div> <!-- form group [order by] --> 
-                        <div class="form-group">
-                            <label class="filter-col" for="pref-status">Estado:</label>
-                            <select id="pref-status" class="form-control" ng-model="status">
-                                <option ng-repeat="x in optionsStatus" value="{{x.value}}">{{x.text}}</option>
-                            </select> 
-                        </div> <!-- form group [status] --> 
-                        <div class="form-group">
-                            <label class="filter-col" for="pref-perpage">Elementos página:</label>
-                            <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
-                                <option ng-repeat="x in optionsItemsPage" value="{{x.value}}">{{x.text}}</option>
-                            </select> 
-                        </div> <!-- form group [rows] -->
-                        <button ng-click="find()" class="btn btn-danger" style="margin-top: 4px;">
-                            <span class="glyphicon glyphicon-search"></span> Buscar
-                        </button>
-                    </form>
+<div id="wrapper">
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Usuarios</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-users"></i> Usuarios
+                        </li>
+                    </ol>
                 </div>
             </div>
-        </div>
-        
-        <button type="button" style="margin-bottom:10px;" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
-            <span class="glyphicon glyphicon-cog"></span> Búsqueda avanzada
-        </button>
-   </div>
-</div>
+            <!-- /.row -->
 
-<div class="row">
-    <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
-        <div class="list-group">
-            <a ng-repeat="user in pagedItems" ui-sref="admin.user({userId: user._id})" class="list-group-item">
-                <h4 class="list-group-item-heading" ng-bind="user.username"></h4>
-                <p class="list-group-item-text pull-right small" ng-bind="user.roles"></p>
-                <p class="list-group-item-text" ng-bind="user.email"></p>
-            </a>
-        </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalUsers"></div>
+                                    <div>Usuarios totales</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">En general</span>
+                            <div class="clearfix"></div> 
+                        </div>-->
+                    </div>
+                    
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="newUsers"></div>
+                                    <div>Usuarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">Realizados en reseñas</span>
+                            <div class="clearfix"></div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
 
-        <pagination boundary-links="true" 
-                    max-size="8" 
-                    items-per-page="itemsPerPage" 
-                    total-items="totalResults" 
-                    ng-model="currentPage" 
-                    ng-change="pageChanged(currentPage)"
-                    first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último">
-        </pagination>
-   </div>
-</div>        
-</section>    
-    
+            <section ng-controller="UserListController" ng-init="init()">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+                    <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <label class="filter-col" for="pref-search">Texto:</label>
+                                        <input type="text" class="form-control input-sm" id="pref-search" ng-model="text">
+                                    </div><!-- form group [search] -->
+                                    <div class="form-group">
+                                        <label class="filter-col" for="pref-orderby">Orden:</label>
+                                        <select id="pref-orderby" class="form-control" ng-model="order">
+                                            <option ng-repeat="x in optionsOrder" value="{{x.value}}">{{x.text}}</option>
+                                        </select> 
+                                    </div> <!-- form group [order by] --> 
+                                    <div class="form-group">
+                                        <label class="filter-col" for="pref-status">Estado:</label>
+                                        <select id="pref-status" class="form-control" ng-model="status">
+                                            <option ng-repeat="x in optionsStatus" value="{{x.value}}">{{x.text}}</option>
+                                        </select> 
+                                    </div> <!-- form group [status] --> 
+                                    <div class="form-group">
+                                        <label class="filter-col" for="pref-perpage">Elementos página:</label>
+                                        <select id="pref-perpage" class="form-control" ng-model="itemsPerPage">
+                                            <option ng-repeat="x in optionsItemsPage" value="{{x.value}}">{{x.text}}</option>
+                                        </select> 
+                                    </div> <!-- form group [rows] -->
+                                    <button ng-click="find()" class="btn btn-danger" style="margin-top: 4px;">
+                                        <span class="glyphicon glyphicon-search"></span> Buscar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" style="margin-bottom:10px;" class="btn btn-danger" ng-click="searchIsCollapsed = !searchIsCollapsed">
+                        <span class="glyphicon glyphicon-cog"></span> Búsqueda avanzada
+                    </button>
+               </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+                    <div class="list-group">
+                        <a ng-repeat="user in pagedItems" ui-sref="admin.user({userId: user._id})" class="list-group-item">
+                            <h4 class="list-group-item-heading" ng-bind="user.username"></h4>
+                            <p class="list-group-item-text pull-right small" ng-bind="user.roles"></p>
+                            <p class="list-group-item-text" ng-bind="user.email"></p>
+                        </a>
+                    </div>
+
+                    <pagination boundary-links="true" 
+                                max-size="8" 
+                                items-per-page="itemsPerPage" 
+                                total-items="totalResults" 
+                                ng-model="currentPage" 
+                                ng-change="pageChanged(currentPage)"
+                                first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último">
+                    </pagination>
+               </div>
+            </div>        
+            </section>    
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div> <!-- wrapper -->     
 
 

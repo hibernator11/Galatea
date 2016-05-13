@@ -1,60 +1,141 @@
-<section>
-  <div class="page-header">
-    <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h1 ng-bind="user.username"></h1>
-          </div>
-          <div class="col-md-4" style="margin-top:20px">
-            <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
-              <i class="glyphicon glyphicon-edit"></i>
-            </a>
-            <a class="btn btn-primary" ng-click="remove();" ng-if="user._id !== authentication.user._id">
-              <i class="glyphicon glyphicon-trash"></i>
-            </a>
-          </div>
-        </div>
-    </div>    
-  </div>
+<div id="wrapper">
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+    
+    <div id="page-wrapper">
 
-  <div class="container">  
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-md-3"><strong>Nombre</strong></div>
-          <div class="col-md-6" ng-bind="user.firstName"></div>
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Usuarios</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-users"></i> Usuarios
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalUsers"></div>
+                                    <div>Usuarios</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">En general</span>
+                            <div class="clearfix"></div> 
+                        </div>-->
+                    </div>
+                    
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="newUsers"></div>
+                                    <div>Usuarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">Realizados en reseñas</span>
+                            <div class="clearfix"></div>
+                        </div> -->
+                    </div>
+                </div>                
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+                    <section>
+                      <div class="page-header">
+                        <div class="container">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <h1 ng-bind="user.username"></h1>
+                              </div>
+                              <div class="col-md-4" style="margin-top:20px">
+                                <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
+                                  <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                                <a class="btn btn-primary" ng-click="remove();" ng-if="user._id !== authentication.user._id">
+                                  <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                              </div>
+                            </div>
+                        </div>    
+                      </div>
+
+                      <div class="container">  
+                        <div class="row">
+                          <div class="col-md-8">
+                            <div class="row">
+                              <div class="col-md-3"><strong>Nombre</strong></div>
+                              <div class="col-md-6" ng-bind="user.firstName"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Apellidos</strong></div>
+                              <div class="col-md-6" ng-bind="user.lastName"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Email</strong></div>
+                              <div class="col-md-6" ng-bind="user.email"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Estado</strong></div>
+                              <div class="col-md-6" ng-bind="user.status"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Provider</strong></div>
+                              <div class="col-md-6" ng-bind="user.provider"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Creado en</strong></div>
+                              <div class="col-md-6" ng-bind="user.created | date:'dd/MM/yyyy'"></div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                              <div class="col-md-3"><strong>Roles</strong></div>
+                              <div class="col-md-6" ng-bind="user.roles"></div>
+                            </div>
+                          </div>
+                        </div>
+                       </div>   
+                    </section>
+                </div>
+           </div>
+            <!-- /.row -->
+
         </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Apellidos</strong></div>
-          <div class="col-md-6" ng-bind="user.lastName"></div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Email</strong></div>
-          <div class="col-md-6" ng-bind="user.email"></div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Estado</strong></div>
-          <div class="col-md-6" ng-bind="user.status"></div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Provider</strong></div>
-          <div class="col-md-6" ng-bind="user.provider"></div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Creado en</strong></div>
-          <div class="col-md-6" ng-bind="user.created | date:'dd/MM/yyyy'"></div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-md-3"><strong>Roles</strong></div>
-          <div class="col-md-6" ng-bind="user.roles"></div>
-        </div>
-      </div>
+        <!-- /.container-fluid -->
+
     </div>
-   </div>   
-</section>
+    <!-- /#page-wrapper -->
+
+</div> <!-- wrapper -->      

@@ -85,7 +85,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.content = '';
             $scope.identifierWork = '';
             $scope.slug = '';
-            $scope.title = '';
             $scope.uuid = '';
             $scope.reproduction = '';
             $scope.language = '';

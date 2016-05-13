@@ -1,0 +1,71 @@
+<section ng-controller="PublicationUserPaginationController" ng-init="init(15)">
+
+  <div class="page-header">
+    <div class="container">
+        <h1><i class="fa fa-pencil-square-o"></i> Mis publicaciones</h1>
+        <h2></h2>
+    </div>
+  </div>    
+    
+  <div class="container">
+
+    <div class="row" ng-controller="PublicationsController">
+        <ul class="profileNav-list hidden-xs">
+            <li class="profileNav-item pull-left">
+                <span class="profileNav-label">Publicaciones</span>
+                <span class="profileNav-value" data-is-compact="false">{{total}}</span>
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Crear publicación" tooltip-placement="top" href="#" ui-sref="publications.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear publicación</a> 
+            </li>
+            <li class="profileNav-item pull-right">
+                <a tooltip="Buscar publicaciones" tooltip-placement="top" href="#" ui-sref="publications.search" class="btn btn-danger"><i class="fa fa-search"></i> Buscar publicaciones</a> 
+            </li>
+        </ul>
+    </div>
+      
+    <div class="row visible-xs">
+        <div class="col-xs-12" style="text-align:center; margin-bottom:10px;">
+            <button type="button" href="#" ui-sref="publications.create" class="btn btn-danger"><i class="fa fa-plus"></i> Crear publicación</button> 
+            <a tooltip="Buscar publicaciones" tooltip-placement="top" href="#" ui-sref="publications.search" class="btn btn-danger"><i class="fa fa-search"></i> Búsqueda</a> 
+        </div>
+    </div>
+ 
+    <div class="row">
+        <div ng-repeat="publication in pagedItems">
+            <section class="widget">
+                <div class="widget-controls">
+
+                </div>
+                <div class="widget-body">
+                    <div class="widget-top-overflow windget-padding-md clearfix bg-grey text-grey">
+                        <a href="#" ui-sref="publications.view({publicationId: publication._id})">
+                            <h3 class="mt-lg mb-lg"><span class="fw-semi-bold">Publicación</span> - {{ publication.title | htmlLimit: 100 }}</h3>
+                        </a>
+                        <ul class="tags text-grey pull-right">
+                            <li><a href="#" ui-sref="publications.view({publicationId: publication._id})">detalles</a></li>
+                        </ul>
+                    </div>
+                    <div class="post-user mt-n-lg">
+                        <span class="thumb-lg pull-left mr">
+                            <!--<img ng-src="{{booklist.user.profileImageURL}}" alt="{{booklist.user.displayName}}" class="img-circle">-->
+                        </span>
+                        <h5 class="mt-sm fw-normal text-grey"><small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="publication.created | date:'dd/MM/yyyy'"></span></small></h5>
+                    </div>
+                    <p class="text-light fs-mini m">
+                        <!--<span>{{publication.books.length}} {{booklist.books.length == 1 ? 'Obra' : 'Obras'}} |</span>-->
+                        <span>{{publication.comments.length}} {{publication.comments.length == 1 ? 'Comentario' : 'Comentarios'}} |</span>&nbsp;{{publication.content | htmlLimit:150}}
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <pagination ng-show="pagedItems.length > 0" total-items="total" ng-model="currentPage" ng-change="pageChanged()" first-text="Primero" previous-text="Anterior" next-text="Siguiente" last-text="Último" boundary-links="true" max-size="8" items-per-page="itemsPerPage"></pagination>
+
+    <div class="alert alert-warning text-center" ng-if="pagedItems" ng-show="pagedItems.length === 0">
+        No ha creado ninguna publicación todavía, ¿<a ui-sref="publications.create">desea crear una</a>?
+    </div>
+
+</div>
+</section>

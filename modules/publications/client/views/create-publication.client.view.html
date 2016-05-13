@@ -1,0 +1,103 @@
+<section ng-controller="UploadPublicationController" class="container">
+
+    <div class="col-md-12">
+
+        <ol class="breadcrumb">
+            <li><a href="#" ui-sref="publications.list">Mis publicaciones</a></li>
+            <li class="active">Crear publicación</li>
+        </ol>
+
+        <div class="alert alert-warning" ng-show="error">
+            <button href="#" type="button" class="close" ng-click="error = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Aviso:</strong> {{error}}
+        </div>
+
+        <div class="alert alert-warning" ng-show="publication.status === 'draft' && warningopen">
+            <button href="#" type="button" class="close" ng-click="warningopen = !warningopen"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Aviso: La publicación no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.</strong> 
+        </div>
+        
+        <form name="publicationForm" class="form-horizontal" method="POST" enctype="multipart/form-data">
+            <div class="well">    
+             <div class="bs-callout bs-callout-danger">
+              <h4>Título de la publicación</h4>
+              Introduce un título que identifique la publicación. Por ejemplo: Cervantes o la casa encantada.
+             </div>
+
+             <div class="form-group input-panel">
+                <input type="text" ng-model="title" name="title" placeholder="Título de la publicación" class="form-control">
+             </div>
+            </div>
+
+            <div class="well">
+
+             <div class="bs-callout bs-callout-danger">
+              <h4>Añade una descripción para la publicación</h4>
+              Si lo deseas puedes incluir una descripción de la publicación.
+             </div>
+
+             <div class="form-group input-panel">
+              <textarea name="content" ng-model="content" id="content" class="form-control" cols="30" rows="5" placeholder="Descripción de la publicación"></textarea>
+             </div>
+            </div>
+                
+            <fieldset>
+              <div class="text-center form-group" ng-hide="uploader.queue.length">
+                <span class="btn btn-danger btn-file">
+                   <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Selecciona un documento<input type="file" nv-file-select uploader="uploader">
+                </span>
+              </div>
+              
+              <div ng-show="success" class="text-center text-success">
+                <strong>Documento modificado correctamente</strong>
+              </div>
+              <div ng-show="error" class="text-center text-danger">
+                <strong ng-bind="error"></strong>
+              </div>
+            </fieldset>                
+
+            
+            
+            <table class="table" ng-repeat="item in uploader.queue" ng-show="uploader.queue.length"> 
+                <caption>Subida de ficheros.</caption> 
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tamaño</th>
+                        <th>Progeso</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>{{ item.file.name }}</strong></td> 
+                        <td ng-show="uploader.isHTML5">{{ item.file.size/1024/1024|number:2 }} MB</td>
+                        <td ng-show="uploader.isHTML5">
+                            <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        </td>
+                        <td class="text-center">
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                        </td>
+                        <td nowrap>
+                            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                <span class="glyphicon glyphicon-upload"></span> Subir
+                            </button>
+                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                <span class="glyphicon glyphicon-ban-circle"></span> Cancelar
+                            </button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()" style="font-size: 12px !important;">
+                                <span class="glyphicon glyphicon-trash"></span> Eliminar
+                            </button>
+                        </td>
+                    </tr> 
+                </tbody>
+            </table>
+                
+        </form>
+   </div>
+
+</section>

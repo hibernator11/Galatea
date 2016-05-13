@@ -1,118 +1,146 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Reseña</h3>
-    </div>
-    <div class="panel-body">
-        
-      <div class="row hidden-xs">
-        <div class="col-xs-12" style="margin-bottom: 20px;">
-            <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
-            <span ng-bind="review.user.displayName"></span>
-            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
-            <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="admin.review-edit({reviewId: review._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-            <a ng-show="review.status !== 'blocked'" tooltip="Bloquear reseña" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-            <a ng-show="review.status === 'blocked'" tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
-        </div>
-      </div>
-        
-      <div class="row visible-xs">
-        <div class="col-xs-12" style="margin-bottom: 20px;">
-            <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="admin.review-edit({reviewId: review._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-            <a ng-show="review.status !== 'blocked'" tooltip="Bloquear reseña" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-            <a ng-show="review.status === 'blocked'" tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
-        </div>
-      </div>    
-        
-      <div class="row visible-xs">
-        <div class="col-xs-6" style="margin-bottom: 20px;">
-            <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
-            <span ng-bind="review.user.displayName"></span>
-        </div>    
-        <div class="col-xs-6" style="margin-bottom: 20px;">
-            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
-        </div>
-      </div>
-        
-        <div class="hero-widget well well-sm visible-xs">
-            <div class="icon">
-                <img width="100px" ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
-            </div>
-            <div class="text">
-                  <label class="text-muted">{{ review.title }}</label>
-                  <label class="text-muted authors">{{ review.authors }}</label>
-            </div>
-            <div class="options">
-                <ul class="profileNav-list" style="padding: 0px;">    
-                    <li class="profileNav-item">
-                        <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
-                    </li>
-                    <li class="profileNav-item">
-                        <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
-                    </li>
-                    <li class="profileNav-item">
-                        <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="row visible-xs">
-            <div class="col-xs-12">
-                <dl class="dl-horizontal">
-                    <dt ng-show="review.reproduction">Reproducción</dt>
-                    <dd ng-show="review.reproduction">{{review.reproduction}}</dd>
-                </dl>    
-                <p ng-bind-html="review.content | html"></p>
-            </div>
-        </div>  
-      
-      <div class="row hidden-xs">
-            <div class="col-md-3 col-sm-3 col-xs-3">
-                <a ng-href="{{review.slug | mountRecord }}" target="_blank">
-                    <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
-                </a>
-            </div>  
-            <div class="col-sm-9 col-md-9 col-xs-9">
-                <h3 class="title">{{ review.title }}</h3>
-                <h4 class="authors" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
-                <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
-                <p ng-bind-html="review.content | html"></p>
-            </div>
-        </div>
-        <hr>
-   
-        <div style="margin-top:20px;" ng-if="review.comments.length > 0">
-            <h4>Actividad reciente</h4>	
+<div id="wrapper">
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+    <div id="page-wrapper">
 
-            <div ng-repeat="comment in review.comments" class="media">
-                <div class="media-left">
-                  <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
-                </div>
-                <div class="media-body">
-                    <small>
-                    <em class="text-muted">
-                    Añadido el
-                    <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
-                     por
-                    <span ng-bind="comment.user.displayName"></span>
-                    </em>
-                    <a href="#" tooltip="Eliminar comentario"
-                       confirm="¿Estas seguro que deseas eliminar el comentario?"
-                       ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
-                    </small>
-                    <div class="visible-xs detail-comment">
-                        <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
-                            <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
-                        </a>
-                    </div>
-                    <div class="hidden-xs detail-comment">
-                        <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
-                            <pre>{{ comment.content || 'comentario vacío' }}</pre>
-                        </a>
-                    </div>
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Reseñas</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-list"></i> <a href="#" ui-sref="admin.reviews">Reseñas</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-book"></i> Visor
+                        </li>
+                    </ol>
                 </div>
             </div>
-            <hr>
-        </div> <!-- last comments -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Reseña</h3>
+                </div>
+                <div class="panel-body">
+
+                  <div class="row hidden-xs">
+                    <div class="col-xs-12" style="margin-bottom: 20px;">
+                        <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
+                        <span ng-bind="review.user.displayName"></span>
+                        <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+                        <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="admin.review-edit({reviewId: review._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                        <a ng-show="review.status !== 'blocked'" tooltip="Bloquear reseña" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                        <a ng-show="review.status === 'blocked'" tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                    </div>
+                  </div>
+
+                  <div class="row visible-xs">
+                    <div class="col-xs-12" style="margin-bottom: 20px;">
+                        <a tooltip="Editar reseña" tooltip-placement="top" href="#" ui-sref="admin.review-edit({reviewId: review._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                        <a ng-show="review.status !== 'blocked'" tooltip="Bloquear reseña" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                        <a ng-show="review.status === 'blocked'" tooltip="Publicar reseña" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                    </div>
+                  </div>    
+
+                  <div class="row visible-xs">
+                    <div class="col-xs-6" style="margin-bottom: 20px;">
+                        <img ng-src="{{review.user.profileImageURL}}" alt="{{review.user.displayName}}" class="header-profile-image" />
+                        <span ng-bind="review.user.displayName"></span>
+                    </div>    
+                    <div class="col-xs-6" style="margin-bottom: 20px;">
+                        <i class="fa fa-calendar fa-2x"></i> <span ng-bind="review.created | date:'dd/MM/yyyy'"></span>
+                    </div>
+                  </div>
+
+                    <div class="hero-widget well well-sm visible-xs">
+                        <div class="icon">
+                            <img width="100px" ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+                        </div>
+                        <div class="text">
+                              <label class="text-muted">{{ review.title }}</label>
+                              <label class="text-muted authors">{{ review.authors }}</label>
+                        </div>
+                        <div class="options">
+                            <ul class="profileNav-list" style="padding: 0px;">    
+                                <li class="profileNav-item">
+                                    <span class="profileNav-label"><a tooltip="Compartir en facebook" tooltip-placement="top" href="#" ng-href="https://www.facebook.com/sharer/sharer.php?u={{location}}" target="_blank"><i style="color:grey;" class="fa fa-facebook fa-2x"></i></a></span>
+                                </li>
+                                <li class="profileNav-item">
+                                    <span class="profileNav-label"><a tooltip="Compartir en twitter" tooltip-placement="top" href="#" ng-href="https://twitter.com/home?status={{location}}" target="_blank"><i style="color:grey;" class="fa fa-twitter fa-2x"></i></a></span>
+                                </li>
+                                <li class="profileNav-item">
+                                    <span class="profileNav-label"><a ng-if="authentication.user" tooltip="Enviar por correo" tooltip-placement="top" href="#" title="Enviar por correo" title="Enviar por correo" tooltip-placement="top" ng-click="showEmailForm()"><i style="color:grey;" class="fa fa-envelope fa-2x"></i></a></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row visible-xs">
+                        <div class="col-xs-12">
+                            <dl class="dl-horizontal">
+                                <dt ng-show="review.reproduction">Reproducción</dt>
+                                <dd ng-show="review.reproduction">{{review.reproduction}}</dd>
+                            </dl>    
+                            <p ng-bind-html="review.content | html"></p>
+                        </div>
+                    </div>  
+
+                  <div class="row hidden-xs">
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            <a ng-href="{{review.slug | mountRecord }}" target="_blank">
+                                <img ng-if="review.uuid" ng-src="{{review.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
+                            </a>
+                        </div>  
+                        <div class="col-sm-9 col-md-9 col-xs-9">
+                            <h3 class="title">{{ review.title }}</h3>
+                            <h4 class="authors" ng-show="review.authors" ng-bind="review.authors | htmlLimit: 200"></h4>
+                            <p class="text-muted" ng-show="review.reproduction" ng-bind-html="review.reproduction | htmlLimit"></p>
+                            <p ng-bind-html="review.content | html"></p>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div style="margin-top:20px;" ng-if="review.comments.length > 0">
+                        <h4>Actividad reciente</h4>	
+
+                        <div ng-repeat="comment in review.comments" class="media">
+                            <div class="media-left">
+                              <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                            </div>
+                            <div class="media-body">
+                                <small>
+                                <em class="text-muted">
+                                Añadido el
+                                <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                                 por
+                                <span ng-bind="comment.user.displayName"></span>
+                                </em>
+                                <a href="#" tooltip="Eliminar comentario"
+                                   confirm="¿Estas seguro que deseas eliminar el comentario?"
+                                   ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
+                                </small>
+                                <div class="visible-xs detail-comment">
+                                    <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                                <div class="hidden-xs detail-comment">
+                                    <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre>{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div> <!-- last comments -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>

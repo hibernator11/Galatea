@@ -5,7 +5,7 @@ var should = require('should'),
   path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
-  Booklist = mongoose.model('Booklist'),
+  Review = mongoose.model('Review'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
@@ -16,7 +16,7 @@ var app, agent, credentials, user, review;
 /**
  * Book routes tests
  */
-describe('Booklist CRUD tests', function () {
+describe('Review CRUD tests', function () {
 
   before(function (done) {
     // Get application
@@ -47,8 +47,8 @@ describe('Booklist CRUD tests', function () {
     // Save a user to the test db and create new review
     user.save(function () {
       review = {
-        title: 'Booklist Title',
-        content: 'Booklist Content'
+        title: 'Review Title',
+        content: 'Review Content'
       };
 
       done();
@@ -91,7 +91,7 @@ describe('Booklist CRUD tests', function () {
 
                 // Set assertions
                 (reviews[0].user._id).should.equal(userId);
-                (reviews[0].title).should.match('Booklist Title');
+                (reviews[0].title).should.match('Review Title');
 
                 // Call the assertion callback
                 done();
@@ -189,7 +189,7 @@ describe('Booklist CRUD tests', function () {
 
   it('should be able to get a list of reviews if not signed in', function (done) {
     // Create new book model instance
-    var reviewObj = new Booklist(review);
+    var reviewObj = new Review(review);
 
     // Save the review
     reviewObj.save(function () {
@@ -208,7 +208,7 @@ describe('Booklist CRUD tests', function () {
 
   it('should be able to get a single review if not signed in', function (done) {
     // Create new review model instance
-    var reviewObj = new Booklist(review);
+    var reviewObj = new Review(review);
 
     // Save the review
     reviewObj.save(function () {
@@ -228,7 +228,7 @@ describe('Booklist CRUD tests', function () {
     request(app).get('/api/reviews/test')
       .end(function (req, res) {
         // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'Booklist is invalid');
+        res.body.should.be.instanceof(Object).and.have.property('message', 'Review is invalid');
 
         // Call the assertion callback
         done();
@@ -295,7 +295,7 @@ describe('Booklist CRUD tests', function () {
     review.user = user;
 
     // Create new review model instance
-    var reviewObj = new Booklist(review);
+    var reviewObj = new Review(review);
 
     // Save the review
     reviewObj.save(function () {
@@ -315,7 +315,7 @@ describe('Booklist CRUD tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Booklist.remove().exec(done);
+      Review.remove().exec(done);
     });
   });
 });

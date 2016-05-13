@@ -76,6 +76,10 @@ exports.delete = function (req, res) {
         res.json(group);
       }
     });
+  }else{
+      return res.status(403).send({
+          message: 'No tiene permisos para eliminar el grupo'
+      });
   }
 };
 

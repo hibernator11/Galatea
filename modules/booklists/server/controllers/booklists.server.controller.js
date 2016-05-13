@@ -76,7 +76,7 @@ exports.delete = function (req, res) {
     });
   }else{
       return res.status(403).send({
-          message: 'No tiene permisos para borra la lista'
+          message: 'No tiene permisos para eliminar la lista'
       });
   }
 };

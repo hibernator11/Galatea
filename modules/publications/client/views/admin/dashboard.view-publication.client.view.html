@@ -1,0 +1,116 @@
+<div id="wrapper">
+
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Publicaciones</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-list"></i> <a href="#" ui-sref="admin.publications">Publicaciones</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-book"></i> Visor
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Publicación</h3>
+                </div>
+                <div class="panel-body">
+
+                  <div class="row hidden-xs">
+                    <div class="col-xs-12" style="margin-bottom: 20px;">
+                        <img ng-src="{{publication.user.profileImageURL}}" alt="{{publication.user.displayName}}" class="header-profile-image" />
+                        <span ng-bind="publication.user.displayName"></span>
+                        <i class="fa fa-calendar fa-2x"></i> <span ng-bind="publication.created | date:'dd/MM/yyyy'"></span>
+                        <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                        <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                        <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                    </div>
+                  </div>
+
+                  <div class="row visible-xs">
+                    <div class="col-xs-12" style="margin-bottom: 20px;">
+                        <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                        <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                        <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                    </div>
+                  </div>    
+
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-xs-12">
+                        <h3 class="booklist-title">{{ publication.title | htmlLimit: 200 }}</h3>
+                        <dl class="dl-horizontal">
+                            <dt ng-show="publication.content">Descripción</dt>
+                            <dd ng-show="publication.content">{{publication.content}}</dd>
+                            <dt ng-show="publication.tags">Etiquetas</dt>
+                            <dd ng-show="publication.tags">
+                                <p ng-if="publication.tags">
+                                    <span style="color:grey; margin-right:20px" ng-repeat="tag in publication.tags track by $id(tag)">
+                                        <i class="glyphicon glyphicon-tag"></i> {{tag.name}}
+                                    </span>
+                                </p>
+                            </dd>
+                        </dl>
+                    </div>
+                  </div>
+                  <hr>
+
+                    <div style="margin-top:20px;" ng-if="publication.comments.length > 0">
+                        <h4>Actividad reciente</h4>	
+
+                        <div ng-repeat="comment in publication.comments" class="media">
+                            <div class="media-left">
+                              <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                            </div>
+                            <div class="media-body">
+                                <small>
+                                <em class="text-muted">
+                                Añadido el
+                                <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                                 por
+                                <span ng-bind="comment.user.displayName"></span>
+                                </em>
+                                <a href="#" tooltip="Eliminar comentario"
+                                   confirm="¿Estas seguro que deseas eliminar el comentario?"
+                                   ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
+                                </small>
+                                <div class="visible-xs detail-comment">
+                                    <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                                <div class="hidden-xs detail-comment">
+                                    <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre>{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div> <!-- last comments -->
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div> <!-- wrapper -->
+

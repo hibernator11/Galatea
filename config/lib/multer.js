@@ -6,3 +6,10 @@ module.exports.profileUploadFileFilter = function (req, file, cb) {
   }
   cb(null, true);
 };
+
+module.exports.publicationsUploadFileFilter = function (req, file, cb) {
+  if (file.mimetype !== 'application/pdf') {
+    return cb(new Error('Only pdf files are allowed!'), false);
+  }
+  cb(null, true);
+};

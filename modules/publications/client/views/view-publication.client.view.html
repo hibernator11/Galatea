@@ -1,0 +1,181 @@
+<section ng-controller="PublicationsController" ng-init="findOne();" >
+
+    <div class="page-header">
+        <div class="container">
+            <h2><i class="fa fa-pencil-square-o"></i> Publicación</h2>
+            <div class="row visible-xs">
+                <div class="col-xs-12" style="text-align: center;">
+                    <img ng-src="{{publication.user.profileImageURL}}" alt="{{publication.user.displayName}}" class="header-profile-image" />
+                    <span ng-bind="publication.user.displayName"></span>
+                </div>
+                <div class="col-xs-12" style="margin-top:10px;text-align: center;">
+                    <i class="fa fa-calendar fa-2x"></i> <span ng-bind="publication.created | date:'dd/MM/yyyy'"></span>
+                </div>
+            </div>
+            <div class="row visible-sm visible-md visible-lg">
+                <div class="col-xs-12">
+                    <img ng-src="{{publication.user.profileImageURL}}" alt="{{publication.user.displayName}}" class="header-profile-image" />
+                    <span ng-bind="publication.user.displayName"></span>
+                    <i class="fa fa-calendar fa-2x" style="margin-left:5px"></i> <span ng-bind="publication.created | date:'dd/MM/yyyy'"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <ul class="profileNav-list">
+                <li class="profileNav-item pull-left">
+                    <span class="profileNav-label">Comentarios</span>
+                    <span class="profileNav-value" data-is-compact="false">{{publication.comments.length}}</span>
+                </li>
+                <!--<li class="profileNav-item hidden-xs">
+                    <span class="profileNav-label">Valoraciones</span>
+                    <span class="profileNav-value" data-is-compact="false">{{publication.ratings.length}}</span>
+                </li>-->
+                <li ng-show="authentication.user._id === publication.user._id" class="profileNav-item hidden-xs">
+                    <span class="profileNav-label">Publicado</span>
+                    <span class="profileNav-value" data-is-compact="false">{{publication.status === 'public' ? 'Si' : 'No' }}</span>
+                </li>
+                <li class="profileNav-item pull-right hidden-xs" ng-if="authentication.user._id === publication.user._id">
+                   <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="publications.edit({publicationId: publication._id})" class="btn btn-danger bvmc-btn"><i class="fa fa-pencil"></i> Editar</a> 
+                </li>
+                <li class="profileNav-item pull-right hidden-xs" ng-show="publication.status === 'draft'">
+                   <a tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublicStatus()" class="btn btn-danger bvmc-btn"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                </li>
+                <li class="profileNav-item pull-right" >
+                   <span class="dropdown" dropdown>
+                       <a tooltip="Más acciones de usuario" tooltip-placement="left" href="" class="dropdown-toggle" dropdown-toggle>
+                           <i class="fa fa-cog fa-2x icon-tools"></i>
+                       </a>
+                       <ul class="dropdown-menu" dropdown-menu>
+                         <li>
+                           <a ng-click="showHelpInformation();" ><i class="glyphicon glyphicon-question-sign"></i> Ayuda</a>
+                         </li>
+                         <li ng-if="authentication.user._id === publication.user._id"> 
+                           <a ui-sref="publications.edit({publicationId: publication._id})"><i class="glyphicon glyphicon-edit"></i> Editar publicación</a>
+                         </li>
+                         <li ng-if="authentication.user._id === publication.user._id">
+                           <a ng-show="publication.status === 'draft'" ng-click="setPublicStatus()"><i class="glyphicon glyphicon-eye-open"></i> Publicar publicación</a>
+                         </li>
+                         <li ng-if="authentication.user._id === publication.user._id">
+                           <a ng-show="publication.status !== 'draft'" ng-click="setDraftStatus()"><i class="glyphicon glyphicon-eye-close"></i> Deshacer publicación</a>
+                         </li>
+                         <li ng-if="authentication.user._id === publication.user._id">
+                           <a ng-click="remove()" confirm="¿Estás seguro que deseas borrar la publicación?"><i class="glyphicon glyphicon-trash"></i> Eliminar publicación</a>
+                         </li>
+                         <li ng-if="authentication.user._id === publication.user._id" class="divider"></li>
+                         <li ng-if="authentication.user._id === publication.user._id">
+                           <a ng-click="createGroupFromPublication()"><i class="glyphicon glyphicon-plus"></i> Crear grupo de esta publicación</a>
+                         </li>
+                         <li ng-show="authentication.user._id"> 
+                           <a ng-click="showReportForm()"><i class="glyphicon glyphicon-warning-sign"></i> Denunciar spam o abuso</a>
+                         </li>
+                       </ul>
+                   </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="alert alert-success" ng-show="messageok">
+            <button href="#" type="button" class="close" ng-click="messageok = ''"><i class="glyphicon glyphicon-remove-circle text-success"></i></button>
+            <strong>Resultado:</strong> {{messageok}}
+        </div>
+
+        <div class="alert alert-warning" ng-show="publication.status === 'draft' && warningopen">
+            <button ng-click="warningopen = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
+            <strong>Aviso:</strong> La publicación no se ha publicado todavía. Si desea publicarla, cambie su estado desde el menú superior.
+        </div>
+        
+        <div class="alert alert-warning" ng-show="error">
+            <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-error"></i></button>
+            <strong>Aviso:</strong> {{error}}
+        </div>
+
+        <hr>
+        
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xs-12">
+                <div class="row home-title">
+                    <span>Descripción</span><hr>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-xs-12">
+                <div class="pull-right" ng-include src="'modules/core/client/views/social.links.client.view.html'"></div>
+                
+                <h4 class="title">{{ publication.title | htmlLimit: 200 }}</h4>
+                <dl class="dl-horizontal">
+                    <dt ng-show="publication.content">Descripción</dt>
+                    <dd ng-show="publication.content">{{publication.content}}</dd>
+                    <dt ng-show="publication.url">Enlace permanente</dt>
+                    <dd ng-show="publication.url">{{publication.url}}</dd>
+                    <dt ng-show="publication.tags">Etiquetas</dt>
+                    <dd ng-show="publication.tags">
+                        <p ng-if="publication.tags">
+                            <span style="color:grey; margin-right:20px" ng-repeat="tag in publication.tags track by $id(tag)">
+                                <i class="glyphicon glyphicon-tag"></i> {{tag.name}}
+                            </span>
+                        </p>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <hr>
+        <button ng-click="loadNewFile(publication.url)"
+                class="btn btn-danger" ng-show="!showToolbar">
+                  Leer texto completo
+        </button>
+        <my-pdf-viewer-toolbar
+          delegate-handle="my-pdf-container" ng-show="showToolbar"></my-pdf-viewer-toolbar>
+        <pdf-viewer ng-show="publication"
+            delegate-handle="my-pdf-container"
+            url=""
+            show-toolbar="false"
+            headers="{ 'x-you-know-whats-awesome': 'EVERYTHING' }">
+        </pdf-viewer>
+   
+        <div ng-if="publication.comments.length > 0">
+            <div class="row home-title">
+                <span>Actividad reciente</span><hr>
+            </div>
+
+            <div ng-repeat="comment in publication.comments" class="media">
+                <div class="media-left">
+                  <img style="width: 64px;height: 64px;" ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                </div>
+                <div class="media-body">
+                    <small>
+                    <em class="text-muted">
+                    Añadido el
+                    <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                     por
+                    <span ng-bind="comment.user.displayName"></span>
+                    </em>
+                    <a ng-show="authentication.user._id === publication.user._id" href="#" tooltip="Eliminar comentario"
+                       confirm="¿Estas seguro que deseas eliminar el comentario?"
+                       ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>    
+                    </small>
+                    <p ng-bind="comment.content"></p>
+                </div>
+            </div>
+            <hr>
+        </div> <!-- last comments -->
+     
+        <div ng-show="publication.status === 'public' && authentication.user">
+            <div class="row home-title">
+                <span>Escribe tu comentario</span><hr>
+            </div>
+            <form ng-submit="addComment()" class="form-horizontal" name="form.commentForm"> 
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <textarea class="form-control" ng-model="txtcomment" id="txtcomment" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button class="btn btn-danger btn-circle" type="submit" id="submitComment"><span class="glyphicon glyphicon-comment"></span> Añadir</button>
+                    </div>
+                </div>            
+            </form>
+        </div>
+</section>

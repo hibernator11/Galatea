@@ -1,0 +1,20 @@
+<div class="panel panel-default" ng-controller="PublicationListController" ng-init="init()">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i>Últimas publicaciones</h3>
+    </div>
+    <div class="panel-body">
+        <div class="list-group">
+          <a ng-repeat="publication in pagedItems" ui-sref="admin.publication({publicationId: publication._id})" class="list-group-item">
+            <span class="badge" ng-bind="publication.created | date:'dd/MM/yyyy'"></span>         
+            <div><span ng-bind="publication.title | htmlLimit: 50"></span></div>
+            <small>
+                Creada por <span ng-bind="publication.user.displayName | htmlLimit: 50"></span>
+            </small>
+          </a> 
+        </div>
+
+        <div class="text-right">
+            <a href="#" ui-sref="admin.publications">Ver Publicaciones <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>

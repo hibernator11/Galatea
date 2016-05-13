@@ -127,6 +127,14 @@ ApplicationConfiguration.registerModule('groups.admin.routes', ['core.admin.rout
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('publications', ['ui.tinymce', "xeditable"]);
+ApplicationConfiguration.registerModule('publications.admin', ['core.admin']);
+ApplicationConfiguration.registerModule('publications.admin.routes', ['core.admin.routes']);
+
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('reviews', ['ui.tinymce', "xeditable"]);
 ApplicationConfiguration.registerModule('reviews.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('reviews.admin.routes', ['core.admin.routes']);
@@ -147,12 +155,12 @@ angular.module('booklists.admin.routes').config(['$stateProvider',
     $stateProvider
       .state('admin.booklists', {
         url: '/booklists',
-        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.booklists.client.view.html',
+        templateUrl: 'modules/booklists/client/views/admin/dashboard.list-booklists.client.view.html',
         controller: 'BooklistListController'
       })
       .state('admin.booklist', {
         url: '/booklists/:booklistId',
-        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.view-booklist.client.view.html',
+        templateUrl: 'modules/booklists/client/views/admin/dashboard.view-booklist.client.view.html',
         controller: 'BooklistAdminController',
         resolve: {
           booklistResolve: ['$stateParams', 'Booklists', function ($stateParams, Booklists) {
@@ -164,7 +172,7 @@ angular.module('booklists.admin.routes').config(['$stateProvider',
       })
       .state('admin.booklist-edit', {
         url: '/booklists/:booklistId/edit',
-        templateUrl: 'modules/core/client/views/admin/booklists/dashboard.edit-booklist.client.view.html',
+        templateUrl: 'modules/booklists/client/views/admin/dashboard.edit-booklist.client.view.html',
         controller: 'BooklistAdminController',
         resolve: {
           booklistResolve: ['$stateParams', 'Booklists', function ($stateParams, Booklists) {
@@ -2040,12 +2048,12 @@ angular.module('groups.admin.routes').config(['$stateProvider',
     $stateProvider
       .state('admin.groups', {
         url: '/groups',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.groups.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.list-groups.client.view.html',
         controller: 'GroupListController'
       })
       .state('admin.group', {
         url: '/groups/:groupId',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.view-group.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.view-group.client.view.html',
         controller: 'GroupAdminController',
         resolve: {
           groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {
@@ -2057,7 +2065,7 @@ angular.module('groups.admin.routes').config(['$stateProvider',
       })
       .state('admin.group-edit', {
         url: '/groups/:groupId/edit',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.edit-group.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.edit-group.client.view.html',
         controller: 'GroupAdminController',
         resolve: {
           groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {
@@ -3418,17 +3426,973 @@ angular.module('groups.admin').factory('Admin', ['$resource',
 'use strict';
 
 // Setting up route
+angular.module('publications.admin.routes').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('admin.publications', {
+        url: '/publications',
+        templateUrl: 'modules/publications/client/views/admin/dashboard.list-publications.client.view.html',
+        controller: 'PublicationListController'
+      })
+      .state('admin.publication', {
+        url: '/publications/:publicationId',
+        templateUrl: 'modules/publications/client/views/admin/dashboard.view-publication.client.view.html',
+        controller: 'PublicationAdminController',
+        resolve: {
+          publicationResolve: ['$stateParams', 'Publications', function ($stateParams, Publications) {
+            return Publications.get({
+              publicationId: $stateParams.publicationId
+            });
+          }]
+        }
+      })
+      .state('admin.publication-edit', {
+        url: '/publications/:publicationId/edit',
+        templateUrl: 'modules/publications/client/views/admin/dashboard.edit-publication.client.view.html',
+        controller: 'PublicationAdminController',
+        resolve: {
+          publicationResolve: ['$stateParams', 'Publications', function ($stateParams, Publications) {
+            return Publications.get({
+              publicationId: $stateParams.publicationId
+            });
+          }]
+        }
+      });
+  }
+]);
+
+'use strict';
+
+// Configuring the publications module
+angular.module('publications').run(['Menus',
+  function (Menus) {
+    // Add the publication dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Publicaciones',
+      state: 'publications',
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'publications', {
+      title: 'Mis publicaciones',
+      state: 'publications.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'publications', {
+      title: 'Crear Publicación',
+      state: 'publications.create',
+      roles: ['user']
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('publications').config(['$stateProvider',
+  function ($stateProvider) {
+    // publications state routing
+    $stateProvider
+      .state('publications', {
+        abstract: true,
+        url: '/publications',
+        template: '<ui-view/>'
+      })
+      .state('publications.list', {
+        url: '',
+        templateUrl: 'modules/publications/client/views/list-publications.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('publications.search', {
+        url: '/search',
+        templateUrl: 'modules/publications/client/views/pagination-publications.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('publications.create', {
+        url: '/create',
+        templateUrl: 'modules/publications/client/views/create-publication.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('publications.view', {
+        url: '/:publicationId',
+        templateUrl: 'modules/publications/client/views/view-publication.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('publications.edit', {
+        url: '/:publicationId/edit',
+        templateUrl: 'modules/publications/client/views/edit-publication.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      });
+  }
+]);
+
+'use strict';
+
+angular.module('publications.admin').controller('PublicationListController', ['$scope', '$http', 'Publications',
+  function ($scope, $http, Publications) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "10", value : "10"},
+        {text : "20", value : "20"},
+        {text : "50", value : "50"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"},
+        {text : "Bloqueado", value : "blocked"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = '';
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = '';
+        $scope.order = 'desc';
+        $scope.find();
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        var config = {
+            params: query,
+            headers : {'Accept' : 'application/json'}
+        };            
+        
+        $http.get('api/admin/publications', config).then(function(response) {
+            // process response here..
+            $scope.pagedItems = response.data.publications;
+            $scope.total = response.data.total;
+          }, function(response) {
+            $scope.error = response.data.message;
+        });
+    };
+  }
+]);
+
+'use strict';
+angular.module('publications.admin').run(["editableOptions", function (editableOptions) {editableOptions.theme = 'bs3'; }]);
+
+angular.module('publications.admin').controller('PublicationAdminController', ['$scope', '$state', '$http', 'Authentication', 'publicationResolve',
+  function ($scope, $state, $http, Authentication, publicationResolve) {
+    $scope.authentication = Authentication;
+    $scope.publication = publicationResolve;
+    
+    $scope.remove = function (publication) {
+      if (confirm('¿Estás seguro que desea eliminar la publicación?')) {
+        if (publication) {
+          publication.$remove();
+
+          $scope.publications.splice($scope.groups.indexOf(publication), 1);
+        } else {
+          $scope.publication.$remove(function () {
+            $state.go('admin.publications');
+          });
+        }
+      }
+    };
+
+    $scope.update = function (isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'publicationForm');
+
+        return false;
+      }
+
+      var publication = $scope.publication;
+      
+      publication.$update(function () {
+        $state.go('admin.publication', {
+          publicationId: publication._id
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/admin/publications/removeComment',
+            method: "POST",
+            data: { 'publicationId' : $scope.publication._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.publication.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.updateComment = function (commentId, data){
+        
+        $http({
+            url: 'api/admin/publications/updateComment',
+            method: "POST",
+            data: { 'publicationId' : $scope.publication._id,
+                    'commentId': commentId,
+                    'data' : data
+                  }
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setBlocked = function (){
+        
+        $http({
+            url: 'api/admin/publications/setStatus',
+            method: "POST",
+            data: { 'publicationId' : $scope.publication._id,
+                    'status' : 'blocked'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.publication.status = 'blocked';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+    
+    $scope.setPublic = function (){
+        
+        $http({
+            url: 'api/admin/publications/setStatus',
+            method: "POST",
+            data: { 'publicationId' : $scope.publication._id,
+                    'status' : 'public'}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.publication.status = 'public';
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+  }
+]);
+
+'use strict';
+
+// controller for modal help window
+var ModalHelpInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+'use strict';
+
+// controller for modal email window
+var ModalPublicationEmailInstanceCtrl = function ($scope, $http, $modalInstance, publicationId) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            
+            var Indata = {'email': $scope.form.emailForm.inputEmail.$modelValue, 
+                          'subject': $scope.form.emailForm.inputSubject.$modelValue,
+                          'message': $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/publications/' + publicationId};
+            
+            $http.post('api/auth/sendPublicationEmail', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
+
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Por favor complete todos los campos.';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalPublicationEmailInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "publicationId"];
+
+
+
+'use strict';
+
+var ModalPublicationReportInstanceCtrl = function ($scope, $http, $modalInstance, publicationId, displayName) {
+    $scope.result = 'hidden';
+    $scope.resultMessage = '';
+    $scope.formData = ''; //formData is an object holding the name, email, subject, and message
+    $scope.submitButtonDisabled = false;
+    $scope.submitted = false; //used so that form errors are shown only after the form has been submitted
+    
+    $scope.submit = function(contactform) {
+        $scope.submitted = true;
+        $scope.submitButtonDisabled = true;
+        if (contactform.$valid) {
+            
+            var Indata = {'subject': 'Denuncia de spam o abuso',
+                          'message': 'El usuario ' + displayName + ' ha denunciado un uso incorrecto en Galatea. Ha dejado el siguiente mensaje:' + 
+                                  $scope.form.emailForm.inputMessage.$modelValue,
+                          'url': '/publications/' + publicationId};
+            
+            $http.post('api/auth/sendEmailReport', Indata).success(function (response) {
+                // Show user success message and clear form
+                $scope.success = response.message;
+
+            }).error(function (response) {
+                // Show user error message and clear form
+                $scope.error = response.message;
+            });
+            
+            $modalInstance.close($scope.result);
+        } else {
+            $scope.submitButtonDisabled = false;
+            $scope.resultMessage = 'Error: por favor rellene todos los campos';
+            $scope.result='bg-danger';
+        }
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+ModalPublicationReportInstanceCtrl.$inject = ["$scope", "$http", "$modalInstance", "publicationId", "displayName"];
+
+
+
+'use strict';
+
+angular.module('publications').controller('PublicationPaginationController', ['$scope', 'Publications',
+  function ($scope, Publications) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "15", value : "15"},
+        {text : "30", value : "30"},
+        {text : "45", value : "45"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.status = 'public';
+        $scope.order = 'desc';
+        $scope.find();
+    };
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+        
+        Publications.query(query, function (data) {
+            $scope.pagedItems = data[0].publications;
+            $scope.total = data[0].total;
+        });
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('publications').controller('PublicationUserPaginationController', ['$scope', '$http', 'Publications', 
+  function ($scope, $http, Publications) {
+    
+    $scope.searchIsCollapsed = true;
+      
+    $scope.optionsItemsPage = [
+        {text : "15", value : "15"},
+        {text : "30", value : "30"},
+        {text : "45", value : "45"}
+    ];
+    
+    $scope.optionsOrder = [
+        {text : "Descendente", value : "asc"},
+        {text : "Ascendente", value : "desc"}
+    ];
+    
+    $scope.optionsStatus = [
+        {text : "Todos", value : ""},
+        {text : "Borrador", value : "draft"},
+        {text : "Publicado", value : "public"}
+    ];
+      
+    $scope.init = function(itemsPerPage){
+        $scope.status = '';
+        $scope.pagedItems = [];
+        $scope.itemsPerPage = itemsPerPage;
+        $scope.currentPage = 1;
+        $scope.find();
+    }
+    
+    $scope.pageChanged = function () {
+        $scope.find();
+    };
+    
+    $scope.find = function () {
+        
+        var query = { page:$scope.currentPage,
+                      itemsPerPage:$scope.itemsPerPage,
+                      order:$scope.order,
+                      status:$scope.status,
+                      text:$scope.text
+                    };
+                    
+        $http.get('api/publications/user').success(function (data) {
+            $scope.pagedItems = data[0].publications;
+            $scope.total = data[0].total;
+        }).error(function (response) {
+            $scope.error = response.message;
+        });                    
+    };
+  }
+]);
+
+'use strict';
+
+// Publications controller
+angular.module('publications').controller('PublicationsController', ['$scope', '$http', '$modal', '$stateParams', '$location', 'Authentication', 'Publications', 
+  function ($scope, $http, $modal, $stateParams, $location, Authentication, Publications) {
+    $scope.authentication = Authentication;
+
+    $scope.location = $location.absUrl();
+
+    $scope.title = '';
+
+    $scope.form = {};
+    $scope.txtcomment = '';
+
+    $scope.messageok = '';
+    $scope.warningopen = true;
+
+    // rating variables
+    $scope.max = 5;
+    $scope.rate = 0;
+    $scope.percent = 0;
+    $scope.showRatingBar = false;
+    $scope.showRatingButton = true;
+    
+    // Create new Publication
+    $scope.create = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'publicationForm');
+
+            return false;
+        }
+
+        // Create new Publication object
+        var publication = new Publications({
+            title: this.title,
+            content: this.content
+        });
+
+        // Redirect after save
+        publication.$save(function (response) {
+            $location.path('publications/' + response._id);
+
+            // Clear form fields
+            $scope.title = '';
+            $scope.content = '';
+
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Remove existing Publication
+    $scope.remove = function (publication) {
+        if (publication) {
+            publication.$remove();
+
+            for (var i in $scope.publications) {
+                if ($scope.publications[i] === publication) {
+                    $scope.publications.splice(i, 1);
+                }
+            }
+        } else {
+            $scope.publication.$remove(function () {
+                $location.path('publications');
+            });
+        }
+    };
+
+    // Update existing Publication
+    $scope.update = function (isValid) {
+        $scope.error = null;
+
+        if (!isValid) {
+            $scope.$broadcast('show-errors-check-validity', 'publicationForm');
+
+            return false;
+        }
+
+        var publication = $scope.publication;
+
+        publication.$update(function () {
+            $scope.messageok = 'La publicación se ha modificado correctamente.';
+            $location.path('publications/' + publication._id);
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    $scope.showList = function(){
+        $location.path('publications');
+    };
+
+    $scope.openPublication = function(publicationId) {
+        $location.path('publications/' + publicationId);
+    };
+
+    // Find the list of Publications of the user
+    $scope.find = function () {
+        $scope.publications = Publications.query();
+    };
+    
+    // Set update publication
+    $scope.updatePublication = function () {
+        $scope.publication.$update(function () {
+            $scope.messageok = 'La publicación se ha modificado correctamente.';
+        }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+        });
+    };
+
+    // Find existing Publication
+    $scope.findOne = function () {
+        $scope.publication = Publications.get({
+            publicationId: $stateParams.publicationId
+        });
+    };
+
+    // update publication status draft
+    $scope.setDraftStatus = function () {
+      $scope.publication.status = "draft";
+      
+      $scope.publication.$update(function () {
+          $scope.messageok = 'La publicación se ha cambiado a estado borrador.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // update publication status public
+    $scope.setPublicStatus = function () {
+      $scope.publication.status = "public";
+      
+      $scope.publication.$update(function () {
+          $scope.messageok = 'La publicación se ha publicado correctamente.';
+      }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+      });
+    };
+    
+    $scope.checkRatingBar = function (){
+        $scope.showRatingBar = true;
+        if ($scope.showRatingButton && 
+                !angular.isUndefined($scope.publication) && 
+                !angular.isUndefined($scope.publication.ratings)){
+            angular.forEach($scope.publication.ratings, function(value, key){
+                if($scope.authentication.user._id === value.user){
+                    $scope.showRatingBar = false;
+                    $scope.error = "No puedes votar dos veces la misma publicación";
+                }
+            });
+        }
+    };
+
+    $scope.$watch('rate', function(value) {
+        if(!angular.isUndefined($scope.publication) && value > 0){
+            $http({
+                url: 'api/publications/addRating',
+                method: "POST",
+                data: { 'rate' :  value,
+                        'publicationId' :  $scope.publication._id}
+            })
+            .then(function(response) {
+                // success
+                $scope.rate = 0;
+                $scope.messageok = response.data.message;
+                $scope.showRatingBar = false;
+                $scope.showRatingButton = false;
+            }, 
+            function(response) { // optional
+                // failed
+                $scope.error = response.data.message;
+            });
+        }
+    });
+    
+    $scope.hoveringOver = function(value) {
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+
+      if(value === 1)
+        $scope.overStar = 'Me gusta poco';
+      else if(value === 2)
+        $scope.overStar = 'Me gusta';
+      else if(value === 3)
+        $scope.overStar = 'Me gusta bastante';
+      else if(value === 4)
+        $scope.overStar = 'Me gusta mucho';
+      else if(value === 5)
+        $scope.overStar = 'Me encanta';
+    };
+    
+    // Find existing Subjects in BVMC catalogue
+    $scope.getSubject = function(val) {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+            params: {
+                q: val,
+                maxRows: 10
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+                var result = {
+                        name:item.nombre, 
+                        identifierSubject: item.id
+                    };
+                return result;
+            });
+        });
+    };
+
+    $scope.addComment = function() {
+      
+      if ($scope.form.commentForm.$valid) {
+        
+        $http({
+            url: 'api/publications/addComment',
+            method: "POST",
+            data: { 'message' :  $scope.txtcomment,
+                    'publicationId' :  $scope.publication._id}
+        })
+        .then(function(response) {
+            // success
+            $scope.publication = Publications.get({
+              publicationId: $stateParams.publicationId
+            });
+            
+            $scope.txtcomment = '';
+            $scope.messageok = response.data.message;
+        }, 
+        function(response) { // optional
+            // failed
+            $scope.error = response.data.message;
+        });
+      }
+    };
+    
+    $scope.removeComment = function (commentId, index){
+        
+        $http({
+            url: 'api/publications/removeComment',
+            method: "POST",
+            data: { 'publicationId' : $scope.publication._id,
+                    'commentId': commentId}
+        })
+        .then(function(response) {
+            // success
+            $scope.messageok = response.data.message;
+            $scope.publication.comments.splice(index, 1);
+        },
+        function(response) { // optional
+            // failed
+            $scope.messageok = '';
+            $scope.error = response.data.message;
+        });
+    };
+
+    $scope.showEmailForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/publications/client/views/modal-email-form.html',
+            controller: ModalPublicationEmailInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                publicationId: function () {
+                    return $scope.publication._id;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+        }, function () {
+        });
+    };
+    
+    $scope.showReportForm = function () {
+        var modalInstance = $modal.open({
+            templateUrl: '/modules/publications/client/views/modal-report-form.html',
+            controller: ModalPublicationReportInstanceCtrl,
+            scope: $scope,
+            resolve: {
+                emailForm: function () {
+                    return $scope.emailForm;
+                },
+                publicationId: function () {
+                    return $scope.publication._id;
+                },
+                displayName: function () {
+                    return $scope.authentication.user.displayName;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.messageok = result.message;
+            
+        }, function () {
+            
+        });
+    };
+
+    $scope.showHelpInformation = function () {
+       $modal.open({
+            templateUrl: '/modules/publications/client/views/modal-help-information.html',
+            controller: ModalHelpInstanceCtrl,
+            scope: $scope
+       });
+    };
+
+  }
+]);
+
+
+'use strict';
+
+angular.module('publications').controller('UploadPublicationController', ['$scope', '$timeout', '$window', '$location', 'Authentication', 'FileUploader',
+  function ($scope, $timeout, $window, $location, Authentication, FileUploader) {
+    $scope.user = Authentication.user;
+    $scope.fileUrl = "";
+    $scope.title = "";
+    $scope.content = "";
+    
+    // Create file uploader instance
+    $scope.uploader = new FileUploader({
+      url: 'api/publications',
+      alias: 'newPublication'
+    });
+
+    // Set file uploader pdf filter
+    $scope.uploader.filters.push({
+      name: 'pdfFilter',
+      fn: function (item, options) {
+        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+        if('|pdf|'.indexOf(type) === -1)
+            $scope.error = "Debe seleccionar un fichero con extensión pdf";
+        return '|pdf|'.indexOf(type) !== -1;
+      }
+    });
+
+    // Called after the user selected a new picture file
+    $scope.uploader.onAfterAddingFile = function (fileItem) {
+      $scope.error = "";  
+      console.log('viene a onAfterAddingFile');
+      if ($window.FileReader) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(fileItem._file);
+
+        fileReader.onload = function (fileReaderEvent) {
+          $timeout(function () {
+            $scope.fileUrl = fileReaderEvent.target.result; 
+          }, 0);
+        };
+      }
+    };
+    
+    $scope.uploader.onBeforeUploadItem = function (fileItem) {
+        console.log('onBeforeUploadItem empieza');
+        var formData = [{
+            title: $scope.title,
+            content: $scope.content
+        }];
+        Array.prototype.push.apply(fileItem.formData, formData);
+        console.log('onBeforeUploadItem termina');
+    };
+     
+
+    // Called after the user has successfully uploaded a new picture
+    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+      // Show success message
+      $scope.success = true;
+
+      // Populate user object
+      //$scope.user = Authentication.user = response;
+      
+      console.log('viene a onSuccessItem:' + response._id);
+
+      // Clear upload buttons
+      $scope.cancelUpload();
+      
+      $location.path('publications/' + response._id);
+    };
+
+    // Called after the user has failed to uploaded a new picture
+    $scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+      // Clear upload buttons
+      $scope.cancelUpload();
+      console.log('viene a onErrorItem');
+
+      // Show error message
+      $scope.error = response.message;
+    };
+    
+    // Change user profile picture
+    $scope.uploadFilePublication = function () {
+      // Clear messages
+      $scope.success = $scope.error = null;
+      console.log('viene por uploadFilePublication');
+      
+      if($scope.title === "")
+          $scope.error = "Por favor añade un título a la publicación";
+      else if($scope.content === "")
+          $scope.error = "Por favor añade una descripción a la publicación";
+      else{
+          // Start upload
+          $scope.uploader.uploadAll();
+      }
+    };
+
+    // Cancel the upload process
+    $scope.cancelUpload = function () {
+      $scope.uploader.clearQueue();
+      $scope.fileUrl = "";
+    };
+    
+  }
+]);
+
+'use strict';
+
+//Publications service used for communicating with the categories REST endpoints
+angular.module('publications').factory('Publications', ['$resource',
+  function ($resource) {
+    return $resource('api/publications/:publicationId', {
+      publicationId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+//TODO this should be Publications service
+angular.module('publications.admin').factory('Admin', ['$resource',
+  function ($resource) {
+    return $resource('api/admin/publications/:publicationId', {
+      publicationId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
 angular.module('reviews.admin.routes').config(['$stateProvider',
   function ($stateProvider) {
     $stateProvider
       .state('admin.reviews', {
         url: '/reviews',
-        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.reviews.client.view.html',
+        templateUrl: 'modules/reviews/client/views/admin/dashboard.list-reviews.client.view.html',
         controller: 'ReviewListController'
       })
       .state('admin.review', {
         url: '/reviews/:reviewId',
-        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.view-review.client.view.html',
+        templateUrl: 'modules/reviews/client/views/admin/dashboard.view-review.client.view.html',
         controller: 'ReviewAdminController',
         resolve: {
           reviewResolve: ['$stateParams', 'Reviews', function ($stateParams, Reviews) {
@@ -3440,7 +4404,7 @@ angular.module('reviews.admin.routes').config(['$stateProvider',
       })
       .state('admin.review-edit', {
         url: '/reviews/:reviewId/edit',
-        templateUrl: 'modules/core/client/views/admin/reviews/dashboard.edit-review.client.view.html',
+        templateUrl: 'modules/reviews/client/views/admin/dashboard.edit-review.client.view.html',
         controller: 'ReviewAdminController',
         resolve: {
           reviewResolve: ['$stateParams', 'Reviews', function ($stateParams, Reviews) {
@@ -4019,7 +4983,6 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
             $scope.content = '';
             $scope.identifierWork = '';
             $scope.slug = '';
-            $scope.title = '';
             $scope.uuid = '';
             $scope.reproduction = '';
             $scope.language = '';
@@ -4695,12 +5658,12 @@ angular.module('users.admin.routes').config(['$stateProvider',
       .state('admin.users', {
         url: '/users',
         //templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
-        templateUrl: 'modules/core/client/views/admin/users/dashboard.users.client.view.html',
+        templateUrl: 'modules/users/client/views/admin/dashboard.list-users.client.view.html',
         controller: 'UserListController'
       })
       .state('admin.user', {
         url: '/users/:userId',
-        templateUrl: 'modules/core/client/views/admin/users/dashboard.view-user.client.view.html',
+        templateUrl: 'modules/users/client/views/admin/dashboard.view-user.client.view.html',
         //templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',
         controller: 'UserController',
         resolve: {
@@ -4714,7 +5677,7 @@ angular.module('users.admin.routes').config(['$stateProvider',
       .state('admin.user-edit', {
         url: '/users/:userId/edit',
         //templateUrl: 'modules/users/client/views/admin/edit-user.client.view.html',
-        templateUrl: 'modules/core/client/views/admin/users/dashboard.edit-user.client.view.html',
+        templateUrl: 'modules/users/client/views/admin/dashboard.edit-user.client.view.html',
         controller: 'UserController',
         resolve: {
           userResolve: ['$stateParams', 'Admin', function ($stateParams, Admin) {

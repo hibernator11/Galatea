@@ -6,12 +6,12 @@ angular.module('groups.admin.routes').config(['$stateProvider',
     $stateProvider
       .state('admin.groups', {
         url: '/groups',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.groups.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.list-groups.client.view.html',
         controller: 'GroupListController'
       })
       .state('admin.group', {
         url: '/groups/:groupId',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.view-group.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.view-group.client.view.html',
         controller: 'GroupAdminController',
         resolve: {
           groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {
@@ -23,7 +23,7 @@ angular.module('groups.admin.routes').config(['$stateProvider',
       })
       .state('admin.group-edit', {
         url: '/groups/:groupId/edit',
-        templateUrl: 'modules/core/client/views/admin/groups/dashboard.edit-group.client.view.html',
+        templateUrl: 'modules/groups/client/views/admin/dashboard.edit-group.client.view.html',
         controller: 'GroupAdminController',
         resolve: {
           groupResolve: ['$stateParams', 'Groups', function ($stateParams, Groups) {

@@ -1,55 +1,135 @@
-<section>
-  <div class="page-header">
-    <div class="container">
-        <h1>Usuario <span ng-bind="user.username"></span></h1>
-    </div>
-  </div>
-  <div class="container">    
-    <div class="row">
-    <div class="col-md-12">
-    <form name="userForm" ng-submit="update(userForm.$valid)" novalidate>
-      <fieldset>
-        <div class="form-group" show-errors>
-          <label for="firstName">Nombre</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="user.firstName" placeholder="Nombre" required />
-          <div ng-messages="userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">El nombre es obligatorio.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="lastName">Apellidos</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="user.lastName" placeholder="Apellidos" required />
-          <div ng-messages="userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Los apellidos son obligatorios.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="status">Estado</label>
-          <select ng-model="user.status">
-            <option ng-repeat="x in userStatus" value="{{x.value}}">{{x.text}}</option>
-          </select>  
-          <div ng-messages="userForm.status.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">El estado es obligatorio.</p>
-          </div>
-        </div>        
-        <div class="form-group" show-errors>
-          <label class="control-label" for="roles">Roles</label>
-          <div class="controls">
-            <input class="form-control" type="text" name="roles" ng-model="user.roles" id="roles" ng-list required />
-            <div ng-messages="userForm.roles.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">Al menos un estado es obligatorio.</p>
+<div id="wrapper">
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Usuarios</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-users"></i> Usuarios
+                        </li>
+                    </ol>
+                </div>
             </div>
-          </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="totalUsers"></div>
+                                    <div>Usuarios</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">En general</span>
+                            <div class="clearfix"></div> 
+                        </div>-->
+                    </div>
+                    
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" ng-bind="newUsers"></div>
+                                    <div>Usuarios nuevos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel-footer">
+                            <span class="pull-left">Realizados en reseñas</span>
+                            <div class="clearfix"></div>
+                        </div> -->
+                    </div>
+                </div>                
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
+                    <section>
+                        <div class="page-header">
+                          <div class="container">
+                              <h1>Usuario <span ng-bind="user.username"></span></h1>
+                          </div>
+                        </div>
+                        <div class="container">    
+                          <div class="row">
+                          <div class="col-md-12">
+                          <form name="userForm" ng-submit="update(userForm.$valid)" novalidate>
+                            <fieldset>
+                              <div class="form-group" show-errors>
+                                <label for="firstName">Nombre</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control" ng-model="user.firstName" placeholder="Nombre" required />
+                                <div ng-messages="userForm.firstName.$error" role="alert">
+                                  <p class="help-block error-text" ng-message="required">El nombre es obligatorio.</p>
+                                </div>
+                              </div>
+                              <div class="form-group" show-errors>
+                                <label for="lastName">Apellidos</label>
+                                <input type="text" id="lastName" name="lastName" class="form-control" ng-model="user.lastName" placeholder="Apellidos" required />
+                                <div ng-messages="userForm.lastName.$error" role="alert">
+                                  <p class="help-block error-text" ng-message="required">Los apellidos son obligatorios.</p>
+                                </div>
+                              </div>
+                              <div class="form-group" show-errors>
+                                <label for="status">Estado</label>
+                                <select ng-model="user.status">
+                                  <option ng-repeat="x in userStatus" value="{{x.value}}">{{x.text}}</option>
+                                </select>  
+                                <div ng-messages="userForm.status.$error" role="alert">
+                                  <p class="help-block error-text" ng-message="required">El estado es obligatorio.</p>
+                                </div>
+                              </div>        
+                              <div class="form-group" show-errors>
+                                <label class="control-label" for="roles">Roles</label>
+                                <div class="controls">
+                                  <input class="form-control" type="text" name="roles" ng-model="user.roles" id="roles" ng-list required />
+                                  <div ng-messages="userForm.roles.$error" role="alert">
+                                    <p class="help-block error-text" ng-message="required">Al menos un estado es obligatorio.</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <input type="submit" value="Modificar" class="btn btn-default">
+                              </div>
+                              <div ng-show="error" class="text-danger">
+                                <strong ng-bind="error"></strong>
+                              </div>
+                            </fieldset>
+                          </form>
+                          </div>
+                          </div>
+                        </div>
+                      </section>
+
+                </div>
+            </div>
+
         </div>
-        <div class="form-group">
-          <input type="submit" value="Modificar" class="btn btn-default">
-        </div>
-        <div ng-show="error" class="text-danger">
-          <strong ng-bind="error"></strong>
-        </div>
-      </fieldset>
-    </form>
+        <!-- /.container-fluid -->
+
     </div>
-    </div>
-  </div>
-</section>
+    <!-- /#page-wrapper -->
+
+</div> 

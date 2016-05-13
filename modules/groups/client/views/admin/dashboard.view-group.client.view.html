@@ -1,250 +1,280 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-users fa-fw"></i> Grupo</h3>
-    </div>
-    <div class="panel-body">
+<div id="wrapper">
+    <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
+    
+    <div id="page-wrapper">
 
-        <div class="alert alert-warning" ng-show="error">
-            <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
-            <strong>Aviso:</strong> {{error}}
-        </div>
-        
-        <div class="row hidden-xs">
-            <div class="col-xs-12" style="margin-bottom: 20px;">
-                <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
-                <span ng-bind="group.user.displayName"></span>
-                <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
-                <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-                <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-                <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header-dashboard">
+                        Dashboard <small>Grupos</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="#" ui-sref="admin.dashboard">Dashboard</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-users"></i> <a href="#" ui-sref="admin.groups">Grupos</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-book"></i> Visor
+                        </li>
+                    </ol>
+                </div>
             </div>
-        </div>
-        
-        <div class="row visible-xs">
-            <div class="col-xs-12" style="margin-bottom: 20px;">
-                <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-                <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-                <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
-            </div>
-        </div>    
-        
-        <div class="row visible-xs">
-          <div class="col-xs-6" style="margin-bottom: 20px;">
-              <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
-              <span ng-bind="group.user.displayName"></span>
-          </div>    
-          <div class="col-xs-6" style="margin-bottom: 20px;">
-              <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
-          </div>
-        </div>
-        
-        <div tabset>
-          <div tab>
-              <span tab-heading>Descripción</span>
-              <div tab-content>
-                  <div class="hero-widget well well-sm visible-xs" >
-                    <div class="icon">
-                        <img ng-if="group.type === 'obra' && group.uuid" 
-                             width="100px" ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" 
-                             tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
-                        
-                        <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0"">
-                            <carousel interval="myInterval" no-wrap="noWrapSlides">
-                                <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
-                                    <img width="100px" ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
-                                    <!--<div class="carousel-caption"> 
-                                       <p>{{slide.title | htmlLimit: 80}}</p>
-                                    </div>-->
-                                </slide>
-                            </carousel>
-                        </div>
-                    </div>
-                    <div class="text">
-                        <label class="text-muted">{{ group.name }}</label>
-                    </div>
-                </div>
 
-                <div class="row visible-xs">
-                    <div class="col-xs-12">
-                        <dl class="dl-horizontal">
-                            <dt ng-show="group.title">Grupo sobre la obra</dt>
-                            <dd ng-show="group.title">{{group.title}}</dd>
-                            <dt ng-show="group.authorName">Grupo sobre el autor</dt>
-                            <dd ng-show="group.authorName">{{group.authorName}}</dd>
-                            <dt ng-show="group.themeName">Grupo sobre el tema</dt>
-                            <dd ng-show="group.themeName">{{group.themeName}}</dd>
-                            <dt ng-show="group.content">Descripción del grupo</dt>
-                            <dd ng-show="group.content" ng-bind-html="group.content | html"></dd>
-                        </dl>
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-users fa-fw"></i> Grupo</h3>
                 </div>
-                  
-                <div class="row visible-xs" ng-if="group.type === 'lista' && group.books.length > 0">
-                    <div class="col-xs-12">
-                         <div class="row home-title">
-                            <span>Obras</span><hr>
-                        </div>
-                        <dl class="dl-horizontal" ng-repeat="book in group.books">
-                            <dt ng-show="book.title">Título</dt>
-                            <dd ng-show="book.title">{{book.title}}</dd>
-                            <dt ng-show="book.authors">Autor</dt>
-                            <dd ng-show="book.authors">{{book.authors}}</dd>
-                        </dl>
-                    </div>
-                </div>  
-                  
-                <div class="row hidden-xs">
-                    <div class="col-xs-12">
-                        <div ng-if="group.type === 'obra' && group.uuid" 
-                            class="col-sm-3 col-md-3 col-xs-12"
-                            style="margin-top:10px">
-                           <a ng-href="{{group.source | mountRecord }}" target="_blank">
-                               <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
-                           </a>
-                        </div>
+                <div class="panel-body">
 
-                        <h3 class="title">{{group.name}}</h3>
-                        <h3 class="title">{{group.authorName}}</h3>
-                        <h3 class="title">{{group.themeName}}</h3>
-                        <h5 class="title">{{group.title}}</h5>
-                        <p ng-bind-html="group.content | html"></p>
+                    <div class="alert alert-warning" ng-show="error">
+                        <button ng-click="error = ''" href="#" type="button" class="close"><i class="glyphicon glyphicon-remove-circle text-warning"></i></button>
+                        <strong>Aviso:</strong> {{error}}
                     </div>
-                </div>
-                
-                <div class="row home-title hidden-xs" ng-if="group.type === 'lista' && group.books.length > 0">
-                    <span>Obras</span><hr>
-                </div>
-                <div ng-repeat="book in group.books" class="hidden-xs">
 
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-4 col-md-2">
-                            <a ng-href="{{book.slug | mountRecord }}" target="_blank">
-                                <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
-                            </a>
+                    <div class="row hidden-xs">
+                        <div class="col-xs-12" style="margin-bottom: 20px;">
+                            <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+                            <span ng-bind="group.user.displayName"></span>
+                            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+                            <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                            <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                            <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
                         </div>
-                        <div class="col-xs-8 col-md-2 pull-right">
-                            <div class="btn-group">
-                                <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-new-window"></i>
-                                </a>
-                                <a confirm="¿Desea eliminar la obra de la lista?" ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="top" ng-click="removeBook(book)" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-trash" ></i>
-                                </a>
-                                <a tooltip="Ver reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-zoom-in" aria-hidden="true"></i>
-                                </a>
+                    </div>
+
+                    <div class="row visible-xs">
+                        <div class="col-xs-12" style="margin-bottom: 20px;">
+                            <a tooltip="Editar grupo" tooltip-placement="top" href="#" ui-sref="admin.group-edit({groupId: group._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                            <a ng-show="group.status !== 'blocked'" tooltip="Bloquear grupo" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                            <a ng-show="group.status === 'blocked'" tooltip="Publicar grupo" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                        </div>
+                    </div>    
+
+                    <div class="row visible-xs">
+                      <div class="col-xs-6" style="margin-bottom: 20px;">
+                          <img ng-src="{{group.user.profileImageURL}}" alt="{{group.user.displayName}}" class="header-profile-image" />
+                          <span ng-bind="group.user.displayName"></span>
+                      </div>    
+                      <div class="col-xs-6" style="margin-bottom: 20px;">
+                          <i class="fa fa-calendar fa-2x"></i> <span ng-bind="group.created | date:'dd/MM/yyyy'"></span>
+                      </div>
+                    </div>
+
+                    <div tabset>
+                      <div tab>
+                          <span tab-heading>Descripción</span>
+                          <div tab-content>
+                              <div class="hero-widget well well-sm visible-xs" >
+                                <div class="icon">
+                                    <img ng-if="group.type === 'obra' && group.uuid" 
+                                         width="100px" ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" 
+                                         tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover" />
+
+                                    <div style="margin-top: 10px;" ng-if="group.type === 'lista' && group.books.length > 0"">
+                                        <carousel interval="myInterval" no-wrap="noWrapSlides">
+                                            <slide ng-repeat="slide in group.books" active="slide.active" index="slide.id">
+                                                <img width="100px" ng-src="{{slide.uuid | mountCover }}" style="margin:auto;" class="border-cover">
+                                                <!--<div class="carousel-caption"> 
+                                                   <p>{{slide.title | htmlLimit: 80}}</p>
+                                                </div>-->
+                                            </slide>
+                                        </carousel>
+                                    </div>
+                                </div>
+                                <div class="text">
+                                    <label class="text-muted">{{ group.name }}</label>
+                                </div>
                             </div>
-                        </div>  
-                        <div class="col-xs-12 col-sm-8 col-md-8">
-                            <h4 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h4>
-                            <h5 ng-if="book.title.length > 200" class="title">{{ book.title }}</h5>
-                            <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
-                            <dl class="dl-horizontal">
-                                <dt ng-show="book.reproduction">Reproducción</dt>
-                                <dd ng-show="book.reproduction">{{book.reproduction}}</dd>
-                                <dt ng-show="book.language">Idioma</dt>
-                                <dd ng-show="book.language">{{book.language}}</dd>
-                                <dt ng-show="book.mediaType">Forma soporte</dt>
-                                <dd ng-show="book.mediaType">
-                                    <span ng-show="book.mediaType" ng-switch on="book.mediaType">
-                                        <span ng-switch-when="audio">
-                                            <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
-                                        </span>
-                                        <span ng-switch-when="video">
-                                            <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
-                                        </span>
-                                        <span ng-switch-when="texto">
-                                            <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
-                                        </span>
-                                        <span ng-switch-default>
-                                            {{book.mediaType}}
-                                        </span>
-                                    </span>
-                                </dd>
-                                <dt ng-show="book.comments">Comentarios</dt>
-                                <dd ng-show="book.comments">{{book.comments}}</dd>
-                            </dl>
+
+                            <div class="row visible-xs">
+                                <div class="col-xs-12">
+                                    <dl class="dl-horizontal">
+                                        <dt ng-show="group.title">Grupo sobre la obra</dt>
+                                        <dd ng-show="group.title">{{group.title}}</dd>
+                                        <dt ng-show="group.authorName">Grupo sobre el autor</dt>
+                                        <dd ng-show="group.authorName">{{group.authorName}}</dd>
+                                        <dt ng-show="group.themeName">Grupo sobre el tema</dt>
+                                        <dd ng-show="group.themeName">{{group.themeName}}</dd>
+                                        <dt ng-show="group.content">Descripción del grupo</dt>
+                                        <dd ng-show="group.content" ng-bind-html="group.content | html"></dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <div class="row visible-xs" ng-if="group.type === 'lista' && group.books.length > 0">
+                                <div class="col-xs-12">
+                                     <div class="row home-title">
+                                        <span>Obras</span><hr>
+                                    </div>
+                                    <dl class="dl-horizontal" ng-repeat="book in group.books">
+                                        <dt ng-show="book.title">Título</dt>
+                                        <dd ng-show="book.title">{{book.title}}</dd>
+                                        <dt ng-show="book.authors">Autor</dt>
+                                        <dd ng-show="book.authors">{{book.authors}}</dd>
+                                    </dl>
+                                </div>
+                            </div>  
+
+                            <div class="row hidden-xs">
+                                <div class="col-xs-12">
+                                    <div ng-if="group.type === 'obra' && group.uuid" 
+                                        class="col-sm-3 col-md-3 col-xs-12"
+                                        style="margin-top:10px">
+                                       <a ng-href="{{group.source | mountRecord }}" target="_blank">
+                                           <img ng-if="group.uuid" ng-src="{{group.uuid | mountCover }}" tooltip="Ver obra en catálogo" tooltip-placement="top" class="border-cover img-responsive" />
+                                       </a>
+                                    </div>
+
+                                    <h3 class="title">{{group.name}}</h3>
+                                    <h3 class="title">{{group.authorName}}</h3>
+                                    <h3 class="title">{{group.themeName}}</h3>
+                                    <h5 class="title">{{group.title}}</h5>
+                                    <p ng-bind-html="group.content | html"></p>
+                                </div>
+                            </div>
+
+                            <div class="row home-title hidden-xs" ng-if="group.type === 'lista' && group.books.length > 0">
+                                <span>Obras</span><hr>
+                            </div>
+                            <div ng-repeat="book in group.books" class="hidden-xs">
+
+                                <div class="row">
+                                    <div class="col-xs-4 col-sm-4 col-md-2">
+                                        <a ng-href="{{book.slug | mountRecord }}" target="_blank">
+                                            <img ng-src="{{book.uuid | mountCover }}" alt="{{book.title}}" class="img-responsive border-cover">
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-8 col-md-2 pull-right">
+                                        <div class="btn-group">
+                                            <a tooltip="Ver obra en catálogo" tooltip-placement="top" ng-href="{{book.slug | mountRecord }}" target="_blank" class="btn btn-default">
+                                                <i class="glyphicon glyphicon-new-window"></i>
+                                            </a>
+                                            <a confirm="¿Desea eliminar la obra de la lista?" ng-show="authentication.user._id === booklist.user._id" tooltip="Eliminar obra" tooltip-placement="top" ng-click="removeBook(book)" class="btn btn-default">
+                                                <i class="glyphicon glyphicon-trash" ></i>
+                                            </a>
+                                            <a tooltip="Ver reseñas de esta obra" tooltip-placement="top" ui-sref="reviews.uuid({uuid: book.uuid})" class="btn btn-default">
+                                                <i class="glyphicon glyphicon-zoom-in" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>  
+                                    <div class="col-xs-12 col-sm-8 col-md-8">
+                                        <h4 ng-if="book.title.length <= 200" class="title">{{ book.title }}</h4>
+                                        <h5 ng-if="book.title.length > 200" class="title">{{ book.title }}</h5>
+                                        <h4 class="authors" ng-show="book.authors" ng-bind="book.authors | htmlLimit: 200"></h4>
+                                        <dl class="dl-horizontal">
+                                            <dt ng-show="book.reproduction">Reproducción</dt>
+                                            <dd ng-show="book.reproduction">{{book.reproduction}}</dd>
+                                            <dt ng-show="book.language">Idioma</dt>
+                                            <dd ng-show="book.language">{{book.language}}</dd>
+                                            <dt ng-show="book.mediaType">Forma soporte</dt>
+                                            <dd ng-show="book.mediaType">
+                                                <span ng-show="book.mediaType" ng-switch on="book.mediaType">
+                                                    <span ng-switch-when="audio">
+                                                        <i class="glyphicon glyphicon-headphones"></i> {{book.mediaType}}
+                                                    </span>
+                                                    <span ng-switch-when="video">
+                                                        <i class="glyphicon glyphicon-film"></i> {{book.mediaType}}
+                                                    </span>
+                                                    <span ng-switch-when="texto">
+                                                        <i class="glyphicon glyphicon-book"></i> {{book.mediaType}}
+                                                    </span>
+                                                    <span ng-switch-default>
+                                                        {{book.mediaType}}
+                                                    </span>
+                                                </span>
+                                            </dd>
+                                            <dt ng-show="book.comments">Comentarios</dt>
+                                            <dd ng-show="book.comments">{{book.comments}}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                                <hr ng-show="$index !== group.books.length -1">
+                            </div> <!-- repeat books -->  
+
+                         </div>     
+                     </div> <!--tab -->
+                     <div tab>
+                         <span tab-heading>Miembros</span>
+                         <div tab-content class="row">
+                             <div class="col-md-9 col-xs-12" ng-if="group.members.length > 0">
+                                 <div ng-include src="'modules/groups/client/views/admin/dashboard.table.users.client.view.html'"></div>
+                             </div>
+                             <div class="col-md-9 col-xs-12" ng-if="group.members.length === 0">
+                                 <p style="margin-top:10px;">El grupo no tiene miembros asociados</p>
+                             </div>
+                             <div class="col-md-3 col-md-offset-0 col-xs-12"
+                                  style="margin-top: 35px;">
+
+                                 <div class="well well-sm">
+                                     <legend style="font-weight: bold;font-size: 15px;" class="text-center">
+                                         Añadir miembros 
+                                     </legend>
+                                     <div class="input-group">
+                                         <input type="text" ng-model="memberName" 
+                                                  placeholder="Introduce el nombre del usuario" 
+                                                  typeahead-on-select="addMemberByAdminGroup($item)" 
+                                                  typeahead="item as item.displayName for item in getUsersLike($viewValue)" 
+                                                  typeahead-loading="loadingUsers"
+                                                  typeahead-template-url="/modules/users/client/views/usercustom.select.template.html"
+                                                  typeahead-min-length="3"
+                                                  typeahead-no-results="noResults" class="form-control" required>
+                                         <span class="input-group-addon">
+                                             <i class="fa fa-search"></i>
+                                         </span>
+                                     </div>
+                                     <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
+                                     <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
+                                         <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de usuario por favor.
+                                     </div>
+                                     <p class="text-center"><span class="profileNav-value" data-is-compact="false">{{(group.members | filter:{status:'activo'}:true).length}}</span> Miembros</p>
+                                 </div>
+                             </div>
+                         </div>
+                      </div> <!-- tab -->
+                    </div> <!-- tabset -->
+
+                    <hr>
+                    <div style="margin-top:20px;" ng-show="group.comments.length > 0">
+                        <h4>Actividad reciente</h4>	
+
+                        <div ng-repeat="comment in group.comments" class="media">
+                            <div class="media-left">
+                                <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
+                            </div>
+                            <div class="media-body">
+                                <small>
+                                <em class="text-muted">
+                                    Añadido el
+                                    <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
+                                    por
+                                    <span ng-bind="comment.user.displayName"></span>
+                                </em>
+                                <a href="#" tooltip="Eliminar comentario"
+                                   confirm="¿Estás seguro que deseas eliminar el comentario?"
+                                   ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+                                </small>
+                                <div class="visible-xs detail-comment">
+                                    <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                                <div class="hidden-xs detail-comment">
+                                    <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
+                                        <pre>{{ comment.content || 'comentario vacío' }}</pre>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <hr ng-show="$index !== group.books.length -1">
-                </div> <!-- repeat books -->  
-                  
-             </div>     
-         </div> <!--tab -->
-         <div tab>
-             <span tab-heading>Miembros</span>
-             <div tab-content class="row">
-                 <div class="col-md-9 col-xs-12" ng-if="group.members.length > 0">
-                     <div ng-include src="'modules/groups/client/views/admin/dashboard.table.users.client.view.html'"></div>
-                 </div>
-                 <div class="col-md-9 col-xs-12" ng-if="group.members.length === 0">
-                     <p style="margin-top:10px;">El grupo no tiene miembros asociados</p>
-                 </div>
-                 <div class="col-md-3 col-md-offset-0 col-xs-12"
-                      style="margin-top: 35px;">
+                        <hr>
+                    </div> <!-- last comments -->
 
-                     <div class="well well-sm">
-                         <legend style="font-weight: bold;font-size: 15px;" class="text-center">
-                             Añadir miembros 
-                         </legend>
-                         <div class="input-group">
-                             <input type="text" ng-model="memberName" 
-                                      placeholder="Introduce el nombre del usuario" 
-                                      typeahead-on-select="addMemberByAdminGroup($item)" 
-                                      typeahead="item as item.displayName for item in getUsersLike($viewValue)" 
-                                      typeahead-loading="loadingUsers"
-                                      typeahead-template-url="/modules/users/client/views/usercustom.select.template.html"
-                                      typeahead-min-length="3"
-                                      typeahead-no-results="noResults" class="form-control" required>
-                             <span class="input-group-addon">
-                                 <i class="fa fa-search"></i>
-                             </span>
-                         </div>
-                         <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i>
-                         <div class="alert alert-warning" style="margin-top:5px;" ng-show="noResults">
-                             <strong>Aviso:</strong> No se han encontrado resultados. Introduce un nombre de usuario por favor.
-                         </div>
-                         <p class="text-center"><span class="profileNav-value" data-is-compact="false">{{(group.members | filter:{status:'activo'}:true).length}}</span> Miembros</p>
-                     </div>
-                 </div>
-             </div>
-          </div> <!-- tab -->
-        </div> <!-- tabset -->
-        
-        <hr>
-        <div style="margin-top:20px;" ng-show="group.comments.length > 0">
-            <h4>Actividad reciente</h4>	
-
-            <div ng-repeat="comment in group.comments" class="media">
-                <div class="media-left">
-                    <img ng-src="{{comment.user.profileImageURL}}" alt="{{comment.user.displayName}}" class="header-profile-image" />
-                </div>
-                <div class="media-body">
-                    <small>
-                    <em class="text-muted">
-                        Añadido el
-                        <span ng-bind="comment.created | date:'dd/MM/yyyy'"></span>
-                        por
-                        <span ng-bind="comment.user.displayName"></span>
-                    </em>
-                    <a href="#" tooltip="Eliminar comentario"
-                       confirm="¿Estás seguro que deseas eliminar el comentario?"
-                       ng-click="removeComment(comment._id, $index)" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
-                    </small>
-                    <div class="visible-xs detail-comment">
-                        <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
-                            <pre class="visible-xs">{{ comment.content || 'comentario vacío' }}</pre>
-                        </a>
-                    </div>
-                    <div class="hidden-xs detail-comment">
-                        <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
-                            <pre>{{ comment.content || 'comentario vacío' }}</pre>
-                        </a>
-                    </div>
                 </div>
             </div>
-            <hr>
-        </div> <!-- last comments -->
-
+        </div>
     </div>
 </div>
