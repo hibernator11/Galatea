@@ -35,6 +35,13 @@ module.exports = {
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
+    },
+    publicationUpload: {
+      dest: './modules/users/client/img/profile/uploads/', // Publication upload destination path + user.id
+      limits: {
+        fileSize: 5*1024*1024 // Max file size in bytes (5 MB)
+      },
+      maxFilesPerUser: 5
     }
   }
 };

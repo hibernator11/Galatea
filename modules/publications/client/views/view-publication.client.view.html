@@ -107,9 +107,7 @@
                 <dl class="dl-horizontal">
                     <dt ng-show="publication.content">Descripción</dt>
                     <dd ng-show="publication.content">{{publication.content}}</dd>
-                    <dt ng-show="publication.url">Enlace permanente</dt>
-                    <dd ng-show="publication.url">{{publication.url}}</dd>
-                    <dt ng-show="publication.tags">Etiquetas</dt>
+                    <dt ng-show="publication.tags.length">Etiquetas</dt>
                     <dd ng-show="publication.tags">
                         <p ng-if="publication.tags">
                             <span style="color:grey; margin-right:20px" ng-repeat="tag in publication.tags track by $id(tag)">
@@ -121,19 +119,32 @@
             </div>
         </div>
         <hr>
-        <button ng-click="loadNewFile(publication.url)"
-                class="btn btn-danger" ng-show="!showToolbar">
-                  Leer texto completo
-        </button>
-        <my-pdf-viewer-toolbar
-          delegate-handle="my-pdf-container" ng-show="showToolbar"></my-pdf-viewer-toolbar>
-        <pdf-viewer ng-show="publication"
-            delegate-handle="my-pdf-container"
-            url=""
-            show-toolbar="false"
-            headers="{ 'x-you-know-whats-awesome': 'EVERYTHING' }">
-        </pdf-viewer>
-   
+        
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xs-12">
+                <button ng-click="loadNewFile(publication.url)"
+                        class="btn btn-danger" ng-show="!showToolbar">
+                         <i class="fa fa-file-text" aria-hidden="true"></i> Leer texto completo
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xs-12">
+                <my-pdf-viewer-toolbar
+                  delegate-handle="my-pdf-container" ng-show="showToolbar"></my-pdf-viewer-toolbar>
+            </div>    
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xs-12">
+                <pdf-viewer 
+                    delegate-handle="my-pdf-container"
+                    url=""
+                    show-toolbar="false"
+                    headers="{ 'x-you-know-whats-awesome': 'EVERYTHING' }">
+                </pdf-viewer>
+            </div>
+        </div>
+        
         <div ng-if="publication.comments.length > 0">
             <div class="row home-title">
                 <span>Actividad reciente</span><hr>

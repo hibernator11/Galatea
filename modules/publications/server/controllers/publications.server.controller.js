@@ -7,74 +7,84 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Publication = mongoose.model('Publication'),
   multer = require('multer'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
   
 /**
  * Create a publication
  */
 exports.create = function (req, res) {
-  
-  var cfgmulter = {
-      dest: './modules/users/client/img/profile/uploads/' + req.user._id, // Profile upload destination path
-      limits: {
-        fileSize: 5*1024*1024 // Max file size in bytes (5 MB)
-      },
-      rename: function (fieldname, filename) {
-        // generate a unique filename
-        console.log('viene a rename multer');
-        return filename.replace(/\W+/g, '-').toLowerCase() + Date.now() + '.pdf';
-      }
-  };  
-  
-  
-  
-    var options = multer.diskStorage({ destination : './modules/users/client/img/profile/uploads/' + req.user._id ,
-      filename: function (req, file, cb) {
-        //cb(null, (Math.random().toString(36)+'00000000000000000').slice(2, 10) + Date.now() + path.extname(file.originalname));
-        cb(null, (Math.random().toString(36)+'00000000000000000').slice(2, 10) + Date.now() + path.extname(file.originalname));
-      }
-    });
-
-    var multerUpload= multer({ storage: options });
-    var upload = multerUpload.single('newPublication');
-
-  //var upload = multer(config.uploads.publicationUpload).single('newPublication');
-  //var upload = multer(cfgmulter).single('newPublication');
-  
-  var publicationUploadFileFilter = require(path.resolve('./config/lib/multer')).publicationsUploadFileFilter;
-  
-  // Filtering to upload only pdf
-  upload.fileFilter = publicationUploadFileFilter;
-  
-  upload(req, res, function (uploadError) {
-      if(uploadError) {
-        return res.status(400).send({
-          message: 'Se ha producido un error actualizando la publicación. El límite por archivo es de 5 MB.'
-        });
-      } else {
-        console.log('create server req.file.filename:' + req.file.filename);
-        var publication = new Publication(req.body);
-        publication.user = req.user;
-        
-        console.log('req.file.mimetype:'+ req.file.mimetype);
-        console.log("file originalName:" + req.file.originalname);
-        
-        publication.url = '/modules/users/client/img/profile/uploads/' + req.user._id + '/' + req.file.filename;
-        /*if('application/pdf' === req.file.mimetype.toString())
-            publication.url += '.pdf';*/
-            
-        console.log(publication.url);
-        
-        publication.save(function (err) {
-            if (err) {
-              return res.status(400).send({
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    
+    Publication.aggregate(
+      { $match: {'user': new ObjectId(req.user._id)}},
+      { $group : {
+          _id: null,
+          total : { $sum : 1 }
+      } })
+    .exec(function(err, userPublications) {
+        if (err) {
+            return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
-              });
-            } else {
-              res.json(publication);
+            });
+        } else {
+            //console.log('total:' + userPublications[0].total);
+            console.log('length:' + userPublications.length);
+            
+            // if there is no publication or less than 5
+            if(userPublications.length === 0 || userPublications[0].total < config.uploads.publicationUpload.maxFilesPerUser){
+            
+                var options = multer.diskStorage({ destination : config.uploads.publicationUpload.dest + req.user._id ,
+                  filename: function (req, file, cb) {
+                    cb(null, (Math.random().toString(36)+'00000000000000000').slice(2, 10) + Date.now() + path.extname(file.originalname));
+                  }
+                });
+
+                var multerUpload= multer({ storage: options,
+                                           limits: { fileSize: config.uploads.publicationUpload.limits.fileSize }});
+                var upload = multerUpload.single('newPublication');
+
+                var publicationUploadFileFilter = require(path.resolve('./config/lib/multer')).publicationsUploadFileFilter;
+
+                // Filtering to upload only pdf
+                upload.fileFilter = publicationUploadFileFilter;
+
+                upload(req, res, function (uploadError) {
+                  if(uploadError) {
+                    return res.status(400).send({
+                      message: 'Se ha producido un error actualizando la publicación. El límite por archivo es de ' + 
+                              config.uploads.publicationUpload.limits.fileSize/1000000   + ' MB.'
+                    });
+                  } else {
+
+                    console.log('create server req.file.filename:' + req.file.filename);
+                    var publication = new Publication(req.body);
+                    publication.user = req.user;
+
+                    console.log('req.file.mimetype:'+ req.file.mimetype);
+                    console.log("file originalName:" + req.file.originalname);
+
+                    publication.url = config.uploads.publicationUpload.dest.substring(1) + req.user._id + '/' + req.file.filename;
+
+                    console.log(publication.url);
+
+                    publication.save(function (err) {
+                        if (err) {
+                          return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                          });
+                        } else {
+                          res.json(publication);
+                        }
+                    });
+                  }
+                });
+            }else{
+                return res.status(400).send({
+                    message: "Ya ha creado 5 publicaciones. No puede crear más de 5 publicaciones."
+                  });
             }
-        });
-      }
+        }
     });
 };
 
