@@ -17,6 +17,7 @@ var config = require('../config'),
   helmet = require('helmet'),
   flash = require('connect-flash'),
   consolidate = require('consolidate'),
+  nodalytics = require('nodalytics'),
   path = require('path');
 
 /**
@@ -249,6 +250,9 @@ module.exports.init = function (db) {
 
   // Initialize error routes
   this.initErrorRoutes(app);
+  
+  // set google analytics id
+  app.use(nodalytics(app.locals.googleAnalyticsTrackingID));
 
   // Configure Socket.io
   app = this.configureSocketIO(app, db);
