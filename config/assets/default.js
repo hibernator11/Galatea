@@ -26,7 +26,8 @@ module.exports = {
         'public/lib/jquery/dist/jquery.min.js',
         'public/lib/angular-xeditable/dist/js/xeditable.min.js',
         'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
-        'public/lib/pdfjs-dist/build/pdf.js'
+        'public/lib/pdfjs-dist/build/pdf.js',
+        
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

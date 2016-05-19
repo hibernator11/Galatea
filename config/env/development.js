@@ -44,6 +44,11 @@ module.exports = {
     clientSecret: process.env.TWITTER_SECRET || 'secret',
     callbackURL: '/api/auth/twitter/callback'
   },
+  wordpress: {
+    clientID: process.env.WORDPRESS_KEY || 'xWqBKaflQG8voSUgGdJ974gzdWAy74',
+    clientSecret: process.env.WORDPRESS_SECRET || 'DE03gKdv64cfzA7uQNHAWPFcoT9Zrg',
+    callbackURL: '/api/auth/wordpress/callback'
+  },
   google: {
     clientID: process.env.GOOGLE_ID || 'APP_ID',
     clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',

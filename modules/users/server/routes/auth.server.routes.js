@@ -66,4 +66,8 @@ module.exports = function (app) {
   app.route('/api/auth/paypal').get(users.oauthCall('paypal'));
   app.route('/api/auth/paypal/callback').get(users.oauthCallback('paypal'));
   
+  // Setting the wordpress oauth routes
+  app.route('/api/auth/wordpress').get(users.oauthCall('wordpress'));
+  app.route('/api/auth/wordpress/callback').get(users.oauthCallback('wordpress'));
+  
 };

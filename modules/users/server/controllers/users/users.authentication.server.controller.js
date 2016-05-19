@@ -104,7 +104,7 @@ exports.oauthCall = function (strategy, scope) {
     // Do not redirect to a signin or signup page
     if (noReturnUrls.indexOf(req.query.redirect_to) === -1) {
       req.session.redirect_to = req.query.redirect_to;
-    }
+    }console.log('user.authentcation.server.controller oauthCall strategy:' + strategy);
     // Authenticate
     passport.authenticate(strategy, scope)(req, res, next);
   };
@@ -119,7 +119,7 @@ exports.oauthCallback = function (strategy) {
     var sessionRedirectURL = req.session.redirect_to;
     delete req.session.redirect_to;
 
-    passport.authenticate(strategy, function (err, user, redirectURL) {
+    passport.authenticate(strategy, function (err, user, redirectURL) {console.log('user.authentcation.server.controller oauthCallback strategy:' + strategy + ' error:' + err);
       if (err) {
         return res.redirect('/authentication/signin?err=' + encodeURIComponent(errorHandler.getErrorMessage(err)));
       }

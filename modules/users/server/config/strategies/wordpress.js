@@ -4,19 +4,22 @@
  * Module dependencies.
  */
 var passport = require('passport'),
-  TwitterStrategy = require('passport-twitter').Strategy,
+  WordpressStrategy = require('passport-oauth2-complete-for-wordpress').Strategy,
   users = require('../../controllers/users.server.controller');
 
-module.exports = function (config) {
-  // Use twitter strategy
-  passport.use(new TwitterStrategy({
-    consumerKey: config.twitter.clientID,
-    consumerSecret: config.twitter.clientSecret,
-    callbackURL: config.twitter.callbackURL,
+module.exports = function (config) {console.log('viene a strategy wordpress');
+  // Use wordpress strategy
+  passport.use(new WordpressStrategy({
+    clientID: config.wordpress.clientID,
+    clientSecret: config.wordpress.clientSecret,
+    callbackURL: config.wordpress.callbackURL,
+    wordpressUrl: 'http://bvmcresearch.cervantesvirtual.com',
     passReqToCallback: true
   },
+  //function(accessToken, refreshToken, profile, done) {
   function (req, token, tokenSecret, profile, done) {
     // Set the provider data and include tokens
+    console.log('viene a strategy wordpress:'+ profile);
     var providerData = profile._json;
     providerData.token = token;
     providerData.tokenSecret = tokenSecret;
@@ -33,7 +36,7 @@ module.exports = function (config) {
       displayName: displayName,
       username: profile.username,
       profileImageURL: profile.photos[0].value.replace('normal', 'bigger'),
-      provider: 'twitter',
+      provider: 'wordpress',
       providerIdentifierField: 'id_str',
       providerData: providerData
     };
