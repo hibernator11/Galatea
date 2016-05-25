@@ -45,9 +45,10 @@ module.exports = {
     callbackURL: '/api/auth/twitter/callback'
   },
   wordpress: {
-    clientID: process.env.WORDPRESS_KEY || 'xWqBKaflQG8voSUgGdJ974gzdWAy74',
-    clientSecret: process.env.WORDPRESS_SECRET || 'DE03gKdv64cfzA7uQNHAWPFcoT9Zrg',
-    callbackURL: '/api/auth/wordpress/callback'
+    clientID: process.env.WORDPRESS_KEY || 'key',
+    clientSecret: process.env.WORDPRESS_SECRET || 'secret',
+    callbackURL: '/api/auth/wordpress/callback',
+    wordpressUrl: process.env.WORDPRESS_URL || 'WORDPRESS_URL'
   },
   google: {
     clientID: process.env.GOOGLE_ID || 'APP_ID',

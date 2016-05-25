@@ -13,8 +13,8 @@ module.exports = function (config) {
     passport.use(new WordpressStrategy({
         clientID: config.wordpress.clientID,
         clientSecret: config.wordpress.clientSecret,
-        wordpressUrl: 'http://bvmcresearch.pre.cervantesvirtual.com',
-        callbackURL: 'http://localhost:3000/api/auth/wordpress/callback',
+        wordpressUrl: config.wordpress.wordpressUrl,
+        callbackURL: config.wordpress.callbackURL,
         passReqToCallback: true
       },
       function(req, accessToken, refreshToken, profile, done) {

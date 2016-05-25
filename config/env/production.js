@@ -53,7 +53,8 @@ module.exports = {
   wordpress: {
     clientID: process.env.WORDPRESS_KEY || 'CLIENT_ID',
     clientSecret: process.env.WORDPRESS_SECRET || 'CLIENT_SECRET',
-    callbackURL: '/api/auth/wordpress/callback'
+    callbackURL: '/api/auth/wordpress/callback',
+    wordpressUrl: process.env.WORDPRESS_URL || 'WORDPRESS_URL'
   },
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
