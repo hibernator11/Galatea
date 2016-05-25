@@ -1,8 +1,8 @@
 'use strict';
 angular.module('publications.admin').run(function (editableOptions) {editableOptions.theme = 'bs3'; });
 
-angular.module('publications.admin').controller('PublicationAdminController', ['$scope', '$state', '$http', 'Authentication', 'publicationResolve',
-  function ($scope, $state, $http, Authentication, publicationResolve) {
+angular.module('publications.admin').controller('PublicationAdminController', ['$scope', '$state', '$http', 'pdfDelegate', 'Authentication', 'publicationResolve',
+  function ($scope, $state, $http, pdfDelegate, Authentication, publicationResolve) {
     $scope.authentication = Authentication;
     $scope.publication = publicationResolve;
     
@@ -118,5 +118,31 @@ angular.module('publications.admin').controller('PublicationAdminController', ['
             $scope.error = response.data.message;
         });
     };
+    
+    // Find existing Subjects in BVMC catalogue
+    $scope.getSubject = function(val) {
+        return $http.jsonp('//app.cervantesvirtual.com/cervantesvirtual-web-services/materia/like?callback=JSON_CALLBACK', {
+            params: {
+                q: val,
+                maxRows: 10
+            }
+        }).then(function(response){
+            return response.data.lista.map(function(item){
+                var result = {
+                        name:item.nombre, 
+                        identifierSubject: item.id
+                    };
+                return result;
+            });
+        });
+    };
+    
+    $scope.loadNewFile = function(url) {
+      $scope.showToolbar = true;  
+      pdfDelegate
+        .$getByHandle('my-pdf-container')
+        .load(url);
+    };
+    
   }
 ]);

@@ -104,7 +104,7 @@ exports.oauthCall = function (strategy, scope) {
     // Do not redirect to a signin or signup page
     if (noReturnUrls.indexOf(req.query.redirect_to) === -1) {
       req.session.redirect_to = req.query.redirect_to;
-    }console.log('user.authentcation.server.controller oauthCall strategy:' + strategy);
+    }
     // Authenticate
     passport.authenticate(strategy, scope)(req, res, next);
   };
@@ -117,9 +117,9 @@ exports.oauthCallback = function (strategy) {
   return function (req, res, next) {
     // Pop redirect URL from session
     var sessionRedirectURL = req.session.redirect_to;
-    delete req.session.redirect_to;
-
-    passport.authenticate(strategy, function (err, user, redirectURL) {console.log('user.authentcation.server.controller oauthCallback strategy:' + strategy + ' error:' + err);
+    delete req.session.redirect_to;console.log('viene a oauthCallback');
+    
+    passport.authenticate(strategy, function (err, user, redirectURL) {
       if (err) {
         return res.redirect('/authentication/signin?err=' + encodeURIComponent(errorHandler.getErrorMessage(err)));
       }
@@ -131,7 +131,12 @@ exports.oauthCallback = function (strategy) {
           return res.redirect('/authentication/signin');
         }
         //return res.redirect(redirectURL || sessionRedirectURL || '/');
-        return res.redirect(sessionRedirectURL || redirectURL || '/');
+        console.log('redirectURL:' + redirectURL);
+        console.log('sessionRedirectURL:' + sessionRedirectURL);
+        if (redirectURL.startsWith('[object'))
+            return res.redirect(redirectURL || '/');
+        else
+            return res.redirect(sessionRedirectURL || redirectURL || '/');
       });
     })(req, res, next);
   };
@@ -150,16 +155,16 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
     var mainProviderSearchQuery = {};
     mainProviderSearchQuery.provider = providerUserProfile.provider;
     mainProviderSearchQuery[searchMainProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
-
+    
     // Define additional provider search query
     var additionalProviderSearchQuery = {};
     additionalProviderSearchQuery[searchAdditionalProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
-
+    
     // Define a search query to find existing user with current provider profile
     var searchQuery = {
       $or: [mainProviderSearchQuery, additionalProviderSearchQuery]
     };
-
+    
     User.findOne(searchQuery, function (err, user) {
       if (err) {
         return done(err);
@@ -178,7 +183,7 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
               provider: providerUserProfile.provider,
               providerData: providerUserProfile.providerData
             });
-
+            
             // And save the user
             user.save(function (err) {
               return done(err, user);

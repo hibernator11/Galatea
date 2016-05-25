@@ -33,43 +33,68 @@
                 </div>
                 <div class="panel-body">
 
-                  <div class="row hidden-xs">
-                    <div class="col-xs-12" style="margin-bottom: 20px;">
-                        <img ng-src="{{publication.user.profileImageURL}}" alt="{{publication.user.displayName}}" class="header-profile-image" />
-                        <span ng-bind="publication.user.displayName"></span>
-                        <i class="fa fa-calendar fa-2x"></i> <span ng-bind="publication.created | date:'dd/MM/yyyy'"></span>
-                        <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-                        <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-                        <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                    <div class="row hidden-xs">
+                        <div class="col-xs-12" style="margin-bottom: 20px;">
+                            <img ng-src="{{publication.user.profileImageURL}}" alt="{{publication.user.displayName}}" class="header-profile-image" />
+                            <span ng-bind="publication.user.displayName"></span>
+                            <i class="fa fa-calendar fa-2x"></i> <span ng-bind="publication.created | date:'dd/MM/yyyy'"></span>
+                            <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                            <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                            <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                        </div>
                     </div>
-                  </div>
 
-                  <div class="row visible-xs">
-                    <div class="col-xs-12" style="margin-bottom: 20px;">
-                        <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
-                        <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
-                        <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
-                    </div>
-                  </div>    
+                    <div class="row visible-xs">
+                        <div class="col-xs-12" style="margin-bottom: 20px;">
+                            <a tooltip="Editar publicación" tooltip-placement="top" href="#" ui-sref="admin.publication-edit({publicationId: publication._id})" class="btn btn-danger pull-right"><i class="fa fa-pencil"></i> Editar</a> 
+                            <a ng-show="publication.status !== 'blocked'" tooltip="Bloquear publicación" tooltip-placement="top" href="#" ng-click="setBlocked()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-ban-circle"></i> Bloquear</a> 
+                            <a ng-show="publication.status === 'blocked'" tooltip="Publicar publicación" tooltip-placement="top" href="#" ng-click="setPublic()" class="btn btn-danger pull-right" style="margin-right:2px;"><i class="glyphicon glyphicon-eye-open"></i> Publicar</a> 
+                        </div>
+                    </div>    
 
-                  <div class="row">
-                    <div class="col-sm-12 col-md-12 col-xs-12">
-                        <h3 class="booklist-title">{{ publication.title | htmlLimit: 200 }}</h3>
-                        <dl class="dl-horizontal">
-                            <dt ng-show="publication.content">Descripción</dt>
-                            <dd ng-show="publication.content">{{publication.content}}</dd>
-                            <dt ng-show="publication.tags">Etiquetas</dt>
-                            <dd ng-show="publication.tags">
-                                <p ng-if="publication.tags">
-                                    <span style="color:grey; margin-right:20px" ng-repeat="tag in publication.tags track by $id(tag)">
-                                        <i class="glyphicon glyphicon-tag"></i> {{tag.name}}
-                                    </span>
-                                </p>
-                            </dd>
-                        </dl>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xs-12">
+                            <h3 class="booklist-title">{{ publication.title | htmlLimit: 200 }}</h3>
+                            <dl class="dl-horizontal">
+                                <dt ng-show="publication.content">Descripción</dt>
+                                <dd ng-show="publication.content">{{publication.content}}</dd>
+                                <dt ng-show="publication.tags">Etiquetas</dt>
+                                <dd ng-show="publication.tags">
+                                    <p ng-if="publication.tags">
+                                        <span style="color:grey; margin-right:20px" ng-repeat="tag in publication.tags track by $id(tag)">
+                                            <i class="glyphicon glyphicon-tag"></i> {{tag.name}}
+                                        </span>
+                                    </p>
+                                </dd>
+                            </dl>
+                        </div>
                     </div>
-                  </div>
-                  <hr>
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xs-12">
+                            <button ng-click="loadNewFile(publication.url)"
+                                    class="btn btn-danger" ng-show="!showToolbar">
+                                     <i class="fa fa-file-text" aria-hidden="true"></i> Leer texto completo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xs-12">
+                            <my-pdf-viewer-toolbar
+                              delegate-handle="my-pdf-container" ng-show="showToolbar"></my-pdf-viewer-toolbar>
+                        </div>    
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xs-12">
+                            <pdf-viewer 
+                                delegate-handle="my-pdf-container"
+                                url=""
+                                show-toolbar="false"
+                                headers="{ 'x-you-know-whats-awesome': 'EVERYTHING' }">
+                            </pdf-viewer>
+                        </div>
+                    </div>
 
                     <div style="margin-top:20px;" ng-if="publication.comments.length > 0">
                         <h4>Actividad reciente</h4>	

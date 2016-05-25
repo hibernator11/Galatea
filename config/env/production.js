@@ -50,6 +50,11 @@ module.exports = {
     clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
     callbackURL: '/api/auth/google/callback'
   },
+  wordpress: {
+    clientID: process.env.WORDPRESS_KEY || 'CLIENT_ID',
+    clientSecret: process.env.WORDPRESS_SECRET || 'CLIENT_SECRET',
+    callbackURL: '/api/auth/wordpress/callback'
+  },
   linkedin: {
     clientID: process.env.LINKEDIN_ID || 'APP_ID',
     clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',

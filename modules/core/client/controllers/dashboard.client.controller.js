@@ -24,15 +24,18 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.totalCommentsReview = 0;
     $scope.totalCommentsGroup = 0;
     $scope.totalCommentsBooklist = 0;
+    $scope.totalCommentsPublication = 0;
     
     $scope.numResultsCommentsReview = 10;
     $scope.numResultsCommentsGroup = 10;
     $scope.numResultsCommentsBooklist = 10;
+    $scope.numResultsCommentsPublication = 10;
     
     $scope.newReviews = 0;
     $scope.newBooklists = 0;
     $scope.newGroups = 0;
     $scope.newUsers = 0;
+    $scope.newPublications = 0;
     $scope.totalUsers = 0;
     $scope.totalReviews = 0;
     
@@ -62,7 +65,16 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
       }).error(function (response) {
             $scope.error = response.message;
       });
-    };    
+    };
+    
+    $scope.getPublicationComments = function() {
+      $http.get('/api/comments/publications/results/' + $scope.numResultsCommentsPublication)
+      .success(function (response) {
+            $scope.commentsPublication = response;
+      }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };
     
     $scope.getTotalCommentsReview = function() {
       
@@ -75,6 +87,18 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
             $scope.error = response.message;
       });
     };
+    
+    $scope.getTotalCommentsPublication = function() {
+      
+      $http.get('/api/comments/publications/').success(function (response) {
+          if(!angular.isUndefined(response[0])){
+            $scope.totalCommentsPublication = response[0].total;
+            $scope.newComments += $scope.totalCommentsPublication;
+          }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    };    
     
     $scope.getTotalCommentsGroup = function() {
       
@@ -104,6 +128,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
         $scope.getTotalCommentsReview();
         $scope.getTotalCommentsBooklist();
         $scope.getTotalCommentsGroup();
+        $scope.getTotalCommentsPublication();
     }
     
     $scope.getNewsReviews = function() {
@@ -138,6 +163,17 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
             $scope.error = response.message;
       });
     }
+    
+    $scope.getNewsPublications = function() {
+      
+        $http.get('/api/publications/news/count').success(function (response) {
+            if(!angular.isUndefined(response[0])){
+                $scope.newPublications = response[0].total;
+            }
+        }).error(function (response) {
+            $scope.error = response.message;
+      });
+    }    
     
     $scope.getNewsUsers = function() {
       
@@ -180,6 +216,7 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     
     $scope.getNewsBooklists();
     $scope.getNewsGroups();
+    $scope.getNewsPublications();
     
     $scope.getNewsUsers();
     $scope.getTotalUsers();
@@ -188,5 +225,6 @@ angular.module('core').controller('DashboardController', ['$scope', '$state', '$
     $scope.getReviewComments();
     $scope.getBooklistComments();
     $scope.getGroupComments();
+    $scope.getPublicationComments();
   }
 ]);

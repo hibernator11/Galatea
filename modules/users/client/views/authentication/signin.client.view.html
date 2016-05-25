@@ -26,7 +26,14 @@
           <a ui-sref="password.forgot">¿Olvidaste tu contraseña?</a>
         </div>
         <alert type="danger" ng-show="error" class="text-center text-danger">
-          <span ng-bind="error"></span>
+          <strong ng-if="error === 'Email already exists'">La cuenta de correo ya existe. Introduzca otra cuenta por favor.</strong>
+          <strong ng-if="error === 'Username already exists'">El usuario ya existe. Introduzca otro usuario por favor.</strong>
+          <strong ng-if="error === '11000 duplicate key error collection: mean.users index: username already exists'">El usuario ya existe. Introduzca otro usuario por favor.</strong>
+          <strong ng-if="error === '11000 duplicate key error collection: mean.users index: email already exists'">La cuenta de correo electrónico ya ha sido utilizada. Introduzca otro usuario por favor o acceda con otro tipo de login.</strong>
+          <strong ng-if="error !== 'Email already exists' &&
+                         error !== 'Username already exists' &&
+                         error !== '11000 duplicate key error collection: mean.users index: email already exists' &&
+                         error !== '11000 duplicate key error collection: mean.users index: username already exists'" ng-bind="error"></strong>
         </alert>
       </fieldset>
     </form>

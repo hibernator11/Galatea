@@ -32,12 +32,12 @@
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge" ng-bind="newComments"></div>
-                                    <div>Comentarios nuevos</div>
+                                    <div class="huge" ng-bind="newPublications"></div>
+                                    <div>Publicaciones nuevas</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" ui-sref="admin.comments">
+                        <a href="#" ui-sref="admin.publications">
                             <div class="panel-footer">
                                 <span class="pull-left">Ver Detalles</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -116,13 +116,16 @@
             <!-- /.row -->
 
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
+                    <div ng-include src="'modules/publications/client/views/admin/dashboard.resume.list-publications.client.view.html'"></div>
+                </div>
+                <div class="col-lg-3">
                     <div ng-include src="'modules/reviews/client/views/admin/dashboard.resume.list-reviews.client.view.html'"></div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div ng-include src="'modules/booklists/client/views/admin/dashboard.resume.list-booklists.client.view.html'"></div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div ng-include src="'modules/groups/client/views/admin/dashboard.resume.list-groups.client.view.html'"></div>
                 </div>
             </div>
