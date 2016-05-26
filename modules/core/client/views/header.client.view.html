@@ -71,8 +71,11 @@
       <li ui-sref-active="active">
         <a class="global-nav" href="/groups">Mis grupos</a>
       </li>
-      <li ui-sref-active="active">
+      <li ui-sref-active="active" ng-show="authentication.user.provider === 'wordpress-oauth-server'">
         <a class="global-nav" href="/publications">Mis publicaciones</a>
+      </li>
+      <li ui-sref-active="active" ng-show="authentication.user.provider !== 'wordpress-oauth-server'">
+        <a class="global-nav" href="/publications/search">Publicaciones</a>
       </li>
     </ul>
       
