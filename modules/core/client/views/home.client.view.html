@@ -70,7 +70,7 @@
                     </div>
                     <div class="post-user mt-n-lg">
                         <span class="thumb-lg pull-left mr">
-                            <img ng-if="comment.user_info[0].profileImageURL" ng-src="{{comment.user_info[0].profileImageURL}}" alt="{{comment.user_info[0].displayName}}" class="img-circle">
+                            <img ng-src="{{comment.user_info[0].profileImageURL || 'modules/users/client/img/profile/default.png'}}" alt="{{comment.user_info[0].displayName}}" class="img-circle">
                         </span>
                         <h5 class="mt-sm fw-normal text-grey">{{comment.user_info[0].displayName}} <small class="text-grey text-light"><i class="fa fa-calendar"></i> &nbsp;<span ng-bind="comment._id.comment.created | date:'dd/MM/yyyy'"></span></small></h5>
                     </div>
