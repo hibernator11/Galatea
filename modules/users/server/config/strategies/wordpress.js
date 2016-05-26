@@ -33,7 +33,7 @@ module.exports = function (config) {
           //email: profile.emails ? profile.emails[0].value : undefined,
           email: json.user_email,
           username: json.user_login,
-          profileImageURL: (json.picture) ? json.picture : undefined,
+          profileImageURL: 'modules/users/client/img/profile/default.png',
           provider: profile.provider,
           providerIdentifierField: 'id',
           providerData: providerData
