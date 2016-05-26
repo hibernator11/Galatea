@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" ng-init="init()">
     <div ng-include="'modules/core/client/views/admin/dashboard.header.client.view.html'"></div>
     <div id="page-wrapper">
 
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <section ng-controller="UserListController" ng-init="init()">
+            
             <div class="row">
                 <div class="col-xs-12 col-md-12 col-sm-12 col-lg-9">
                     <div id="filter-panel" class="filter-panel" collapse="searchIsCollapsed">
@@ -127,7 +127,6 @@
                     </pagination>
                </div>
             </div>        
-            </section>    
         </div>
         <!-- /.container-fluid -->
 
