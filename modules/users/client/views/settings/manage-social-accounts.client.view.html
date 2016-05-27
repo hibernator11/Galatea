@@ -28,6 +28,12 @@
         <i class="glyphicon glyphicon-plus"></i>
       </a>
     </div>
+    <div class="social-account-container" ng-hide="isConnectedSocialAccount('wordpress-oauth-server')">
+      <img ng-src="/modules/users/client/img/buttons/wordpress-oauth-server.png">
+      <a tooltip="Conectar con wordpress" class="btn btn-success btn-remove-account" href="/api/auth/wordpress" target="_self">
+        <i class="glyphicon glyphicon-plus"></i>
+      </a>
+    </div>  
     <!--<div class="social-account-container" ng-hide="isConnectedSocialAccount('linkedin')">
       <img ng-src="/modules/users/client/img/buttons/linkedin.png">
       <a class="btn btn-success btn-remove-account" href="/api/auth/linkedin" target="_self">

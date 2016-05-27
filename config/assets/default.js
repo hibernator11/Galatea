@@ -8,7 +8,8 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/ng-tags-input/ng-tags-input.min.css',
         'public/lib/font-awesome/css/font-awesome.min.css',
-        'public/lib/angular-xeditable/dist/css/xeditable.min.css'
+        'public/lib/angular-xeditable/dist/css/xeditable.min.css',
+        'public/lib/angular-cookie-law/dist/angular-cookie-law.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
@@ -27,7 +28,7 @@ module.exports = {
         'public/lib/angular-xeditable/dist/js/xeditable.min.js',
         'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
         'public/lib/pdfjs-dist/build/pdf.js',
-        
+        'public/lib/angular-cookie-law/dist/angular-cookie-law.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

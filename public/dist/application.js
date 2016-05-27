@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function () {
   // Init module configuration options
   var applicationModuleName = 'mean';
-  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload'];
+  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'angular-cookie-law'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
@@ -28,7 +28,7 @@ var ApplicationConfiguration = (function () {
 angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$httpProvider',
+angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$httpProvider', 
   function ($locationProvider, $httpProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
@@ -45,7 +45,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope"
 
       // if create publication state and provider wordpress or user is admin
       if(toState.name === 'publications.create'){
-          if(Authentication.user.provider === 'wordpress-oauth-server' || Authentication.user.roles.indexOf('admin') !== -1){
+          if(Authentication.user.provider === 'wordpress-oauth-server' || 
+             Authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') !== -1 ||
+             Authentication.user.roles.indexOf('admin') !== -1){
               allowed = true;
               return true;
           }
@@ -1433,6 +1435,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     .state('condiciones', {
       url: '/condiciones',
       templateUrl: 'modules/core/client/views/condiciones.client.view.html'
+    })
+    .state('cookies', {
+      url: '/cookies',
+      templateUrl: 'modules/core/client/views/cookies.client.view.html'
     })
     .state('not-found', {
       url: '/not-found',

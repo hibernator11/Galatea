@@ -21,6 +21,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/condiciones',
       templateUrl: 'modules/core/client/views/condiciones.client.view.html'
     })
+    .state('cookies', {
+      url: '/cookies',
+      templateUrl: 'modules/core/client/views/cookies.client.view.html'
+    })
     .state('not-found', {
       url: '/not-found',
       templateUrl: 'modules/core/client/views/404.client.view.html',

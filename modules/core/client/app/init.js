@@ -4,7 +4,7 @@
 angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$httpProvider',
+angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$httpProvider', 
   function ($locationProvider, $httpProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
@@ -21,7 +21,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
 
       // if create publication state and provider wordpress or user is admin
       if(toState.name === 'publications.create'){
-          if(Authentication.user.provider === 'wordpress-oauth-server' || Authentication.user.roles.indexOf('admin') !== -1){
+          if(Authentication.user.provider === 'wordpress-oauth-server' || 
+             Authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') !== -1 ||
+             Authentication.user.roles.indexOf('admin') !== -1){
               allowed = true;
               return true;
           }
