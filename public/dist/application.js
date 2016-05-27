@@ -1720,6 +1720,18 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     $scope.$on('$stateChangeSuccess', function () {
       $scope.isCollapsed = false;
     });
+    
+    $scope.showPublicationMenu = function () {
+        
+        if($scope.authentication.user)
+            if($scope.authentication.user.provider === 'wordpress-oauth-server' || 
+                ($scope.authentication.user.additionalProvidersData.length > 0 &&    
+                $scope.authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') >= 0) || 
+                ($scope.authentication.user.roles.indexOf('admin') >= 0)) {
+                return true;
+            }
+        return false;
+    }
   }
 ]);
 

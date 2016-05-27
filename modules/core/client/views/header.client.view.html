@@ -71,11 +71,11 @@
       <li ui-sref-active="active">
         <a class="global-nav" href="/groups">Mis grupos</a>
       </li>
-      <li ui-sref-active="active" ng-show="authentication.user.provider === 'wordpress-oauth-server' || authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') !== -1 || authentication.user.roles.indexOf('admin') !== -1">
-        <a class="global-nav" href="/publications">Mis publicaciones</a>
+      <li ui-sref-active="active" ng-if="showPublicationMenu()">
+          <a class="global-nav" href="/publications">Mis publicaciones</a>
       </li>
-      <li ui-sref-active="active" ng-show="authentication.user.provider !== 'wordpress-oauth-server' && authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') === -1 && authentication.user.roles.indexOf('admin') === -1">
-        <a class="global-nav" href="/publications/search">Publicaciones</a>
+      <li ui-sref-active="active" ng-if="!showPublicationMenu()">
+          <a class="global-nav" href="/publications/search">Publicaciones</a>
       </li>
     </ul>
       
