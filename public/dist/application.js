@@ -44,9 +44,12 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope"
       var allowed = false;
 
       // if create publication state and provider wordpress or user is admin
-      if(toState.name === 'publications.create'){
+      if(toState.name === 'publications.create' && 
+         Authentication.user !== undefined && 
+         typeof Authentication.user === 'object'){
           if(Authentication.user.provider === 'wordpress-oauth-server' || 
-             Authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') !== -1 ||
+             (Authentication.user.additionalProvidersData !== undefined &&
+              Authentication.user.additionalProvidersData.indexOf('wordpress-oauth-server') !== -1 )||
              Authentication.user.roles.indexOf('admin') !== -1){
               allowed = true;
               return true;
