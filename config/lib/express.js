@@ -37,11 +37,19 @@ module.exports.initLocalVariables = function (app) {
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;
-
+  
   // Passing the request url to environment locals
   app.use(function (req, res, next) {
     res.locals.host = req.protocol + '://' + req.hostname;
     res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
+    
+    var ua = req.headers['user-agent'];
+ 
+    if (/^(facebookexternalhit)|(Twitterbot)|(Pinterest)/gi.test(ua)) {
+        console.log(ua,' is a bot');
+        res.send('Serve regular HTML with metatags');
+    }
+    
     next();
   });
 };
