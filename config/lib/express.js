@@ -84,8 +84,9 @@ module.exports.initLocalVariables = function (app) {
                             // Now we update layout variables with DB info.
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: review.title,
-                            socialDescription: review.reproduction,
-                            socialImageUrl: '/modules/core/client/img/brand/galatea_icono.png'
+                            socialDescription: 'Reseña realizada en Galatea',
+                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/galatea_icono.png',
+                            socialType: 'article'
                         });
                     } else {
                         res.locals.url = req.protocol + '://' + req.headers.host;
@@ -110,15 +111,70 @@ module.exports.initLocalVariables = function (app) {
                             // Now we update layout variables with DB info.
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: group.name,
-                            socialDescription: group.content,
-                            socialImageUrl: '/modules/core/client/img/brand/galatea_icono.png'
+                            socialDescription: 'Grupo creado en Galatea',
+                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/galatea_icono.png',
+                            socialType: 'website'
                         });
                     } else {
                         res.locals.url = req.protocol + '://' + req.headers.host;
                         next();
                     }
                 });    
-            } 
+            }
+            else if('booklists' === module){  
+                
+                var Booklist = mongoose.model('Booklist');
+                var ObjectId = require('mongoose').Types.ObjectId; 
+                
+                Booklist.findOne({ _id: new ObjectId(id) }, function(err, booklist) {
+                    if(err) {console.log('error:' + err);
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    } else if (booklist !== null) {
+                        console.log('booklist:' + booklist);
+                        // Found link. Populate data.
+                        res.status(200).render('modules/core/server/views/social-layout', {
+
+                            // Now we update layout variables with DB info.
+                            socialUrl: req.protocol + '://' + req.headers.host + req.url,
+                            socialTitle: booklist.title,
+                            socialDescription: 'Lista de obras creado en Galatea',
+                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/galatea_icono.png',
+                            socialType: 'website'
+                        });
+                    } else {
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    }
+                });    
+            }
+            else if('publications' === module){  
+                
+                var Publication = mongoose.model('Publication');
+                var ObjectId = require('mongoose').Types.ObjectId; 
+                
+                Publication.findOne({ _id: new ObjectId(id) }, function(err, publication) {
+                    if(err) {console.log('error:' + err);
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    } else if (publication !== null) {
+                        console.log('publication:' + publication);
+                        // Found link. Populate data.
+                        res.status(200).render('modules/core/server/views/social-layout', {
+
+                            // Now we update layout variables with DB info.
+                            socialUrl: req.protocol + '://' + req.headers.host + req.url,
+                            socialTitle: publication.title,
+                            socialDescription: 'Publicación creada en Galatea',
+                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/galatea_icono.png',
+                            socialType: 'article'
+                        });
+                    } else {
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    }
+                });    
+            }
         } else {
             res.locals.url = req.protocol + '://' + req.headers.host;
             next();
