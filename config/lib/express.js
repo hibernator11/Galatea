@@ -17,8 +17,12 @@ var config = require('../config'),
   helmet = require('helmet'),
   flash = require('connect-flash'),
   consolidate = require('consolidate'),
+  mongoose = require('mongoose'),
   path = require('path');
+  
+  
 
+  
 /**
  * Initialize local variables
  */
@@ -38,20 +42,88 @@ module.exports.initLocalVariables = function (app) {
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;
   
-  // Passing the request url to environment locals
-  app.use(function (req, res, next) {
-    res.locals.host = req.protocol + '://' + req.hostname;
-    res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
-    
-    var ua = req.headers['user-agent'];
- 
-    if (/^(facebookexternalhit)|(Twitterbot)|(Pinterest)/gi.test(ua)) {
-        console.log(ua,' is a bot');
-        res.send('Serve regular HTML with metatags');
-    }
-    
-    next();
-  });
+    // This code happens just after app.locals variables are set.
+    // Passing the request url to environment locals
+    app.use(function(req, res, next) {
+        
+        
+        
+        // Let's check user-agents to see if this is a social bot. If so, let's serve a different layout to populate the og data so it looks pretty when sharing.
+        if( req.headers['user-agent'] === 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)' ||
+            req.headers['user-agent'] === 'facebookexternalhit/1.0 (+http://www.facebook.com/externalhit_uatext.php)' ||
+            req.headers['user-agent'] === 'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)' ||
+            req.headers['user-agent'] === 'facebookexternalhit/1.0 (+https://www.facebook.com/externalhit_uatext.php)' ||
+            req.headers['user-agent'] === 'visionutils/0.2' ||
+            req.headers['user-agent'] === 'Twitterbot/1.0' ||
+            req.headers['user-agent'] === 'LinkedInBot/1.0 (compatible; Mozilla/5.0; Jakarta Commons-HttpClient/3.1 +http://www.linkedin.com)' ||
+            req.headers['user-agent'] === 'Mozilla/5.0 (Windows NT 6.1; rv:6.0) Gecko/20110814 Firefox/6.0 Google (+https://developers.google.com/+/web/snippet/)' ||
+            req.headers['user-agent'] === 'Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)') {
+
+            console.log('req-url:'+ req.url);
+            var urlArray = req.url.substr(1).split('/');
+            var module = urlArray[0];
+            var id = urlArray[1];
+            
+            console.log('module:' + module);
+            console.log('id:' + id);
+            
+            if('reviews' === module){  
+                
+                var Review = mongoose.model('Review');
+                var ObjectId = require('mongoose').Types.ObjectId; 
+                
+                Review.findOne({ _id: new ObjectId(id) }, function(err, review) {
+                    if(err) {console.log('error:' + err);
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    } else if (review !== null) {
+                        console.log('review:' + review);
+                        // Found link. Populate data.
+                        res.status(200).render('modules/core/server/views/social-layout', {
+
+                            // Now we update layout variables with DB info.
+                            socialUrl: req.protocol + '://' + req.headers.host + req.url,
+                            socialTitle: review.title,
+                            socialDescription: review.reproduction,
+                            socialImageUrl: '/modules/core/client/img/brand/galatea_icono.png'
+                        });
+                    } else {
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    }
+                });    
+            }
+            else if('groups' === module){  
+                
+                var Group = mongoose.model('Group');
+                var ObjectId = require('mongoose').Types.ObjectId; 
+                
+                Group.findOne({ _id: new ObjectId(id) }, function(err, group) {
+                    if(err) {console.log('error:' + err);
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    } else if (group !== null) {
+                        console.log('group:' + group);
+                        // Found link. Populate data.
+                        res.status(200).render('modules/core/server/views/social-layout', {
+
+                            // Now we update layout variables with DB info.
+                            socialUrl: req.protocol + '://' + req.headers.host + req.url,
+                            socialTitle: group.name,
+                            socialDescription: group.content,
+                            socialImageUrl: '/modules/core/client/img/brand/galatea_icono.png'
+                        });
+                    } else {
+                        res.locals.url = req.protocol + '://' + req.headers.host;
+                        next();
+                    }
+                });    
+            } 
+        } else {
+            res.locals.url = req.protocol + '://' + req.headers.host;
+            next();
+        }
+    });
 };
 
 /**
@@ -260,6 +332,6 @@ module.exports.init = function (db) {
   
   // Configure Socket.io
   app = this.configureSocketIO(app, db);
-
+  
   return app;
 };
