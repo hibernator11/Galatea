@@ -106,7 +106,7 @@ module.exports.initLocalVariables = function (app) {
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: group.name,
                             socialDescription: 'Grupo creado en Galatea por ' + group.user.displayName,
-                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
+                            //socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
                             socialType: 'website'
                         });
                     } else {
@@ -133,7 +133,7 @@ module.exports.initLocalVariables = function (app) {
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: booklist.title,
                             socialDescription: 'Lista de obras creado en Galatea por ' + booklist.user.displayName,
-                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
+                            //socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
                             socialType: 'website'
                         });
                     } else {
@@ -160,7 +160,7 @@ module.exports.initLocalVariables = function (app) {
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: publication.title,
                             socialDescription: 'Publicación creada en Galatea por ' + publication.user.displayName,
-                            socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
+                            //socialImageUrl: req.protocol + '://' + req.headers.host + '/modules/core/client/img/brand/fondo_bvmc_social_gris_rojo.png',
                             socialType: 'book'
                         });
                     } else {
