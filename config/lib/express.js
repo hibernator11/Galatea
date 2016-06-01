@@ -46,8 +46,6 @@ module.exports.initLocalVariables = function (app) {
     // Passing the request url to environment locals
     app.use(function(req, res, next) {
         
-        
-        
         // Let's check user-agents to see if this is a social bot. If so, let's serve a different layout to populate the og data so it looks pretty when sharing.
         if( req.headers['user-agent'] === 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)' ||
             req.headers['user-agent'] === 'facebookexternalhit/1.0 (+http://www.facebook.com/externalhit_uatext.php)' ||
@@ -78,7 +76,6 @@ module.exports.initLocalVariables = function (app) {
                         // Found link. Populate data.
                         res.status(200).render('modules/core/server/views/social-layout', {
 
-                            // Now we update layout variables with DB info.
                             socialUrl: req.protocol + '://' + req.headers.host + req.url,
                             socialTitle: review.title,
                             socialDescription: 'Reseña realizada en Galatea por ' + review.user.displayName,
