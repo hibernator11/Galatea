@@ -64,9 +64,7 @@ module.exports.initLocalVariables = function (app) {
             if('reviews' === module){  
                 
                 var Review = mongoose.model('Review');
-                var ObjectId = require('mongoose').Types.ObjectId; 
-                
-                Review.findOne({ _id: new ObjectId(id) }, function(err, review) {
+                Review.findById(id).populate('user', 'displayName').exec(function(err, review) {
                     if(err) {
                         res.locals.url = req.protocol + '://' + req.headers.host;
                         next();
