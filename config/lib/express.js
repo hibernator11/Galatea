@@ -74,7 +74,7 @@ module.exports.initLocalVariables = function (app) {
                         next();
                     } else if (review !== null) {
                         
-                        var uuidPath = uuid.replace(/-/g, '').match(/.{1,3}/g).join("/"); 
+                        var uuidPath = review.uuid.replace(/-/g, '').match(/.{1,3}/g).join("/"); 
                         // Found link. Populate data.
                         res.status(200).render('modules/core/server/views/social-layout', {
 
