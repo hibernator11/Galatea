@@ -9,6 +9,14 @@ var mongoose = require('mongoose'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
+  
+  owasp.config({
+    allowPassphrases       : false,
+    maxLength              : 128,
+    minLength              : 6,
+    minPhraseLength        : 6,
+    minOptionalTestsToPass : 0,
+  });
 
 /**
  * A Validation function for local strategy properties
@@ -127,7 +135,7 @@ UserSchema.pre('save', function (next) {
 UserSchema.pre('validate', function (next) {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
     var result = owasp.test(this.password);
-    if (result.errors.length) {
+    if (result.requiredTestErrors.length) {
       var error = result.errors.join(' ');
       this.invalidate('password', error);
     }
@@ -204,7 +212,7 @@ UserSchema.statics.generateRandomPassphrase = function () {
 
     // Send the rejection back if the passphrase fails to pass the strength test
     if (owasp.test(password).errors.length) {
-      reject(new Error('An unexpected problem occured while generating the random passphrase'));
+      reject(new Error('Ha ocurrido un problema al generar el password'));
     } else {
       // resolve with the validated passphrase
       resolve(password);
