@@ -46,7 +46,6 @@
               <p ng-if="passwordError === 'The password must be fewer than 128 characters.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener menos de 128 caracteres.</p>
               <p ng-if="passwordError === 'The password may not contain sequences of three or more repeated characters.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña no debe contener secuencias de 3 o más caracteres repetidos.</p>-->
               <p ng-if="passwordError === 'The password must be at least 6 characters long.'" class="help-block error-text" ng-show="userForm.password.$error.requirements">La contraseña debe contener al menos 6 caracteres.</p>
-              <p class="help-block error-text" ng-show="userForm.password.$error.requirements" ng-bind="passwordError"></p>
             </div>
           </div>
         </div>

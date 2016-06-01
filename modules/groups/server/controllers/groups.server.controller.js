@@ -434,8 +434,6 @@ exports.activatePublicMember = function(req, res){
  
     if(req.user && req.body.groupId && req.body.userId){
         
-        console.log('req.body.userId:' + req.body.userId);
-        
         Group.update(
             {'_id': req.body.groupId, 'members.user': req.body.userId}, 
             {'$set': {

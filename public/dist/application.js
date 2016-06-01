@@ -4384,7 +4384,6 @@ angular.module('publications').controller('UploadPublicationController', ['$scop
     // Called after the user selected a new picture file
     $scope.uploader.onAfterAddingFile = function (fileItem) {
       $scope.error = "";  
-      console.log('viene a onAfterAddingFile');
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);
@@ -4398,13 +4397,11 @@ angular.module('publications').controller('UploadPublicationController', ['$scop
     };
     
     $scope.uploader.onBeforeUploadItem = function (fileItem) {
-        console.log('onBeforeUploadItem empieza');
         var formData = [{
             title: $scope.title,
             content: $scope.content
         }];
         Array.prototype.push.apply(fileItem.formData, formData);
-        console.log('onBeforeUploadItem termina');
     };
      
 
@@ -4412,11 +4409,6 @@ angular.module('publications').controller('UploadPublicationController', ['$scop
     $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
       // Show success message
       $scope.success = true;
-
-      // Populate user object
-      //$scope.user = Authentication.user = response;
-      
-      console.log('viene a onSuccessItem:' + response._id);
 
       // Clear upload buttons
       $scope.cancelUpload();
@@ -4428,7 +4420,6 @@ angular.module('publications').controller('UploadPublicationController', ['$scop
     $scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
       // Clear upload buttons
       $scope.cancelUpload();
-      console.log('viene a onErrorItem');
 
       // Show error message
       $scope.error = response.message;
@@ -4438,7 +4429,6 @@ angular.module('publications').controller('UploadPublicationController', ['$scop
     $scope.uploadFilePublication = function () {
       // Clear messages
       $scope.success = $scope.error = null;
-      console.log('viene por uploadFilePublication');
       
       if($scope.title === "")
           $scope.error = "Por favor añade un título a la publicación";
@@ -6547,13 +6537,12 @@ angular.module('users').factory('PasswordValidator', ['$window',
     var owaspPasswordStrengthTest = $window.owaspPasswordStrengthTest;
     
     owaspPasswordStrengthTest.config({
-    allowPassphrases       : false,
-    maxLength              : 128,
-    minLength              : 6,
-    minPhraseLength        : 6,
-    minOptionalTestsToPass : 0,
-  });
-  console.log('client viene a configurar owasp');
+        allowPassphrases       : false,
+        maxLength              : 128,
+        minLength              : 6,
+        minPhraseLength        : 6,
+        minOptionalTestsToPass : 0,
+    });
 
     return {
       getResult: function (password) {

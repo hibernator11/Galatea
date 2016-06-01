@@ -28,8 +28,6 @@ exports.create = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            //console.log('total:' + userPublications[0].total);
-            console.log('length:' + userPublications.length);
             
             // if there is no publication or less than 5
             if(userPublications.length === 0 || userPublications[0].total < config.uploads.publicationUpload.maxFilesPerUser){
@@ -57,16 +55,10 @@ exports.create = function (req, res) {
                     });
                   } else {
 
-                    console.log('create server req.file.filename:' + req.file.filename);
                     var publication = new Publication(req.body);
                     publication.user = req.user;
 
-                    console.log('req.file.mimetype:'+ req.file.mimetype);
-                    console.log("file originalName:" + req.file.originalname);
-
                     publication.url = config.uploads.publicationUpload.dest.substring(1) + req.user._id + '/' + req.file.filename;
-
-                    console.log(publication.url);
 
                     publication.save(function (err) {
                         if (err) {
@@ -81,7 +73,7 @@ exports.create = function (req, res) {
                 });
             }else{
                 return res.status(400).send({
-                    message: "Ya ha creado 5 publicaciones. No puede crear más de 5 publicaciones."
+                    message: "Ha alcanzado el límite máximo de publicaciones personales. No puede crear más de 5 publicaciones."
                   });
             }
         }
