@@ -89,9 +89,8 @@ module.exports.initLocalVariables = function (app) {
             else if('groups' === module){  
                 
                 var Group = mongoose.model('Group');
-                var ObjectId = require('mongoose').Types.ObjectId; 
                 
-                Group.findOne({ _id: new ObjectId(id) }, function(err, group) {
+                Group.findById(id).populate('user', 'displayName').exec(function(err, group) {
                     if(err) {
                         res.locals.url = req.protocol + '://' + req.headers.host;
                         next();
@@ -116,9 +115,8 @@ module.exports.initLocalVariables = function (app) {
             else if('booklists' === module){  
                 
                 var Booklist = mongoose.model('Booklist');
-                var ObjectId = require('mongoose').Types.ObjectId; 
                 
-                Booklist.findOne({ _id: new ObjectId(id) }, function(err, booklist) {
+                Booklist.findById(id).populate('user', 'displayName').exec(function(err, booklist) {
                     if(err) {
                         res.locals.url = req.protocol + '://' + req.headers.host;
                         next();
@@ -143,9 +141,8 @@ module.exports.initLocalVariables = function (app) {
             else if('publications' === module){  
                 
                 var Publication = mongoose.model('Publication');
-                var ObjectId = require('mongoose').Types.ObjectId; 
                 
-                Publication.findOne({ _id: new ObjectId(id) }, function(err, publication) {
+                Publication.findById(id).populate('user', 'displayName').exec(function(err, publication) {
                     if(err) {
                         res.locals.url = req.protocol + '://' + req.headers.host;
                         next();
