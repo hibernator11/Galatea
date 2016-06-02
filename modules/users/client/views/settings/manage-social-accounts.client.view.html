@@ -1,5 +1,6 @@
 <section class="row" ng-controller="SocialAccountsController">
-  <h3 class="col-md-12 text-center" ng-show="hasConnectedAdditionalSocialAccounts()">Connected social accounts:</h3>
+  <h3 class="col-md-12 text-center">¿Quieres conectar tus cuentas de Facebook, Twitter, Google+ o Amigos de la Cervantes?</h3>  
+  <h3 class="col-md-12 text-center" ng-show="hasConnectedAdditionalSocialAccounts()">Redes sociales conectadas:</h3>
   <div class="col-md-12 text-center">
     <div ng-repeat="(providerName, providerData) in user.additionalProvidersData" class="social-account-container">
       <img ng-src="/modules/users/client/img/buttons/{{providerName}}.png">
@@ -8,7 +9,7 @@
       </a>
     </div>
   </div>
-  <h3 class="col-md-12 text-center" ng-show="hasConnectedAdditionalSocialAccounts()">Unconnected social accounts:</h3>
+  <h3 class="col-md-12 text-center" ng-show="hasConnectedAdditionalSocialAccounts()">Redes sociales pendientes de conectar:</h3>
   <div class="col-md-12 text-center">
     <div class="social-account-container" ng-hide="isConnectedSocialAccount('facebook')">
       <img ng-src="/modules/users/client/img/buttons/facebook.png">
@@ -30,7 +31,7 @@
     </div>
     <div class="social-account-container" ng-hide="isConnectedSocialAccount('wordpress-oauth-server')">
       <img ng-src="/modules/users/client/img/buttons/wordpress-oauth-server.png">
-      <a tooltip="Conectar con wordpress" class="btn btn-success btn-remove-account" href="/api/auth/wordpress" target="_self">
+      <a tooltip="Conectar con Amigos de la Cervantes" class="btn btn-success btn-remove-account" href="/api/auth/wordpress" target="_self">
         <i class="glyphicon glyphicon-plus"></i>
       </a>
     </div>  
