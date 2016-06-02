@@ -682,3 +682,14 @@ li.profileNav-item span a {
     color:#494b55;
 }
 
+.link-amigos {
+    color: rgb(255, 57, 3)
+}
+
+.link-amigos:hover {
+    color: rgb(255, 57, 3)
+}
+
+.link-amigos:visited {
+    color: rgb(255, 57, 3)
+}
