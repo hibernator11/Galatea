@@ -36,8 +36,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
   }
 ]);
 
-angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope", "$state", "Authentication", function ($rootScope, $state, Authentication) {
+angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope", "$state", "$window", "$location", "Authentication", function ($rootScope, $state, $window, $location, Authentication) {
 
+  	
+  $window.ga('create', 'UA-XXXXXXXX-YY', 'auto');
+  
   // Check authentication before changing state
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
     if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
@@ -80,6 +83,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope"
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
     storePreviousState(fromState, fromParams);
+    $window.ga('send', 'pageview', $location.path());
   });
 
   // Store previous state
