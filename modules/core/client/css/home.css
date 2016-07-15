@@ -693,3 +693,7 @@ li.profileNav-item span a {
 .link-amigos:visited {
     color: rgb(255, 57, 3)
 }
+
+span.fw-semi-bold {
+    margin-left: 6px;
+}
