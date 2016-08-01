@@ -697,3 +697,8 @@ li.profileNav-item span a {
 span.fw-semi-bold {
     margin-left: 6px;
 }
+
+.comment {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

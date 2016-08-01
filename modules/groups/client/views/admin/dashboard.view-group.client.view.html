@@ -260,12 +260,12 @@
                                 </small>
                                 <div class="visible-xs detail-comment">
                                     <a class="visible-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="15" onbeforesave="updateComment(comment._id, $data)">
-                                        <pre class="visible-xs" ng-bind-html="comment.content | html"></pre>
+                                        <pre class="visible-xs comment" ng-bind-html="comment.content | html"></pre>
                                     </a>
                                 </div>
                                 <div class="hidden-xs detail-comment">
                                     <a class="hidden-xs" href="#" editable-textarea="comment.content" e-rows="7" e-cols="40" onbeforesave="updateComment(comment._id, $data)">
-                                        <pre ng-bind-html="comment.content | html"></pre>
+                                        <pre class="comment" ng-bind-html="comment.content | html"></pre>
                                     </a>
                                 </div>
                             </div>

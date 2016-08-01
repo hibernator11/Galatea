@@ -135,7 +135,7 @@
                             <div class="list-group">
                               <a ng-repeat="comment in commentsPublication" ui-sref="admin.publication({publicationId: comment._id.publicationId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
-                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <div><span ng-bind-html="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
                                 </small>-->
@@ -172,7 +172,7 @@
                             <div class="list-group">
                               <a ng-repeat="comment in commentsReview" ui-sref="admin.review({reviewId: comment._id.reviewId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
-                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <div><span ng-bind-html="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
                                 </small>-->
@@ -206,7 +206,7 @@
                             <div class="list-group">
                               <a ng-repeat="comment in commentsBooklist" ui-sref="admin.booklist({booklistId: comment._id.booklistId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
-                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <div><span ng-bind-html="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
                                 </small>-->
@@ -239,7 +239,7 @@
                             <div class="list-group">
                               <a ng-repeat="comment in commentsGroup" ui-sref="admin.group({groupId: comment._id.groupId})" class="list-group-item">
                                 <!--<span class="badge" ng-bind="review.created | date:'dd/MM/yyyy'"></span>-->
-                                <div><span ng-bind="comment._id.comment.content | htmlLimit: 150"></span></div>
+                                <div><span ng-bind-html="comment._id.comment.content | htmlLimit: 150"></span></div>
                                 <!--<small>
                                     Añadido por <span ng-bind="comment.user_info[0].displayName | htmlLimit: 50"></span>
                                 </small>-->
