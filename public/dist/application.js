@@ -519,6 +519,11 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.showRatingBar = false;
     $scope.showRatingButton = true;
 
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
+
     // Create new Booklist
     $scope.create = function (isValid) {
         $scope.error = null;
@@ -2577,6 +2582,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.warningopen = true;
 
     $scope.type = '';
+
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
     
     $scope.showWorkPanel = false;
     $scope.showBookListPanel = false;
@@ -4052,6 +4062,11 @@ angular.module('publications').controller('PublicationsController', ['$scope', '
     $scope.messageok = '';
     $scope.warningopen = true;
 
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
+
     // rating variables
     $scope.max = 5;
     $scope.rate = 0;
@@ -5106,7 +5121,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.showRatingButton = true;
     
     $scope.tinymceOptions = {
-        language_url : 'modules/reviews/client/language-tinymce/es.js' 
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
     };
     
     $scope.createGroupFromReview = function () {

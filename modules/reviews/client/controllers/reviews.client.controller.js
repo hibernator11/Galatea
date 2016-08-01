@@ -30,7 +30,8 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$http', '$
     $scope.showRatingButton = true;
     
     $scope.tinymceOptions = {
-        language_url : 'modules/reviews/client/language-tinymce/es.js' 
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
     };
     
     $scope.createGroupFromReview = function () {

@@ -15,6 +15,11 @@ angular.module('publications').controller('PublicationsController', ['$scope', '
     $scope.messageok = '';
     $scope.warningopen = true;
 
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
+
     // rating variables
     $scope.max = 5;
     $scope.rate = 0;

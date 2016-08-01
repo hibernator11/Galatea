@@ -25,6 +25,11 @@ angular.module('groups').controller('GroupsController', ['$scope', '$http', '$mo
     $scope.warningopen = true;
 
     $scope.type = '';
+
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
     
     $scope.showWorkPanel = false;
     $scope.showBookListPanel = false;

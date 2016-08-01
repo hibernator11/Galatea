@@ -22,6 +22,11 @@ angular.module('booklists').controller('BooklistsController', ['$scope', '$http'
     $scope.showRatingBar = false;
     $scope.showRatingButton = true;
 
+    $scope.tinymceOptions = {
+        language_url : 'modules/reviews/client/language-tinymce/es.js',
+        plugins: 'link image'
+    };
+
     // Create new Booklist
     $scope.create = function (isValid) {
         $scope.error = null;
